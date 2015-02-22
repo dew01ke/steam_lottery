@@ -1,7 +1,7 @@
 <h1>LINKS:</h1>
-http://skim.la/2012/01/16/rsa-public-key-interoperability-between-ruby-and-android/
-http://rxr.whitequark.org/mri/source/test/openssl/test_pkey_rsa.rb
-https://wiki.teamfortress.com/wiki/WebAPI
+http://skim.la/2012/01/16/rsa-public-key-interoperability-between-ruby-and-android/<br>
+http://rxr.whitequark.org/mri/source/test/openssl/test_pkey_rsa.rb<br>
+https://wiki.teamfortress.com/wiki/WebAPI<br>
 
 <h1>STEAM API:</h1>
 <h3>ПОЛУЧЕНИЕ ИНВЕНТАРЯ</h3>
@@ -29,7 +29,7 @@ Content-Type: application/x-www-form-urlencoded; charset=UTF-8<br>
 Referer: https://steamcommunity.com/tradeoffer/new/?partner=SHORT_PARTNER_ID<br>
 Cookie: ALL_COOKIES<br>
 Host: steamcommunity.com<br><br>
-body запроса:<br>
+<b>body запроса:</b><br>
 sessionid=COOKIE_SESSION_ID&<br>
 serverid=1&<br>
 partner=STEAM64_ID&<br>
