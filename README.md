@@ -18,3 +18,23 @@ http://api.steampowered.com/ISteamEconomy/GetAssetPrices/v0001/?appid=730&key=40
 440 = TF<br>
 570 = DOTA2<br>
 730 = CSGO<br>
+
+<h1>STEAM TRADEOFFERS:</h1>
+url запроса:<br>
+<b><i>https://steamcommunity.com/tradeoffer/new/send</b></i><br>
+header запроса:<br>
+<b><i>Origin: https://steamcommunity.com<br>
+User-Agent: USER_AGENT<br>
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8<br>
+Referer: https://steamcommunity.com/tradeoffer/new/?partner=SHORT_PARTNER_ID<br>
+Cookie: ALL_COOKIES<br>
+Host: steamcommunity.com</b></i>
+===============
+body запроса:<br>
+sessionid=COOKIE_SESSION_ID&
+serverid=1&
+partner=STEAM64_ID&
+tradeoffermessage=ANYTHING&
+json_tradeoffer={"newversion":true,"version":4,"me":{"assets":[{"appid":570,"contextid":"2","amount":1,"assetid":"5452553857"},{"appid":570,"contextid":"2","amount":1,"assetid":"5454103477"},{"appid":570,"contextid":"2","amount":1,"assetid":"5454103543"}],"currency":[],"ready":false},"them":{"assets":[],"currency":[],"ready":false}}&
+captcha=&
+trade_offer_create_params=%7B%7D
