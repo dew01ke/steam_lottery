@@ -12,9 +12,13 @@ class HttpController < ApplicationController
     req_url = URI.parse(request_url)
 
     http = Net::HTTP.new(req_url.host, req_url.port)
-    http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-    http.ca_file = "C:\\Users\\Andrew\\RubymineProjects\\steam_lottery\\app\\assets\\cert\\ca-bundle.crt"
+
+
+    if req_url.scheme == 'https'
+      http.use_ssl = true
+      http.ca_file = File.join(File.dirname(File.expand_path("../", __FILE__)), 'assets', 'cert', 'ca-bundle.crt')
+      http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+    end
 
     resp = http.post(req_url.path, request_data.to_query, nil)
 
