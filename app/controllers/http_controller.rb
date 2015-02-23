@@ -8,16 +8,22 @@ class HttpController < ApplicationController
 
   def index
     setHeader({'User-Agent' => 'Lottery Offer Bot'})
-    @auth = httpRequest("https://steamcommunity.com/login/getrsakey/", {'username' => 'dew01ke'})
+    @auth = httpRequest("GET", "http://api.steampowered.com/ISteamEconomy/GetAssetPrices/v0001/", {"appid"=>"570", "key"=>"40203AB5100825DF97F990FCE10E7916"})
   end
 
   #######
   #Отправляем Post запрос, на вход адрес и параметры запроса
   #######
-  def httpRequest(request_url, request_data = {} )
+  def httpRequest(request_method, request_url, request_data = {} )
+
     req_url = URI.parse(request_url)
 
-    http = Net::HTTP.new(req_url.host, req_url.port)
+    if request_method == "GET"
+      req_url.query = URI.encode_www_form(request_data)
+      http = Net::HTTP.new(req_url.host, req_url.port)
+    else
+      http = Net::HTTP.new(req_url.host, req_url.port)
+    end
 
     if req_url.scheme == 'https'
       http.use_ssl = true
@@ -29,7 +35,11 @@ class HttpController < ApplicationController
       @@http_header = @@http_header.merge({"Cookie" => (@@http_cookie.to_query).gsub('&', '; ')})
     end
 
-    resp = http.post(req_url.path, request_data.to_query, @@http_header)
+    if request_method == "GET"
+      resp = http.request(Net::HTTP::Get.new(req_url.request_uri))
+    else
+      resp = http.post(req_url.path, request_data.to_query, @@http_header)
+    end
 
     case resp
       when Net::HTTPSuccess
