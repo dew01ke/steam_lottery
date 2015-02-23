@@ -9,10 +9,12 @@ http://api.steampowered.com/IEconItems_440/GetPlayerItems/v0001/?key=XXXX&steami
 http://api.steampowered.com/IEconItems_570/GetPlayerItems/v0001/?key=XXXX&steamid=YYYY получение списка предметов Dota<br>
 http://api.steampowered.com/IEconItems_730/GetPlayerItems/v0001/?key=XXXX&steamid=YYYY получение списка предметов CS<br>
 Для примера key=40203AB5100825DF97F990FCE10E7916, steamid=76561197996373589<br>
-<h3>ПОЛУЧЕНИЕ ЦЕН</h3>
+<h3>ПОЛУЧЕНИЕ ЦЕН НА АССЕТЫ</h3>
 http://api.steampowered.com/ISteamEconomy/GetAssetPrices/v0001/?appid=440&key=40203AB5100825DF97F990FCE10E7916 получение цен на предметы(?) TF<br>
 http://api.steampowered.com/ISteamEconomy/GetAssetPrices/v0001/?appid=570&key=40203AB5100825DF97F990FCE10E7916 получение цен на предметы(?) Dota<br>
 http://api.steampowered.com/ISteamEconomy/GetAssetPrices/v0001/?appid=730&key=40203AB5100825DF97F990FCE10E7916 получение цен на предметы(?) CS<br>
+<h3>ПОЛУЧЕНИЕ ЦЕНЫ НА ШМОТКУ ПО ЕЕ MARKET_HASH_NAME</h3>
+https://steamcommunity.com/market/priceoverview/?country=RU&currency=1&appid=570&market_hash_name=Sentinel Hood
 
 <h1>STEAM APPID:</h1>
 440 = TF<br>
