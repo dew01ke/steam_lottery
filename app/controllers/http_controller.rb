@@ -48,13 +48,13 @@ class HttpController < ApplicationController
     #Если сервер присылаем нам свои куки для установки, забираем их
     set_cookie = resp.response['set-cookie']
     #Парсим их, чтобы был вид key=value
-    if set_cookie != ""
+    if set_cookie != nil
       parsed_cookies = set_cookie.scan(/(.*?)=(.*?);(.*?)\s*path=\/[,\s]*/)
-    end
 
-    #Распарсенные куки добавляем в @@http_cookie
-    parsed_cookies.each do |cookie|
-      setCookie({cookie[0] => cookie[1]})
+      #Распарсенные куки добавляем в @@http_cookie
+      parsed_cookies.each do |cookie|
+        setCookie({cookie[0] => cookie[1]})
+      end
     end
 
     #Смотрим какой код ответа нам вернул сервер, если все ОК, то ретурним
