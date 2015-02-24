@@ -15,7 +15,6 @@ class HttpController < ApplicationController
   #Отправляем Post запрос, на вход адрес и параметры запроса
   #######
   def httpRequest(request_method, request_url, request_data = {} )
-
     #Парсим наш адрес на компоненты протокол://хост/запрос
     req_url = URI.parse(request_url)
 
@@ -49,7 +48,9 @@ class HttpController < ApplicationController
     #Если сервер присылаем нам свои куки для установки, забираем их
     set_cookie = resp.response['set-cookie']
     #Парсим их, чтобы был вид key=value
-    parsed_cookies = set_cookie.scan(/(.*?)=(.*?);(.*?)\s*path=\/[,\s]*/)
+    if set_cookie != ""
+      parsed_cookies = set_cookie.scan(/(.*?)=(.*?);(.*?)\s*path=\/[,\s]*/)
+    end
 
     #Распарсенные куки добавляем в @@http_cookie
     parsed_cookies.each do |cookie|
