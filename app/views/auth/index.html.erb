@@ -1,0 +1,18 @@
+Если есть токен, то здесь он отобразится: <%= @token%>
+
+<%= form_tag("/auth", method: "post") do %>
+    <%= hidden_field_tag "password", @rsa_encrypted_password %>
+    <%= hidden_field_tag "username", @username %>
+    <%= hidden_field_tag "rsatimestamp", @rsa_timestamp %>
+    <%= hidden_field_tag "donotcache", @donotcache %>
+
+    <h1>Подтвердить капчу</h1>
+    <%= @CAPTCHA_IMG %>
+    <%= hidden_field_tag "captcha_gid", @CAPTCHA_GID %>
+    <%= text_field_tag "captcha_text", "" %>
+    <br><br><br>
+    <h1>Подтвердить код с почты</h1>
+    <%= hidden_field_tag "emailsteamid", @EMAIL_ID %>
+    <%= text_field_tag "emailauth", "" %>
+    <%= submit_tag("send it") %>
+<% end %>
