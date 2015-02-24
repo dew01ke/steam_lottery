@@ -35,7 +35,7 @@ class HttpController < ApplicationController
 
     #Если массив с куками пуст, то не прикрепляем их к нашему заголовку
     if @@http_cookie != {}
-      @@http_header = @@http_header.merge({"Cookie" => buildCookie})
+      @@http_header = @@http_header.merge({"Cookie" => (@@http_cookie.to_query).gsub('&', '; ')})
     end
 
     #Посылаем запрос на нужный адрес в зависимости от POST или GET
@@ -47,9 +47,11 @@ class HttpController < ApplicationController
 
     #Если сервер присылаем нам свои куки для установки, забираем их
     set_cookie = resp.response['set-cookie']
+
+    puts set_cookie
     #Парсим их, чтобы был вид key=value
     if set_cookie != nil
-      parsed_cookies = set_cookie.scan(/(.*?)=(.*?);(.*?)\s*path=\/[,\s]*/)
+      parsed_cookies = set_cookie.scan(/(.*?)=(.*?);(.*?)\s*path=\/\s*[secure;\s]*[httponly\,\s]*/)
 
       #Распарсенные куки добавляем в @@http_cookie
       parsed_cookies.each do |cookie|
