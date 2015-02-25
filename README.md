@@ -40,10 +40,14 @@ json_tradeoffer={"newversion":true,"version":4,"me":{"assets":[{"appid":570,"con
 captcha=&<br>
 trade_offer_create_params={}<br>
 
-<h1>РЕАЛИЗАЦИЯ КОНТРОЛЛЕРА ПУБЛИЧНЫХ АПИ:</h1>
+<h1>ЗАДАНИЯ:</h1>
+<h3>(ДЛЯ ИЛЬИ) РЕАЛИЗАЦИЯ КОНТРОЛЛЕРА ПУБЛИЧНЫХ АПИ:</h3>
 getUserInfo(steamid64, api_key)<br>
 getBackpackByAppid(steamid64, api_key, appid)<br>
 getBackpack(steamid64 or steamlogin, appid)<br>
 getSteamId64(steamlogin)<br>
 getAssetPrices(api_key, appid)<br>
 getPricesByHashname(appid, market_hash_name)<br>
+
+<h3>(ДЛЯ ИЛЬИ) РЕАЛИЗАЦИЯ КЛИЕНТА ПОЧТЫ:</h3>
+По логину\паролю от почты получить оперделенное письмо и найти 5-ти символьный пароль и извлечь его от туда.
