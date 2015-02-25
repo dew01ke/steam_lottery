@@ -42,10 +42,10 @@ trade_offer_create_params={}<br>
 
 <h1>ЗАДАНИЯ:</h1>
 <h3>(ДЛЯ ИЛЬИ) РЕАЛИЗАЦИЯ КОНТРОЛЛЕРА ПУБЛИЧНЫХ АПИ:</h3>
-getUserInfo(steamid64, api_key)<br>
+-getUserInfo(steamid64, api_key)<br>
 getBackpackByAppid(steamid64, api_key, appid)<br>
-getBackpack(steamid64 or steamlogin, appid)<br>
-getSteamId64(steamlogin)<br>
+-getBackpack(steamid64 or steamlogin, appid)<br>
+-getSteamId64(steamlogin)<br>
 getAssetPrices(api_key, appid)<br>
 getPricesByHashname(appid, market_hash_name)<br>
 
