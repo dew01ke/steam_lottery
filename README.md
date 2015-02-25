@@ -39,3 +39,11 @@ tradeoffermessage=ANYTHING&<br>
 json_tradeoffer={"newversion":true,"version":4,"me":{"assets":[{"appid":570,"contextid":"2","amount":1,"assetid":"5452553857"},{"appid":570,"contextid":"2","amount":1,"assetid":"5454103477"},{"appid":570,"contextid":"2","amount":1,"assetid":"5454103543"}],"currency":[],"ready":false},"them":{"assets":[],"currency":[],"ready":false}}&<br>
 captcha=&<br>
 trade_offer_create_params={}<br>
+
+<h1>РЕАЛИЗАЦИЯ КОНТРОЛЛЕРА ПУБЛИЧНЫХ АПИ:</h1>
+getUserInfo(steamid64, api_key)<br>
+getBackpackByAppid(steamid64, api_key, appid)<br>
+getBackpack(steamid64 or steamlogin, appid)<br>
+getSteamId64(steamlogin)<br>
+getAssetPrices(api_key, appid)<br>
+getPricesByHashname(appid, market_hash_name)<br>
