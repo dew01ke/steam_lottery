@@ -87,10 +87,10 @@ Deposit/withdraw
 * iem name
 * amount
 
-Depo examples:
-(131, DATETIME, true, true, "AWP|Asiimov", 5800) - user won AWP|Asiimov and picked points
-(131, DATETIME, true, true, "AWP|Asiimov", 0) - user won AWP|Asiimov and picked item
-(131, DATETIME, true, false, "", 400) - user deposited 400 points
+Depo examples:<br>
+(131, DATETIME, true, true, "AWP|Asiimov", 5800) - user won AWP|Asiimov and picked points <br>
+(131, DATETIME, true, true, "AWP|Asiimov", 0) - user won AWP|Asiimov and picked item <br>
+(131, DATETIME, true, false, "", 400) - user deposited 400 points <br>
 
 Item pool:
 * item DB id
@@ -123,16 +123,16 @@ Item info:
 * бан/разбан
 * закрытие раздач
 * редактирование сетки раздач
-* контроль ботов
--статус логина ботов
--примерная суммарная стоимость вещей на боте
--редактирование инфо о ботах
--просмотр инвентаря ботов
--обмен с ботами
--обмен между ботами
--добавление/удаление ботов
--статистика пула вещей
--просмотр инфо об авторизации в SteamGuard
+* контроль ботов <br>
+-статус логина ботов <br>
+-примерная суммарная стоимость вещей на боте <br>
+-редактирование инфо о ботах <br>
+-просмотр инвентаря ботов <br>
+-обмен с ботами <br>
+-обмен между ботами <br>
+-добавление/удаление ботов <br>
+-статистика пула вещей <br>
+-просмотр инфо об авторизации в SteamGuard <br>
 
 <h1>ЗАДАНИЯ:</h1>
 <h3>(ДЛЯ ИЛЬИ) РЕАЛИЗАЦИЯ КОНТРОЛЛЕРА ПУБЛИЧНЫХ АПИ:</h3>
