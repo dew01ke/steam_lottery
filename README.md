@@ -40,6 +40,100 @@ json_tradeoffer={"newversion":true,"version":4,"me":{"assets":[{"appid":570,"con
 captcha=&<br>
 trade_offer_create_params={}<br>
 
+<h1>ИНФОРМАЦИЯ О ПРОЕКТЕ</h1>
+<h3>Основные принципы</h3>
+Множество одновременных раздач вещей разных ценовых категорий
+Суммарная стоимость слотов - 130-140%
+Каждый слот имеет равный шанс победить + рандомные награды в виде экспы
+
+<h3>МОДЕЛИ </h3>
+User
+* steamid
+* email
+* date of birth
+* exp
+* points
+* is banned
+
+Active raffle
+* item pool id
+* item steam id
+* item value
+* number of slots
+* slot value
+* slot info
+
+Finished raffle short info(generated for each participant) - store for ~30 days
+* user id
+* item name
+* points spent (on this raffle)
+* date&time
+
+Finished raffle full info (store in logs or in separate table)
+* date&time
+* item steam id
+* item donated by (user id)
+* item name
+* item value
+* number of slots
+* slot value
+* slot layout
+
+Deposit/withdraw
+* user id
+* date&time
+* (bool) is deposit
+* (bool) is item
+* iem name
+* amount
+
+Depo examples:
+(131, DATETIME, true, true, "AWP|Asiimov", 5800) - user won AWP|Asiimov and picked points
+(131, DATETIME, true, true, "AWP|Asiimov", 0) - user won AWP|Asiimov and picked item
+(131, DATETIME, true, false, "", 400) - user deposited 400 points
+
+Item pool:
+* item DB id
+* item steam id
+* deposited by
+* deposited on
+* bot info
+
+Item info:
+* item steam id
+* item price
+* last updated
+
+<h3>КОНТРОЛЛЕРЫ </h3>
+/raffle - методы, обесечивающие функционал раздач
+/auth - авторизация ботов и юзеров
+/account - данные об аккаунте, статистика, внесение/снятие поинтов
+/admin - функционал админки
+/http - вспомогательные сетевые методы
+/papi - public API
+* getUserInfo
+* getBackpack
+* getItemPrice
+* getSteam64
+* getAllItems
+/trade - функционал трейдофферов
+
+<h3>АДМИНКА </h3>
+* просмотр логов
+* бан/разбан
+* закрытие раздач
+* редактирование сетки раздач
+* контроль ботов
+-статус логина ботов
+-примерная суммарная стоимость вещей на боте
+-редактирование инфо о ботах
+-просмотр инвентаря ботов
+-обмен с ботами
+-обмен между ботами
+-добавление/удаление ботов
+-статистика пула вещей
+-просмотр инфо об авторизации в SteamGuard
+
 <h1>ЗАДАНИЯ:</h1>
 <h3>(ДЛЯ ИЛЬИ) РЕАЛИЗАЦИЯ КОНТРОЛЛЕРА ПУБЛИЧНЫХ АПИ:</h3>
 -getUserInfo(steamid64, api_key)<br>
