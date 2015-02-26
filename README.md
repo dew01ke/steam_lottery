@@ -111,11 +111,6 @@ Item info:
 /admin - функционал админки <br>
 /http - вспомогательные сетевые методы <br>
 /papi - public API <br>
-* getUserInfo
-* getBackpack
-* getItemPrice
-* getSteam64
-* getAllItems <br>
 /trade - функционал трейдофферов
 
 <h3>АДМИНКА </h3>
@@ -136,10 +131,10 @@ Item info:
 
 <h1>ЗАДАНИЯ:</h1>
 <h3>(ДЛЯ ИЛЬИ) РЕАЛИЗАЦИЯ КОНТРОЛЛЕРА ПУБЛИЧНЫХ АПИ:</h3>
--getUserInfo(steamid64, api_key)<br>
+(сделано) getUserInfo(steamid64, api_key)<br>
 getBackpackByAppid(steamid64, api_key, appid)<br>
--getBackpack(steamid64 or steamlogin, appid)<br>
--getSteamId64(steamlogin)<br>
+(сделано) getBackpack(steamid64 or steamlogin, appid)<br>
+(сделано) getSteamId64(steamlogin)<br>
 getAssetPrices(api_key, appid)<br>
 getPricesByHashname(appid, market_hash_name)<br>
 
