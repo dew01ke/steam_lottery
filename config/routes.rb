@@ -4,6 +4,17 @@ Rails.application.routes.draw do
 
   root :to => 'auth#index'
 
+  get 'id64/:api_key/:steamlogin' => 'papi#id64'
+
+  get 'backpackAppid/:steamid64/:api_key/:appid' => 'papi#backpackAppid'
+
+  get 'backpackLogin/:steamlogin/:appid' => 'papi#backpackLogin'
+
+  get 'backpack/:steamid64/:appid' => 'papi#backpackLogin'
+
+  get 'userinfo/:steamid64/:api_key' => 'papi#userinfo'
+
+  get 'pricebyhash/:appid/:market_hash_name' => 'papi#pricebyhash'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

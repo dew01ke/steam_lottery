@@ -7,7 +7,7 @@
     <%= hidden_field_tag "donotcache", @donotcache %>
 
     <h1>Подтвердить капчу</h1>
-    <%= @CAPTCHA_IMG %>
+    <img src='<%= @CAPTCHA_IMG %>'>
     <%= hidden_field_tag "captcha_gid", @CAPTCHA_GID %>
     <%= text_field_tag "captcha_text", "" %>
     <br><br><br>

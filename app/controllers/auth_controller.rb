@@ -9,7 +9,7 @@ class AuthController < ApplicationController
   @@steam_auth_url = "https://steamcommunity.com/login/dologin/"
 
   def index
-    steamLogin("dew01ke", "***")
+    steamLogin("chilintano1340", "Chili13401340")
   end
 
   #######
@@ -67,7 +67,7 @@ class AuthController < ApplicationController
     if auth_response_data["captcha_needed"] == true
       @EMAIL_ID = ""
       @CAPTCHA_GID = auth_response_data['captcha_gid']
-      @CAPTCHA_IMG = "<img src='https://steamcommunity.com/public/captcha.php?gid=#{auth_response_data['captcha_gid']}'>"
+      @CAPTCHA_IMG = "https://steamcommunity.com/public/captcha.php?gid=#{auth_response_data['captcha_gid']}"
       @OTHER_URL = auth_post_data
     end
 
@@ -105,5 +105,8 @@ class AuthController < ApplicationController
     if auth_response_data["success"] == true
       @token = auth_response_data["transfer_parameters"]["token"]
     end
+
+    #DEBUG
+    puts response
   end
 end
