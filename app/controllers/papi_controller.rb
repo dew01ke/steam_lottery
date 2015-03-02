@@ -5,7 +5,7 @@ class PapiController < ApplicationController
   @@http = HttpController.new
 
   def id64
-    @id = getSteam64(params[:steamlogin], params[:api_key])
+    @id = getSteam64(nil, params[:api_key])
   end
 
   def backpackAppid
@@ -36,9 +36,14 @@ class PapiController < ApplicationController
   def getSteam64(steamlogin, api_key)
     url="http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/"
     data = {'key'=> api_key, 'vanityurl' => steamlogin}
-    response = JSON.parse(@@http.httpRequest("GET", url, data))
-    if (response['response']['success'].to_i == 1)
-    return response['response']['steamid']
+    request = @@http.httpRequest("GET", url, data)
+    if (request != -1)
+      response = JSON.parse(request)
+      if (response['response']['success'].to_i == 1)
+      return response['response']['steamid']
+      else
+        return -1
+      end
     else
       return -1
     end
@@ -105,8 +110,13 @@ class PapiController < ApplicationController
   def getPricesByHashname(appid, market_hash_name)
     url = "http://steamcommunity.com/market/priceoverview/"
     data = {'country' => "ru", 'currency' => 1, 'appid' => appid, 'market_hash_name' => market_hash_name}
-    response = JSON.parse(@@http.httpRequest("GET", url, data))
-    return response
+    request = @@http.httpRequest("GET", url, data)
+    if (request != -1)
+      response = JSON.parse(@@http.httpRequest("GET", url, data))
+      return response
+    else
+      return -1
+    end
     #no HTTP errors, response contains {"success":false} if wrong data is provided
   end
 
