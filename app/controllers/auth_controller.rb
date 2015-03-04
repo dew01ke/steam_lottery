@@ -3,6 +3,7 @@ class AuthController < ApplicationController
   require 'json'
   require 'openssl'
   require 'base64'
+	require 'mail'
 
   @@http = HttpController.new
   @@steam_rsa_url = "https://steamcommunity.com/login/getrsakey/"
@@ -76,6 +77,26 @@ class AuthController < ApplicationController
       @token = auth_response_data["transfer_parameters"]["token"]
     end
   end
+
+	#######
+	#Получает последнее непрочитаное письмо от noreply@steampowered.com и возвращает логин и код SteamGuard
+	#######
+	def getSteamGuardCode(imap_address, email_login, email_password)
+		Mail.defaults do
+			retriever_method :imap, :address    => imap_address,
+											 :port       => 993,
+											 :user_name  => email_login,
+											 :password   => email_password,
+											 :enable_ssl => true
+		end
+		mail = Mail.find(:what => :last, :count => 1, keys: ['NOT','SEEN'])
+		puts mail.from[0]
+		if mail.body.decoded !=[] &&mail.from[0] == "noreply@steampowered.com"
+			code = mail.body.decoded.match(/<h2>(.*?)<\/h2>/)[1]
+			login = mail.body.decoded.match(/Dear\s(.*?),/)[1]
+		end
+		return {"login" => login, "code" => code}
+	end
 
   #######
   #Возвращает Unix Timestamp
