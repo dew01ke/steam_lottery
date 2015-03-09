@@ -1,1 +1,4 @@
-<%= @result %>
+<% @result['rgInventory'].each do |t|%>
+<%= t[1]['id']%> <%= t[1]['classid'] %>  <%= t[1]['instanceid'] %> :<br>
+<%= @result['rgDescriptions'][t[1]['classid'] + '_' + t[1]['instanceid']] %> <br><br>
+<%end %>

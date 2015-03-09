@@ -76,7 +76,7 @@ class PapiController < ApplicationController
       if (response['success'].to_s == 'false')
         return -1
       else
-        return response['rgInventory']
+        return response
       end
     else
       return -1
@@ -92,7 +92,7 @@ class PapiController < ApplicationController
       if (response['success'].to_s == 'false')
         return -1
       else
-        return response['rgInventory']
+        return response
       end
     else
       return -1
