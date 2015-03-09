@@ -2,6 +2,7 @@
 http://skim.la/2012/01/16/rsa-public-key-interoperability-between-ruby-and-android/<br>
 http://rxr.whitequark.org/mri/source/test/openssl/test_pkey_rsa.rb<br>
 https://wiki.teamfortress.com/wiki/WebAPI<br>
+Соотношение типов данных Ruby и MySQL: http://niugrad.blogspot.in/2008/03/ruby-rails-column-type-to-mysql.html
 
 <h1>STEAM API:</h1>
 <h3>ПОЛУЧЕНИЕ ИНВЕНТАРЯ</h3>
