@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  get 'net/index'
+
   post 'auth' => 'auth#resend'
 
   root :to => 'auth#index'
@@ -17,6 +19,8 @@ Rails.application.routes.draw do
   get 'pricebyhash/:appid/:market_hash_name' => 'papi#pricebyhash'
 
   get 'asset/:api_key/:appid' => 'papi#asset'
+
+  get 'lolz' => 'net#index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
