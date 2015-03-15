@@ -4,13 +4,37 @@ class AuthController < ApplicationController
   require 'openssl'
   require 'base64'
 	require 'mail'
+  require 'faraday'
 
-  @@http = HttpController.new
+  @@http = NetController.new
   @@steam_rsa_url = "https://steamcommunity.com/login/getrsakey/"
   @@steam_auth_url = "https://steamcommunity.com/login/dologin/"
 
   def index
-    steamLogin("chilintano1340", "Chili13401340")
+    #Получаем сначала sessionid
+    @@http.httpRequest("POST", "https://steamcommunity.com")
+    #Получаем токены
+    #steamLogin("dew01ke", "GBCZ")
+  end
+
+  def sendTradeOffer(offer_name)
+    @@http.addHeader({
+                         "User-Agent" => "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 YaBrowser/14.12.2125.10034 Safari/537.36",
+                         "Content-Type" => "application/x-www-form-urlencoded; charset=UTF-8",
+                         "Referer" => "https://steamcommunity.com/tradeoffer/new/?partner=36107861"
+                     })
+
+    body = {
+        "sessionid" => @@http.getCookie("sessionid"),
+        "serverid" => "1",
+        "partner" => "76561197996373589",
+        "tradeoffermessage" => offer_name,
+        "json_tradeoffer" => '{"newversion":true,"version":2,"me":{"assets":[{"appid":730,"contextid":"2","amount":1,"assetid":"1802822393"}],"currency":[],"ready":false},"them":{"assets":[],"currency":[],"ready":false}}',
+        "captcha" => "",
+        "trade_offer_create_params" => "{}"
+    }
+
+    @@http.httpRequest("POST", "https://steamcommunity.com/tradeoffer/new/send", body)
   end
 
   #######
@@ -22,6 +46,7 @@ class AuthController < ApplicationController
     rsa_post_data = {"username" => bot_username, "donotcache" => getTimestamp}
     #Отправляем Post запрос
     response = @@http.httpRequest("POST", @@steam_rsa_url, rsa_post_data)
+    puts response
     #Парсим полученный Json массив
     rsa_response_data = JSON.parse(response)
 
@@ -54,7 +79,7 @@ class AuthController < ApplicationController
     auth_response_data = JSON.parse(response)
 
     #DEBUG
-    puts response
+    #puts response
 
     #Нужно подтверждение по электропочте
     if auth_response_data["emailauth_needed"] == true
@@ -129,5 +154,9 @@ class AuthController < ApplicationController
 
     #DEBUG
     puts response
+
+    #После успешной авторизации отправить трейдоффер
+    #sendTradeOffer()
   end
+
 end

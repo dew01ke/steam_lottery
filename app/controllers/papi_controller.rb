@@ -2,7 +2,7 @@ class PapiController < ApplicationController
   require 'net/http'
   require 'net/https'
 
-  @@http = HttpController.new
+  @@http = NetController.new
 
   def id64
     @id = getSteam64(nil, params[:api_key])
