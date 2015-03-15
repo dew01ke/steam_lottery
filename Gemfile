@@ -5,6 +5,7 @@ gem 'rails', '4.1.8'
 gem 'openssl'
 gem 'mail'
 gem 'faraday'
+gem 'faraday_middleware'
 gem 'addressable'
 # Use sqlite3 as the database for Active Record
 gem 'mysql2'

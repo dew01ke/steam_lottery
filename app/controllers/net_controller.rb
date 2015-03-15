@@ -1,6 +1,7 @@
 class NetController < ApplicationController
   require 'uri'
-  require "addressable/uri"
+  require 'addressable/uri'
+  require 'faraday_middleware'
 
   @@header_store = {}
   @@cookie_store = {}
@@ -40,6 +41,7 @@ class NetController < ApplicationController
     ca_file = File.join(File.dirname(File.expand_path("../", __FILE__)), 'assets', 'cert', 'ca-bundle.crt')
 
     conn = Faraday.new(:url => "#{uri.scheme}://#{uri.host}", :ssl => {:ca_file => ca_file}) do |faraday|
+      faraday.use FaradayMiddleware::FollowRedirects
       faraday.request  :url_encoded
       faraday.response :logger
       faraday.adapter  Faraday.default_adapter
@@ -69,7 +71,9 @@ class NetController < ApplicationController
         addCookie({cookie[0] => cookie[1]})
       end
     end
-    
+
+    puts request.body
+
     if request.status == 200
       return request.body
     else
