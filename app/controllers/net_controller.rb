@@ -69,10 +69,12 @@ class NetController < ApplicationController
         addCookie({cookie[0] => cookie[1]})
       end
     end
-
-    puts request.body
-
-    return request.body
+    
+    if request.status == 200
+      return request.body
+    else
+      return -1
+    end
   end
 
   #######
