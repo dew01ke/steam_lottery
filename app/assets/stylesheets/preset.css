@@ -1,0 +1,335 @@
+html, body {
+    padding: 0;
+    margin: 0;
+    background: url(./preset/background.jpg);
+    background-repeat: repeat;
+    background-position: center top;
+    font-family: 'Open Sans', sans-serif;
+}
+a {
+    color: #d5d5d5;
+    text-decoration: none;
+    outline: none;
+}
+#header {
+    min-width: 1200px;
+    height: 60px;
+    background: #071215;
+}
+#auth_button {
+    padding: 0;
+    margin: 8px 0;
+    width: 114px;
+    height: 43px;
+    background: url(./preset/auth_button.png);
+    cursor: pointer;
+}
+#logo {
+    line-height: 60px;
+    color: #d25a3e;
+    font-size: 25px;
+}
+#wrapper {
+    padding: 0;
+    margin: 0 auto;
+    width: 1200px;
+    height: 100%;
+}
+.content {
+    margin: 0;
+    padding: 30px 0 !important;
+}
+#page {
+    width: 870px;
+    background: #071215;
+}
+#sidebar {
+    width: 300px;
+}
+#sidebar ul {
+    padding: 0;
+    margin: 0;
+    width: 270px;
+}
+#sidebar ul li {
+    padding: 0;
+    margin: 0;
+    width: 270px;
+    list-style: none;
+    clear: both
+}
+#sideblock {
+    padding: 0;
+    margin: 30px 0 0 0;
+    width: 300px;
+    background: #071215;
+}
+#advert-300 {
+    padding: 0;
+    margin: 30px 0 0 0;
+}
+#advert-900 {
+    width: 1200px;
+    margin: 30px auto;
+    text-align: center;
+}
+#sidename {
+    width: 300px;
+    height: 50px;
+    font-size: 16px;
+    line-height: 50px;
+    color: #ffffff;
+    text-align: center;
+    background: url(./preset/background_title.jpg) repeat-x;
+}
+#sidebody {
+    padding: 15px 15px 0 15px;
+    width: 270px;
+    background: #071215;
+}
+#jackpot {
+    margin: 30px 0 0 0;
+    width: 300px;
+    height: 165px;
+    background: #071215;
+}
+#jackpot .count-bg {
+    margin: 0 auto;
+    padding: 15px;
+    width: 264px;
+    height: 80px;
+    background: url(./preset/background_jackpot.png) center no-repeat;
+    text-align: center;
+    color: #c9c9c9;
+    font-size: 24px;
+    line-height: 65px;
+}
+.jackpot-button {
+    cursor: pointer;
+    display: inline-block;
+    margin: 0 50px;
+    float: left;
+    border-radius: 2px;
+    width: 200px;
+    height: 35px;
+    line-height: 35px;
+    font-size: 14px;
+    text-align: center;
+    font-weight: normal;
+}
+#user {
+    width: 100%;
+    height: 115px;
+}
+#balance {
+    width: 185px;
+    height: 85px;
+    padding: 0;
+    margin: 15px 0;
+    background: #071215;
+}
+#balance .stats {
+    padding: 0;
+    margin: 0;
+    width: 165px;
+    height: 85px;
+}
+#balance .username {
+    padding: 0;
+    margin: 0;
+    height: 35px;
+    line-height: 35px;
+    font-size: 16px;
+    text-align: center;
+    color: #ffffff;
+}
+#balance .value {
+    padding: 0;
+    margin: 0;
+    height: 20px;
+    line-height: 15px;
+    font-size: 30px;
+    letter-spacing: -1px;
+    text-align: center;
+    text-shadow: 0px 0px 7px rgba(255, 255, 190, 0.5);
+    color: #d38413;
+}
+#balance .currency {
+    padding: 0;
+    margin: 0;
+    height: 25px;
+    line-height: 25px;
+    font-size: 16px;
+    text-align: center;
+    text-shadow: 0px 0px 5px rgba(255, 255, 190, 0.5);
+    color: #d38413;
+}
+#balance .buy {
+    padding: 0;
+    margin: 0;
+    width: 20px;
+    height: 85px;
+    font-size: 21px;
+    line-height: 85px;
+    text-align: center;
+    color: #edd1a6;
+    background: #966214;
+    cursor: pointer;
+}
+#avatar {
+    width: 105px;
+    height: 105px;
+    border: 5px solid #324a66;
+}
+li.chance {
+    height: 70px;
+}
+#item-chance {
+    width: 190px;
+    overflow-x: hidden;
+}
+#item-chance #name {
+    margin: 0;
+    padding: 5px 15px 0 15px;
+    width: 175px;
+    height: 23px;
+    font-size: 16px;
+    color: #bcbcbc;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+}
+#item-chance #desc {
+    margin: 0;
+    padding: 0 5px 15px 15px;
+    width: 175px;
+    height: 23px;
+    font-size: 14px;
+    color: #686868;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.date {
+    width: 80px;
+    text-align: center;
+    font-size: 24px;
+    color: #bcbcbc;
+    letter-spacing: -1px;
+}
+#news {
+    width: 190px;
+}
+#news #name {
+    margin: 0;
+    padding: 5px 15px 0 15px;
+    width: 175px;
+    font-size: 16px;
+    color: #bcbcbc;
+    text-align: left;
+}
+#news #desc {
+    margin: 0;
+    padding: 0 5px 15px 15px;
+    width: 175px;
+    font-size: 14px;
+    color: #686868;
+    text-align: left;
+}
+#footer {
+    width: 100%;
+    color: #bcbcbc;
+    font-size: 12px;
+}
+.project {
+    padding: 0 0 30px 0;
+    text-align: left
+}
+.authors {
+    padding: 0 0 30px 0;
+    text-align: right
+}
+.clear {
+    width: 100%;
+    height: 1px;
+    clear: both
+}
+.left {
+    float: left
+}
+.right {
+    float: right;
+}
+
+/** DOTA 2 QUALITY **/
+
+.common {
+    border-top-color: rgb(176, 195, 217); background-image: linear-gradient(rgb(176, 195, 217), rgb(38, 42, 45)), linear-gradient(rgb(176, 195, 217), rgb(38, 42, 45));
+}
+.uncommon {
+    border-top-color: rgb(94, 152, 217); background-image: linear-gradient(rgb(94, 152, 217), rgb(38, 42, 45)), linear-gradient(rgb(94, 152, 217), rgb(38, 42, 45));
+}
+.rare {
+    border-top-color: rgb(75, 105, 255); background-image: linear-gradient(rgb(75, 105, 255), rgb(38, 42, 45)), linear-gradient(rgb(75, 105, 255), rgb(38, 42, 45));
+}
+.mythical {
+    border-top-color: rgb(136, 71, 255); background-image: linear-gradient(rgb(136, 71, 255), rgb(38, 42, 45)), linear-gradient(rgb(136, 71, 255), rgb(38, 42, 45));
+}
+.legendary {
+    border-top-color: rgb(211, 44, 230); background-image: linear-gradient(rgb(211, 44, 230), rgb(38, 42, 45)), linear-gradient(rgb(211, 44, 230), rgb(38, 42, 45));
+}
+.ancient {
+    border-top-color: rgb(235, 75, 75); background-image: linear-gradient(rgb(235, 75, 75), rgb(38, 42, 45)), linear-gradient(rgb(235, 75, 75), rgb(38, 42, 45));
+}
+.immortal {
+    border-top-color: rgb(228, 174, 51); background-image: linear-gradient(rgb(228, 174, 51), rgb(38, 42, 45)), linear-gradient(rgb(228, 174, 51), rgb(38, 42, 45));
+}
+.arcana {
+    border-top-color: rgb(173, 229, 92); background-image: linear-gradient(rgb(173, 229, 92), rgb(38, 42, 45)), linear-gradient(rgb(173, 229, 92), rgb(38, 42, 45));
+}
+
+/** CS:GO QUALITY **/
+
+.stattrack {
+    color: #CF6A32
+}
+.consumer {
+    border-top-color: rgb(176, 195, 217); background-image: linear-gradient(rgb(176, 195, 217), rgb(38, 42, 45)), linear-gradient(rgb(176, 195, 217), rgb(38, 42, 45));
+}
+.industrial {
+    border-top-color: rgb(94, 152, 217); background-image: linear-gradient(rgb(94, 152, 217), rgb(38, 42, 45)), linear-gradient(rgb(94, 152, 217), rgb(38, 42, 45));
+}
+.mil-spec {
+    border-top-color: rgb(75, 105, 255); background-image: linear-gradient(rgb(75, 105, 255), rgb(38, 42, 45)), linear-gradient(rgb(75, 105, 255), rgb(38, 42, 45));
+}
+.restricted {
+    border-top-color: rgb(136, 71, 255); background-image: linear-gradient(rgb(136, 71, 255), rgb(38, 42, 45)), linear-gradient(rgb(136, 71, 255), rgb(38, 42, 45));
+}
+.classified {
+    border-top-color: rgb(211, 44, 230); background-image: linear-gradient(rgb(211, 44, 230), rgb(38, 42, 45)), linear-gradient(rgb(211, 44, 230), rgb(38, 42, 45));
+}
+.covert {
+    border-top-color: rgb(235, 75, 75); background-image: linear-gradient(rgb(235, 75, 75), rgb(38, 42, 45)), linear-gradient(rgb(235, 75, 75), rgb(38, 42, 45));
+}
+.knife {
+    border-top-color: rgb(134, 80, 172); background-image: linear-gradient(rgb(134, 80, 172), rgb(38, 42, 45)), linear-gradient(rgb(134, 80, 172), rgb(38, 42, 45));
+}
+.contraband {
+    border-top-color: rgb(228, 174, 57); background-image: linear-gradient(rgb(228, 174, 57), rgb(38, 42, 45)), linear-gradient(rgb(228, 174, 57), rgb(38, 42, 45));
+}
+
+.accept, .accept:link, .accept:visited {
+    -webkit-transition: none;
+    -moz-transition: none;
+    -o-transition: none;
+    transition: none;
+    background: #60872c;
+    background: -moz-linear-gradient(top, #60872c 0%, #395a1a 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#60872c), color-stop(100%,#395a1a));
+    background: -webkit-linear-gradient(top, #60872c 0%,#395a1a 100%);
+    background: -o-linear-gradient(top, #60872c 0%,#395a1a 100%);
+    background: -ms-linear-gradient(top, #60872c 0%,#395a1a 100%);
+    background: linear-gradient(to bottom, #60872c 0%,#395a1a 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#60872c', endColorstr='#395a1a',GradientType=0 );
+    color: #d8fead;
+}

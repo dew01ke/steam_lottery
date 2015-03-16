@@ -6,8 +6,12 @@ class ApplicationController < ActionController::Base
 
   def index
     puts "Application started"
-    
+
     $http = NetController.new
     $papi = PapiController.new
+
+    @user_steamlogin = "dew01ke"
+    @user_avatarurl = "/dsd"
+    @user_coincount = "1488"
   end
 end

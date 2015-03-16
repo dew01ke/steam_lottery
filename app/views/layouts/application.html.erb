@@ -1,13 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>steam_lottery</title>
-  <%= stylesheet_link_tag    'application', media: 'all' %>
-  <%= csrf_meta_tags %>
+  <title><%= APP_CONFIG['lottery_title'] %></title>
+  <meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
+
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300&subset=cyrillic,latin' rel='stylesheet' type='text/css'>
+  <%= stylesheet_link_tag "preset", media: "all" %>
 </head>
 <body>
+<div id="header">
+  <div id="wrapper">
+    <div id="logo" class="left"><%= APP_CONFIG['lottery_title'] %></div>
+    <div id="auth_button" class="right"></div>
+  </div>
+</div>
 
-<%= yield %>
+<div id="wrapper" class="content">
+  <div id="page" class="left">
+    <%= yield %>
+  </div>
+  <div id="sidebar" class="right">
+    <%= yield :user_block %>
+  </div>
+</div>
 
+<div class="clear"></div>
+
+<div id="advert-900">
+  <%= image_tag("block/block_900.jpg", size: "900x90") %>
+</div>
+
+<div id="footer">
+  <div id="wrapper">
+    <div class="project left">This is Nice shit for u! © 2015 - All Rights Reserved<br>Powered by <a href="#">Steam</a>.</div>
+    <div class="authors right">Coded by <a href="#">Андрей</a>, <a href="#">Влад</a> и <a href="#">Илюшка-хуюшка</a><br>Running in Ruby</div>
+  </div>
+</div>
 </body>
 </html>

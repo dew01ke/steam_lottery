@@ -1,5 +1,10 @@
 development:
   test_string: "it's test string, check it"
+
+  #Общие настройки
+  lottery_title: "Стандартный заголовок из конфига"
+
+  #Работа со steamcommunity
   steam_rsa_url: "https://steamcommunity.com/login/getrsakey/"
   steam_auth_url: "https://steamcommunity.com/login/dologin/"
   steam_trade_url: "https://steamcommunity.com/tradeoffer/new/send"
