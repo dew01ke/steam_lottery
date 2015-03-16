@@ -1,0 +1,8 @@
+development:
+  test_string: "it's test string, check it"
+  steam_rsa_url: "https://steamcommunity.com/login/getrsakey/"
+  steam_auth_url: "https://steamcommunity.com/login/dologin/"
+  steam_trade_url: "https://steamcommunity.com/tradeoffer/new/send"
+
+production:
+test:

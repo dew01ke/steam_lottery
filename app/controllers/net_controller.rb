@@ -7,7 +7,7 @@ class NetController < ApplicationController
   @@cookie_store = {}
 
   def initialize
-    puts "@net controller created"
+    puts ">>Net controller created"
   end
 
   #######
@@ -71,8 +71,6 @@ class NetController < ApplicationController
         addCookie({cookie[0] => cookie[1]})
       end
     end
-
-    puts request.body
 
     if request.status == 200
       return request.body

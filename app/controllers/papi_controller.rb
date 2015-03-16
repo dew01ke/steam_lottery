@@ -2,7 +2,9 @@ class PapiController < ApplicationController
   require 'net/http'
   require 'net/https'
 
-  @@http = NetController.new
+  def initialize
+    puts ">>Papi controller created"
+  end
 
   def id64
     @id = getSteam64(nil, params[:api_key])
@@ -36,7 +38,7 @@ class PapiController < ApplicationController
   def getSteam64(steamlogin, api_key)
     url="http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/"
     data = {'key'=> api_key, 'vanityurl' => steamlogin}
-    request = @@http.httpRequest("GET", url, data)
+    request = $http.httpRequest("GET", url, data)
     if (request != -1)
       response = JSON.parse(request)
       if (response['response']['success'].to_i == 1)
@@ -53,7 +55,7 @@ class PapiController < ApplicationController
   def getBackpackByAppid(steamid64, api_key, appid)
     url = 'http://api.steampowered.com/IEconItems_570/GetPlayerItems/v0001/'
     data = {'key'=> api_key, 'SteamID' => steamid64}
-    request = @@http.httpRequest("GET", url, data)
+    request = $http.httpRequest("GET", url, data)
 
     if (request != -1)
       response = JSON.parse(request)
@@ -69,7 +71,7 @@ class PapiController < ApplicationController
 
   def getBackpackLogin(steamlogin, appid)
     url = 'http://steamcommunity.com/id/' + steamlogin.to_s + '/inventory/json/' + appid.to_s + '/2/'
-    request = @@http.httpRequest("GET", url, {})
+    request = $http.httpRequest("GET", url, {})
 
     if (request != -1)
       response = JSON.parse(request)
@@ -85,7 +87,7 @@ class PapiController < ApplicationController
 
   def getBackpack(steamid64, appid)
     url = 'http://steamcommunity.com/profiles/' + steamid64.to_s + '/inventory/json/' + appid.to_s + '/2/'
-    request = @@http.httpRequest("GET", url, {})
+    request = $http.httpRequest("GET", url, {})
 
     if (request != -1)
       response = JSON.parse(request)
@@ -102,7 +104,7 @@ class PapiController < ApplicationController
   def getUserInfo(steamid64, api_key)
     url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
     data = {'key'=> api_key, 'steamids' => steamid64}
-    response = JSON.parse(@@http.httpRequest("GET", url, data))
+    response = JSON.parse($http.httpRequest("GET", url, data))
     return response['response']['players']
     #in case of wrong id, response['response']['players'] is empty
   end
@@ -110,9 +112,9 @@ class PapiController < ApplicationController
   def getPricesByHashname(appid, market_hash_name)
     url = "http://steamcommunity.com/market/priceoverview/"
     data = {'country' => "ru", 'currency' => 1, 'appid' => appid, 'market_hash_name' => market_hash_name}
-    request = @@http.httpRequest("GET", url, data)
+    request = $http.httpRequest("GET", url, data)
     if (request != -1)
-      response = JSON.parse(@@http.httpRequest("GET", url, data))
+      response = JSON.parse($http.httpRequest("GET", url, data))
       return response
     else
       return -1
@@ -123,7 +125,7 @@ class PapiController < ApplicationController
   def getAssetPrices(api_key, appid)
     url = "http://api.steampowered.com/ISteamEconomy/GetAssetPrices/v0001/"
     data = {'key'=> api_key, 'appid' => appid}
-    request = @@http.httpRequest("GET", url, data)
+    request = $http.httpRequest("GET", url, data)
     if (request != -1)
       response = JSON.parse(request)
       if (response['result']['success'].to_s == 'false')

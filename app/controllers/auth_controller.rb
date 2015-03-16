@@ -6,29 +6,25 @@ class AuthController < ApplicationController
 	require 'mail'
   require 'faraday'
 
-
-  @@papi = PapiController.new
-  @@http = NetController.new
-  @@steam_rsa_url = "https://steamcommunity.com/login/getrsakey/"
-  @@steam_auth_url = "https://steamcommunity.com/login/dologin/"
-
   def index
     #Получаем сначала sessionid
-    @@http.httpRequest("POST", "https://steamcommunity.com")
-		@icon123 = inventoryView("https://steamcommunity.com/tradeoffer/new/?partner=86493268&token=RD-gii2a", 730)
+    #$http.httpRequest("POST", "https://steamcommunity.com")
+		@icon123 = inventoryView("https://steamcommunity.com/tradeoffer/new/?partner=86493268&token=RD-gii2a", 570)
     #Получаем токены
     #steamLogin("dew01ke", "GBCZ")
+
+    puts $is_global
   end
 
   def sendTradeOffer(offer_name)
-    @@http.addHeader({
+    $http.addHeader({
                          "User-Agent" => "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 YaBrowser/14.12.2125.10034 Safari/537.36",
                          "Content-Type" => "application/x-www-form-urlencoded; charset=UTF-8",
                          "Referer" => "https://steamcommunity.com/tradeoffer/new/?partner=36107861"
                      })
 
     body = {
-        "sessionid" => @@http.getCookie("sessionid"),
+        "sessionid" => $http.getCookie("sessionid"),
         "serverid" => "1",
         "partner" => "76561197996373589",
         "tradeoffermessage" => offer_name,
@@ -37,7 +33,7 @@ class AuthController < ApplicationController
         "trade_offer_create_params" => "{}"
     }
 
-    @@http.httpRequest("POST", "https://steamcommunity.com/tradeoffer/new/send", body)
+    $http.httpRequest("POST", APP_CONFIG['steam_trade_url'], body)
   end
 
   #######
@@ -48,7 +44,7 @@ class AuthController < ApplicationController
     #Формируем данные для получения Экспоненты и Модуля
     rsa_post_data = {"username" => bot_username, "donotcache" => getTimestamp}
     #Отправляем Post запрос
-    response = @@http.httpRequest("POST", @@steam_rsa_url, rsa_post_data)
+    response = $http.httpRequest("POST", APP_CONFIG['steam_rsa_url'], rsa_post_data)
     puts response
     #Парсим полученный Json массив
     rsa_response_data = JSON.parse(response)
@@ -77,7 +73,7 @@ class AuthController < ApplicationController
                       "donotcache" => @donotcache}
 
     #Отправляем Post запрос
-    response = @@http.httpRequest("POST", @@steam_auth_url, auth_post_data)
+    response = $http.httpRequest("POST", APP_CONFIG['steam_auth_url'], auth_post_data)
     #Парсим полученный Json массив
     auth_response_data = JSON.parse(response)
 
@@ -130,7 +126,7 @@ class AuthController < ApplicationController
 		icon = [[],[]]
 		id = (tradeOfferUrl.match(/http[s]*:\/\/steamcommunity.com\/tradeoffer\/new\/\?partner=(\d{8})/)[1]).to_i + 76561197960265728
 		if id != nil
-			inventory = @@papi.getBackpack(id, appid)
+			inventory = $papi.getBackpack(id, appid)
 			if inventory != -1
 				inventory['rgDescriptions'].each do |desc|
 					if desc[1]['tradable'] == 1
@@ -160,7 +156,7 @@ class AuthController < ApplicationController
   #######
   def resend
     #Отправляем запрос с добавленными данными
-    response = @@http.httpRequest("POST", @@steam_auth_url, {'password' => params[:password],
+    response = $http.httpRequest("POST", @@steam_auth_url, {'password' => params[:password],
                                                              'username' => params[:username],
                                                              'rsatimestamp' => params[:rsatimestamp],
                                                              'donotcache' => params[:donotcache],
