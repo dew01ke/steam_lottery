@@ -23,7 +23,11 @@
           <% end %>
           <td align="center" >
             <p> <%= @icon123[0][x] %></p>
-            <p> <img width="145" height="97"  src= <%= @icon123[1][x] %>></p>
+            <% if @icon123[1][x] == 'http://steamcommunity-a.akamaihd.net/economy/image/' %>
+                <p> <%= image_tag("empty.gif", size:"145x97") %></p>
+            <% else %>
+                <p> <img width="145" height="97"  src= <%= @icon123[1][x] %>></p>
+            <% end %>
           </td>
           <% if x % 5 == 4 %>
               </tr>

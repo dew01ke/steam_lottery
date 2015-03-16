@@ -15,7 +15,7 @@ class AuthController < ApplicationController
   def index
     #Получаем сначала sessionid
     @@http.httpRequest("POST", "https://steamcommunity.com")
-		@icon123 = inventoryView("https://steamcommunity.com/tradeoffer/new/?partner=86493268&token=RD-gii2a", 570)
+		@icon123 = inventoryView("https://steamcommunity.com/tradeoffer/new/?partner=86493268&token=RD-gii2a", 730)
     #Получаем токены
     #steamLogin("dew01ke", "GBCZ")
   end
