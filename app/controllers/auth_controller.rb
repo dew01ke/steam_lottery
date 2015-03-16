@@ -6,6 +6,8 @@ class AuthController < ApplicationController
 	require 'mail'
   require 'faraday'
 
+
+  @@papi = PapiController.new
   @@http = NetController.new
   @@steam_rsa_url = "https://steamcommunity.com/login/getrsakey/"
   @@steam_auth_url = "https://steamcommunity.com/login/dologin/"
@@ -13,6 +15,7 @@ class AuthController < ApplicationController
   def index
     #Получаем сначала sessionid
     @@http.httpRequest("POST", "https://steamcommunity.com")
+		@icon123 = inventoryView("https://steamcommunity.com/tradeoffer/new/?partner=86493268&token=RD-gii2a", 570)
     #Получаем токены
     #steamLogin("dew01ke", "GBCZ")
   end
@@ -122,6 +125,28 @@ class AuthController < ApplicationController
 		end
 		return {"login" => login, "code" => code}
 	end
+
+	def inventoryView(tradeOfferUrl, appid)
+		icon = [[],[]]
+		id = (tradeOfferUrl.match(/http[s]*:\/\/steamcommunity.com\/tradeoffer\/new\/\?partner=(\d{8})/)[1]).to_i + 76561197960265728
+		if id != nil
+			inventory = @@papi.getBackpack(id, appid)
+			if inventory != -1
+				inventory['rgDescriptions'].each do |desc|
+					if desc[1]['tradable'] == 1
+						icon[0][icon[0].size] = desc[1]['market_hash_name']
+						icon[1][icon[1].size] = 'http://steamcommunity-a.akamaihd.net/economy/image/' + desc[1]['icon_url_large'].to_s
+					end
+				end
+				return icon
+			else
+				return -1
+			end
+		else
+			return -1
+		end
+	end
+
 
   #######
   #Возвращает Unix Timestamp

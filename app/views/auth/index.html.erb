@@ -15,4 +15,19 @@
     <%= hidden_field_tag "emailsteamid", @EMAIL_ID %>
     <%= text_field_tag "emailauth", "" %>
     <%= submit_tag("send it") %>
+
+    <table align="center" rules="all">
+      <% 0.upto(@icon123[0].size-1) do |x| %>
+          <% if x % 5 == 0 or x == 0 %>
+              <tr valign="bottom">
+          <% end %>
+          <td align="center" >
+            <p> <%= @icon123[0][x] %></p>
+            <p> <img width="145" height="97"  src= <%= @icon123[1][x] %>></p>
+          </td>
+          <% if x % 5 == 4 %>
+              </tr>
+          <% end %>
+      <% end %>
+    </table>
 <% end %>
