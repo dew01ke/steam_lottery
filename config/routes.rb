@@ -1,9 +1,7 @@
 Rails.application.routes.draw do
 
   post 'auth' => 'auth#resend'
-
-  root :to => 'auth#index'
-
+  
   get 'id64/:api_key/:steamlogin' => 'papi#id64'
 
   get 'backpackAppid/:steamid64/:api_key/:appid' => 'papi#backpackAppid'
