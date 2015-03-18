@@ -65,6 +65,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (10.4.2)
+    ruby-openid (2.7.0)
     sprockets (2.12.3)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -93,4 +94,5 @@ DEPENDENCIES
   mysql2
   openssl
   rails (= 4.1.8)
+  ruby-openid
   tzinfo-data
