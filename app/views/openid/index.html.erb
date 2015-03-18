@@ -1,0 +1,25 @@
+<% if flash[:alert] %>
+    <div class='alert'>
+      <%= h(flash[:alert]) %>
+    </div>
+<% end %>
+<% if flash[:error] %>
+    <div class='error'>
+      <%= h(flash[:error]) %>
+    </div>
+<% end %>
+<% if flash[:success] %>
+    <div class='success'>
+      <%= h(flash[:success]) %>
+    </div>
+<% end %>
+<% if flash[:sreg_results] %>
+    <div class='alert'>
+      <%= flash[:sreg_results] %>
+    </div>
+<% end %>
+<% if flash[:pape_results] %>
+    <div class='alert'>
+      <%= flash[:pape_results] %>
+    </div>
+<% end %>

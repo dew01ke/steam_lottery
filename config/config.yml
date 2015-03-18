@@ -9,5 +9,11 @@ development:
   steam_auth_url: "https://steamcommunity.com/login/dologin/"
   steam_trade_url: "https://steamcommunity.com/tradeoffer/new/send"
 
+  #Работа с openid
+  steam_openid: "http://steamcommunity.com/openid"
+
+  #Ключи
+  api_key: "40203AB5100825DF97F990FCE10E7916"
+
 production:
 test:

@@ -1,13 +1,15 @@
-<% content_for :user_block do %>
-    <div id="user">
-      <img id="avatar" class="left" src="<%= @user_avatarurl %>">
-      <div id="balance" class="right">
-        <div class="stats left">
-          <div class="username"><%= @user_avatarurl %></div>
-          <div class="value"><%= @user_coincount %></div>
-          <div class="currency">габенов</div>
+<% if session[:is_logged] != nil %>
+    <% content_for :user_block do %>
+        <div id="user">
+          <img id="avatar" class="left" src="<%= @user_avatarurl %>">
+          <div id="balance" class="right">
+            <div class="stats left">
+              <div class="username"><%= @user_steamlogin %></div>
+              <div class="value"><%= @user_coincount %></div>
+              <div class="currency">габенов</div>
+            </div>
+            <div class="buy right">+</div>
+          </div>
         </div>
-        <div class="buy right">+</div>
-      </div>
-    </div>
+    <% end %>
 <% end %>

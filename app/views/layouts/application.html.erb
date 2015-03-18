@@ -11,7 +11,11 @@
 <div id="header">
   <div id="wrapper">
     <div id="logo" class="left"><%= APP_CONFIG['lottery_title'] %></div>
-    <div id="auth_button" class="right"></div>
+    <% if session[:is_logged] != nil %>
+        <a href="<%= url_for :action => 'logout', :controller => 'auth' %>"><div id="logout_button" class="right"></div></a>
+    <% else %>
+        <a href="<%= url_for :action => 'start', :controller => 'openid' %>"><div id="auth_button" class="right"></div></a>
+    <% end %>
   </div>
 </div>
 

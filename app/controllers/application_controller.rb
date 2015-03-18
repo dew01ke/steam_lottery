@@ -5,13 +5,10 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   def index
-    puts "Application started"
-
-    $http = NetController.new
-    $papi = PapiController.new
-
-    @user_steamlogin = "dew01ke"
-    @user_avatarurl = "/dsd"
-    @user_coincount = "1488"
+    if session[:is_logged] != nil
+      @user_steamlogin = session[:steam_login]
+      @user_avatarurl = session[:avatar_url]
+      @user_coincount = "0"
+    end
   end
 end

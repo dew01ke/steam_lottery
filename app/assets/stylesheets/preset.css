@@ -24,6 +24,14 @@ a {
     background: url(./preset/auth_button.png);
     cursor: pointer;
 }
+#logout_button {
+    padding: 0;
+    margin: 8px 0;
+    width: 46px;
+    height: 43px;
+    background: url(./preset/logout_button.png);
+    cursor: pointer;
+}
 #logo {
     line-height: 60px;
     color: #d25a3e;

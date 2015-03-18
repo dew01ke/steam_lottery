@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
 
+  get 'openid/index'
+  get 'openid/start'
+  get 'openid/complete'
+  get 'auth/logout'
+
   post 'auth' => 'auth#resend'
   
   get 'id64/:api_key/:steamlogin' => 'papi#id64'

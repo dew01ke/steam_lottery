@@ -7,7 +7,7 @@ gem 'mail'
 gem 'faraday'
 gem 'faraday_middleware'
 gem 'addressable'
-# Use sqlite3 as the database for Active Record
+gem 'ruby-openid'
 gem 'mysql2'
 # Use SCSS for stylesheets
 # gem 'sass-rails', '~> 4.0.3'

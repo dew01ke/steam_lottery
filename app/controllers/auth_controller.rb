@@ -36,6 +36,11 @@ class AuthController < ApplicationController
     $http.httpRequest("POST", APP_CONFIG['steam_trade_url'], body)
   end
 
+  def logout
+    reset_session
+    redirect_to :action => 'index', :controller => 'application'
+  end
+
   #######
   #Авторизация на портале steamcommunity.com, возвращается 3 токена
   #######
