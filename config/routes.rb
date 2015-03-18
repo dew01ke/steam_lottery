@@ -5,7 +5,9 @@ Rails.application.routes.draw do
   get 'openid/complete'
   get 'auth/logout'
 
-  post 'auth' => 'auth#resend'
+    post 'auth' => 'auth#resend'
+
+  #testing routes below
   
   get 'id64/:api_key/:steamlogin' => 'papi#id64'
 
@@ -20,6 +22,8 @@ Rails.application.routes.draw do
   get 'pricebyhash/:appid/:market_hash_name' => 'papi#pricebyhash'
 
   get 'asset/:api_key/:appid' => 'papi#asset'
+
+  get 'raffle/testgen/:cost' => 'raffle#testgen'
 
   root :to => 'application#index'
   # The priority is based upon order of creation: first created -> highest priority.
