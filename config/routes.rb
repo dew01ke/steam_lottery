@@ -23,7 +23,8 @@ Rails.application.routes.draw do
 
   get 'asset/:api_key/:appid' => 'papi#asset'
 
-  get 'raffle/testgen/:cost' => 'raffle#testgen'
+  get 'lot/testgen/:cost' => 'lot#testgen'
+  get 'lot/testgrid'
 
   root :to => 'application#index'
   # The priority is based upon order of creation: first created -> highest priority.

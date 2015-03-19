@@ -1,12 +1,16 @@
-class RaffleController < ApplicationController
+class LotController < ApplicationController
 
   def testgen
     @itemprice=params[:cost].to_i
-    @a=generateRaffle(params[:cost])
+    @a=generateLot(params[:cost])
+  end
+
+  def testgrid
+
   end
 
   #функция генерации новой раздачи
-  def generateRaffle(itemprice)
+  def generateLot(itemprice)
     itemprice=itemprice.to_i
     #выберем шмотки в интервале 0.9*цена - 1.1*цена, отсортируем по увеличению расхождения с ценой
     price_bounds =0.9*itemprice..1.1*itemprice
@@ -40,8 +44,13 @@ class RaffleController < ApplicationController
     total_price = slot_cost * cur_slots
     puts "Total item price:" + total_price.to_s
 
-    result = {'item' => a, 'slots' => cur_slots, 'slot_price' => slot_cost, 'min_slots' => min_slots*8, 'max_slots' => max_slots*8}
+    result = {'item' => a, 'slots' => cur_slots, 'slot_price' => slot_cost}
     return result
+  end
+
+  def setLot(lotid, data)
+    $LotGrid[lotid]['data'] = data
+    $LotGrid[lotid]['slots']=Array.new(data['slots'],0)
   end
 
 end
