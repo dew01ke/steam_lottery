@@ -2,9 +2,9 @@
 
   <tr><td>Item steam id:<%=@a['item']['item_steam_id']%></td></tr>
   <tr><td>Item price id:<%=@a['item']['price_id']%></td></tr>
-  <tr><td>Item cost:<%=@a['item'].price['item_cost']%></td></tr>
-  <tr><td>Difference with requested cost:<%=@itemprice-@a['item'].price['item_cost']%></td></tr>
-  <tr><td>Item cost x1.4:<%=(@a['item'].price['item_cost']*1.4).ceil%></td></tr>
+  <tr><td>Item cost:<%=@a['item']['price_id']%></td></tr>
+  <tr><td>Difference with requested cost:<%=@itemprice-@a['item']['price_id']%></td></tr>
+  <tr><td>Item cost x1.4:<%=(@a['item']['price_id']*1.4).ceil%></td></tr>
   <tr><td>Generated slots:<%=@a['slots'] %></td></tr>
   <tr><td>Slot price:<%=@a['slot_price'] %></td></tr>
   <tr><td>Total:<%=@a['slots']*@a['slot_price'] %></td></tr>

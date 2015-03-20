@@ -1,6 +1,26 @@
-<font color="#f0ffff"><table>
-  <%$LotGrid.each do |t|%>
-      <tr><td><%= t['minprice']%></td>
-      <td><%= t['maxprice']%></td></tr>
+<font color="#f0ffff">
+  <%$LotGrid.each.with_index do |t, lotid|%>
+      <table>
+      <tr>
+        <td><%= t['data']['slots']%></td>
+        <td><%= t['data']['slot_price']%></td>
+        <td><%= t['data']['item']['item_steam_id']%></td>
+      </tr>
+      </table>
+      <table>
+      <tr>
+        <% if (t['slot_info'].empty? == false) %>
+            <% t['slot_info'].each.with_index do |p, slotid| %>
+                <% if (((slotid ) % 8) == 0) %>
+                    </tr><tr>
+                <% end %>
+                <% if (p == 0) %>
+                    <td><a href="/gateway/testbuy/<%=lotid%>/<%=slotid%>"><%=(slotid+1)%></a></td>
+                <% else %>
+                    <td><font color="red"><%=p%></font></td>
+                <% end %>
+            <% end %>
+        <% end %>
+      </tr></table>
   <% end %>
-</table></font>
+</font>

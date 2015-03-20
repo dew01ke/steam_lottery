@@ -1,12 +1,6 @@
 class LotController < ApplicationController
 
-  def testgen
-    @itemprice=params[:cost].to_i
-    @a=generateLot(params[:cost])
-  end
-
   def testgrid
-
   end
 
   #функция генерации новой раздачи
@@ -44,13 +38,58 @@ class LotController < ApplicationController
     total_price = slot_cost * cur_slots
     puts "Total item price:" + total_price.to_s
 
-    result = {'item' => a, 'slots' => cur_slots, 'slot_price' => slot_cost}
+    item = {'item_steam_id' => a['item_steam_id'], 'price_id' => a['price_id'], 'deposited_by' => a['deposited_by'], 'created_at' => a['created_at'], 'bot_id' => a['bot_id']}
+    a.destroy
+
+    result = {'item' => item, 'slots' => cur_slots, 'slot_price' => slot_cost}
     return result
   end
 
-  def setLot(lotid, data)
+  def setLotInGrid(lotid, data)
+    lotid=lotid.to_i
     $LotGrid[lotid]['data'] = data
-    $LotGrid[lotid]['slots']=Array.new(data['slots'],0)
+    $LotGrid[lotid]['slot_info'] = Array.new(data['slots'],0)
+    $LotGrid[lotid]['vacant'] = 0
   end
 
+  def finalizeLot(lotid)
+    #get winner
+    winner = rand($LotGrid[lotid]['data']['slots'].to_i)
+    puts "Winner at lot " + lotid.to_s + " is " + winner.to_s + " with steamid " + $LotGrid[lotid]['slot_info'][winner]
+
+    #award winner
+    a=PendingItem.new
+    a['item_steam_id'] = $LotGrid[lotid]['data']['item']['item_steam_id']
+    a['price_id'] = $LotGrid[lotid]['data']['item']['price_id']
+    a['bot_id'] = $LotGrid[lotid]['data']['item']['bot_id']
+    a['user_id'] = $LotGrid[lotid]['slot_info'][winner]
+    a.save
+    puts a['item_steam_id'].to_s + "  " + a['price_id'].to_s + "  " + a['bot_id'].to_s + "  " + a['user_id'].to_s
+
+    #generate new raffle
+    #push to queue
+    setLotInQueue(lotid,generateLot(rand($LotGrid[lotid]['maxprice']-$LotGrid[lotid]['minprice']+1)+$LotGrid[lotid]['minprice']))
+  end
+
+  def setLotInQueue(lotid, data)
+    a = {'lotid' => lotid, 'data' => data}
+    $LotQueue.push(a)
+    puts "Lot number " + lotid.to_s + " is prepared in queue"
+    $LotQueueCounter = $LotQueueCounter + 1
+    puts $LotQueueCounter.to_s + " lots in queue"
+    if ($LotQueueCounter > 1)
+      puts "Critical mass reached, pushing"
+      pushQueue()
+    end
+  end
+
+  def pushQueue
+
+    $LotQueue.each do |t|
+      setLotInGrid(t['lotid'],t['data'])
+      puts "Pushing in slot " + t['lotid'].to_s
+    end
+    $LotQueue = []
+    $LotQueueCounter = 0
+  end
 end
