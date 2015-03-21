@@ -21,7 +21,7 @@ class OpenidController < ApplicationController
       user = User.new do |u|
         u.steam64 = id
         u.exp = 0
-        u.points = 0
+        u.points = 10000
         u.banned = 0
       end
       user.save
@@ -31,6 +31,7 @@ class OpenidController < ApplicationController
     session[:is_logged] = true
     session[:avatar_url] = user_info[0]['avatarfull']
     session[:steam_login] = user_info[0]['personaname']
+    session[:coin_count] = (User.find_by steam64: id).points
     session[:steam_id] = id
   end
 

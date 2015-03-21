@@ -44,6 +44,9 @@ class GatewayController < ApplicationController
     a[0].save
     puts "User points after:" + a[0]['points'].to_s
 
+    #Обновляем в сессии баланс
+    session[:coin_count] = a[0]['points']
+
     #увеличим счетчик купленных слотов
     $LotGrid[lotid]['vacant'] = $LotGrid[lotid]['vacant'] + 1
 
