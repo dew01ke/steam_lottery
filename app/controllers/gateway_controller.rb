@@ -41,7 +41,7 @@ class GatewayController < ApplicationController
       otherslots = t['vacant'] - myslots
       tmp.push({'display_name_rus' => t['data']['item']['display_name_rus'], 'display_name_eng' => t['data']['item']['display_name_eng'], 'quality_rus' => t['data']['item']['quality_rus'], 'quality_eng' => t['data']['item']['quality_eng'], 'total_slots' => t['data']['slots'], 'myslots' => myslots, 'otherslots' => otherslots})
     end
-    return tmp
+    return JSON.generate(tmp)
   end
 
   def buySlot(lotid, slotid)
