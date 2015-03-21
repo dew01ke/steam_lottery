@@ -26,6 +26,7 @@ Rails.application.routes.draw do
   get 'lot/testgen/:cost' => 'lot#testgen'
   get 'lot/testgrid'
   get 'gateway/testbuy/:lotid/:slotid' => 'gateway#testbuy'
+  get 'gateway/testgateway/:lotid' => 'gateway#testgateway'
 
   root :to => 'application#index'
   # The priority is based upon order of creation: first created -> highest priority.

@@ -4,6 +4,9 @@ $http = NetController.new
 $papi = PapiController.new
 $lot = LotController.new
 
+$qualities_rus = {'570' => ["Частое", "Нечастое", "Редкое", "Мифическое", "Легендарное", "Древнее", "Чрезвычайно редкое"], "730" => ["Потребительская серия", "Промышленная серия", "Военная серия", "Ограниченная серия", "Засекреченная серия", "Тайная серия", "Нож"]}
+$qualities_eng = {'570' => ["Common", "Uncommon", "Rare", "Mythical", "Legendary", "Immortal", "Arcana"], '730' => ["Consumer grade", "Industrial grade", "Mil-spec", "Restricted", "Classified", "Covert", "Melee Weapon"]}
+
 #init lot grid
 $LotGrid = []
 $LotGrid.push({'minprice' => 10, 'maxprice' => 25, 'data' => {}, 'slot_info' => []})

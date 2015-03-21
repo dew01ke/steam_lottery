@@ -25,11 +25,11 @@ class LotController < ApplicationController
 
     item_price = (1.4*a.price['item_cost']).ceil
     puts "Item price*1.4:" + item_price.to_s
-    min_slots = [((Math.sqrt(itemprice)-12)/8).ceil, 1].max
-    puts "Min slots:" + (min_slots*8).to_s
-    max_slots = [((1.3*Math.sqrt(itemprice+20)-2)/8).ceil,1].max
-    puts "Max slots:" + (max_slots*8).to_s
-    cur_slots = (rand(max_slots - min_slots+1)+min_slots)*8
+    min_slots = [((Math.sqrt(itemprice)-12)/12).ceil, 1].max
+    puts "Min slots:" + (min_slots*12).to_s
+    max_slots = [((1.3*Math.sqrt(itemprice+20)-2)/12).ceil,1].max
+    puts "Max slots:" + (max_slots*12).to_s
+    cur_slots = (rand(max_slots - min_slots+1)+min_slots)*12
     puts "Current slots:" + cur_slots.to_s
 
     slot_cost = (item_price/cur_slots.to_f).ceil
@@ -38,7 +38,8 @@ class LotController < ApplicationController
     total_price = slot_cost * cur_slots
     puts "Total item price:" + total_price.to_s
 
-    item = {'item_steam_id' => a['item_steam_id'], 'price_id' => a['price_id'], 'deposited_by' => a['deposited_by'], 'created_at' => a['created_at'], 'bot_id' => a['bot_id']}
+    item = {'item_steam_id' => a['item_steam_id'], 'price_id' => a['price_id'], 'bot_id' => a['bot_id'], 'display_name_rus' => a.price['display_name_rus'], 'display_name_eng' => a.price['display_name_eng'], 'quality_rus' => $qualities_rus[a.price['appid'].to_s][a.price['quality'].to_i - 1], 'quality_eng' => $qualities_eng[a.price['appid'].to_s][a.price['quality'].to_i - 1]}
+    puts item['item_steam_id']
     a.destroy
 
     result = {'item' => item, 'slots' => cur_slots, 'slot_price' => slot_cost}
@@ -92,4 +93,5 @@ class LotController < ApplicationController
     $LotQueue = []
     $LotQueueCounter = 0
   end
+
 end
