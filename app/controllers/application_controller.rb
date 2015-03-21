@@ -5,10 +5,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   def index
-    if session[:is_logged] != nil
-      @user_steamlogin = session[:steam_login]
-      @user_avatarurl = session[:avatar_url]
-      @user_coincount = "0"
-    end
+    #что-то
   end
 end

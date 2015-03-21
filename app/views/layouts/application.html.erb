@@ -24,7 +24,19 @@
     <%= yield %>
   </div>
   <div id="sidebar" class="right">
-    <%= yield :user_block %>
+    <% if session[:is_logged] != nil %>
+        <div id="user">
+          <img id="avatar" class="left" src="<%= session[:avatar_url] %>">
+          <div id="balance" class="right">
+            <div class="stats left">
+              <div class="username"><%= session[:steam_login] %></div>
+              <div class="value"><%= session[:coin_count] %></div>
+              <div class="currency">габенов</div>
+            </div>
+            <div class="buy right">+</div>
+          </div>
+        </div>
+    <% end %>
   </div>
 </div>
 
