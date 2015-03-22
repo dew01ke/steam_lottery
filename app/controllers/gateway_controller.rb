@@ -19,7 +19,7 @@ class GatewayController < ApplicationController
   def getEnding
     percentage=Array.new($LotGrid.size,0)
     $LotGrid.each.with_index do |t,lotid|
-      percentage[lotid] = t['vacant']/ t['data']['slots']
+      percentage[lotid] = t['vacant']/ t['data']['slots'].to_f
     end
     lot1=percentage.index(percentage.max)
     percentage[lot1]=-1
