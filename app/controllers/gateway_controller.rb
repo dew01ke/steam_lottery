@@ -1,40 +1,27 @@
 class GatewayController < ApplicationController
 
+  #Запрещаем вывод в лайоут
+  layout false
+
   def testbuy
     puts buySlot(params[:lotid],params[:slotid])
     redirect_to '/lot/testgrid'
   end
 
   def buyslot
-    respond_to do |format|
-      format.json{
-        @a=buySlot(params[:lotid],params[:slotid]).to_s.html_safe
-      }
-    end
+    @a=buySlot(params[:lotid], params[:slotid]).to_s
   end
 
   def getgrid
-    respond_to do |format|
-      format.json{
-        @a=getGrid.to_s.html_safe
-      }
-    end
+    @a=getGrid.to_s
   end
 
   def getslots
-    respond_to do |format|
-      format.json{
-        @a=getSlots(params[:lotid]).to_s.html_safe
-      }
-    end
+    @a=getSlots(params[:lotid]).to_s
   end
 
   def getending
-    respond_to do |format|
-      format.json{
-        @a=getEnding.to_s.html_safe
-      }
-    end
+    @a=getEnding.to_s
   end
 
   def testgateway

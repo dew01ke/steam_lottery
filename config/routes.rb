@@ -1,12 +1,13 @@
 Rails.application.routes.draw do
 
+  #Авторизация и все действия с ней
   get 'openid/index'
   get 'openid/start'
   get 'openid/complete'
   get 'auth/logout'
+  post 'auth' => 'auth#resend'
 
-    post 'auth' => 'auth#resend'
-
+  #Приватный Апи - гейтвей
   get 'gateway/getgrid'
   get 'gateway/getslots/:lotid' => 'gateway#getslots'
   get 'gateway/getending'
