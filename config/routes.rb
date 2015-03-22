@@ -7,6 +7,11 @@ Rails.application.routes.draw do
 
     post 'auth' => 'auth#resend'
 
+  get 'gateway/getgrid'
+  get 'gateway/getslots/:lotid' => 'gateway#getslots'
+  get 'gateway/getending'
+  get 'gateway/buyslot/:lotid/:slotid' => 'gateway#buyslot'
+
   #testing routes below
   
   get 'id64/:api_key/:steamlogin' => 'papi#id64'
@@ -27,6 +32,7 @@ Rails.application.routes.draw do
   get 'lot/testgrid'
   get 'gateway/testbuy/:lotid/:slotid' => 'gateway#testbuy'
   get 'gateway/testgateway/:lotid' => 'gateway#testgateway'
+
 
   root :to => 'application#index'
   # The priority is based upon order of creation: first created -> highest priority.

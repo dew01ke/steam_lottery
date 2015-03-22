@@ -5,6 +5,38 @@ class GatewayController < ApplicationController
     redirect_to '/lot/testgrid'
   end
 
+  def buyslot
+    respond_to do |format|
+      format.json{
+        @a=buySlot(params[:lotid],params[:slotid]).to_s.html_safe
+      }
+    end
+  end
+
+  def getgrid
+    respond_to do |format|
+      format.json{
+        @a=getGrid.to_s.html_safe
+      }
+    end
+  end
+
+  def getslots
+    respond_to do |format|
+      format.json{
+        @a=getSlots(params[:lotid]).to_s.html_safe
+      }
+    end
+  end
+
+  def getending
+    respond_to do |format|
+      format.json{
+        @a=getEnding.to_s.html_safe
+      }
+    end
+  end
+
   def testgateway
     @a = getSlots(params[:lotid])
     @b = getEnding
@@ -47,11 +79,16 @@ class GatewayController < ApplicationController
     return JSON.generate(tmp)
   end
 
-  def buySlot(lotid, slotid)
+  def buySlot(referenceid, slotid)
     if (session['steam_id'].nil?)
       return {'success' => false, 'message' => "Not logged in"}
     end
-    lotid=lotid.to_i
+    referenceid=referenceid.to_i
+    if ($LotID.count{|x| x == referenceid} == 0)
+      return {'success' => false, 'message' => "Trying to access finished lot"}
+    end
+
+    lotid=$LotID.index(referenceid)
     slotid=slotid.to_i
 
     #смотрим, не заняли ли слот чуть раньше
