@@ -39,21 +39,21 @@ class GatewayController < ApplicationController
         myslots = 0
       end
       otherslots = t['vacant'] - myslots
-      tmp.push({'display_name_rus' => t['data']['item']['display_name_rus'], 'display_name_eng' => t['data']['item']['display_name_eng'], 'quality_rus' => t['data']['item']['quality_rus'], 'quality_eng' => t['data']['item']['quality_eng'], 'total_slots' => t['data']['slots'], 'myslots' => myslots, 'otherslots' => otherslots})
+      tmp.push({'display_name_rus' => t['data']['item']['display_name_rus'], 'display_name_eng' => t['data']['item']['display_name_eng'], 'quality_rus' => t['data']['item']['quality_rus'], 'quality_eng' => t['data']['item']['quality_eng'], 'total_slots' => t['data']['slots'], 'myslots' => myslots, 'otherslots' => otherslots, 'quality_color' => t['data']['item']['quality_color']})
     end
     return JSON.generate(tmp)
   end
 
   def buySlot(lotid, slotid)
     if (session['steam_id'].nil?)
-      return "Not logged in"
+      return {'success' => false, 'message' => "Not logged in"}
     end
     lotid=lotid.to_i
     slotid=slotid.to_i
 
     #смотрим, не заняли ли слот чуть раньше
     if ($LotGrid[lotid]['slot_info'][slotid] != 0)
-      return "Slot occupied"
+      return {'success' => false, 'message' => "Slot occupied"}
     end
 
     #займем слот на время проверок
@@ -66,14 +66,14 @@ class GatewayController < ApplicationController
     if (a.size == 0)
       puts "ШТА?!"
       $LotGrid[lotid]['slot_info'][slotid] = 0
-      return "No such user"
+      return {'success' => false, 'message' => "No such user"}
     end
 
     puts "User points before:" + a[0]['points'].to_s
     if (a[0]['points'].to_i < $LotGrid[lotid]['data']['slot_price'].to_i)
       $LotGrid[lotid]['slot_info'][slotid] = 0
       puts "Bomzh detected"
-      return -2
+      return {'success' => false, 'message' => "Not enough points"}
     end
 
     #забираем деньги (самая приятная часть!)
@@ -94,6 +94,7 @@ class GatewayController < ApplicationController
       $lot.finalizeLot(lotid)
     end
     puts "Success"
+    return {'success' => true, 'message' =>""}
   end
 
 end

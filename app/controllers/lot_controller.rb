@@ -38,7 +38,7 @@ class LotController < ApplicationController
     total_price = slot_cost * cur_slots
     puts "Total item price:" + total_price.to_s
 
-    item = {'item_steam_id' => a['item_steam_id'], 'price_id' => a['price_id'], 'bot_id' => a['bot_id'], 'display_name_rus' => a.price['display_name_rus'], 'display_name_eng' => a.price['display_name_eng'], 'quality_rus' => $qualities_rus[a.price['appid'].to_s][a.price['quality'].to_i - 1], 'quality_eng' => $qualities_eng[a.price['appid'].to_s][a.price['quality'].to_i - 1]}
+    item = {'item_steam_id' => a['item_steam_id'], 'price_id' => a['price_id'], 'bot_id' => a['bot_id'], 'display_name_rus' => a.price['display_name_rus'], 'display_name_eng' => a.price['display_name_eng'], 'quality_rus' => $qualities_rus[a.price['appid'].to_s][a.price['quality'].to_i - 1], 'quality_eng' => $qualities_eng[a.price['appid'].to_s][a.price['quality'].to_i - 1], 'quality_color' => $quality_color[a.price['appid'].to_s][a.price['quality'].to_i - 1]}
     puts item['item_steam_id']
     a.destroy
 

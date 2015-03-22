@@ -5,7 +5,8 @@ $papi = PapiController.new
 $lot = LotController.new
 
 $qualities_rus = {'570' => ["Частое", "Нечастое", "Редкое", "Мифическое", "Легендарное", "Древнее", "Чрезвычайно редкое"], "730" => ["Потребительская серия", "Промышленная серия", "Военная серия", "Ограниченная серия", "Засекреченная серия", "Тайная серия", "Нож"]}
-$qualities_eng = {'570' => ["Common", "Uncommon", "Rare", "Mythical", "Legendary", "Immortal", "Arcana"], '730' => ["Consumer grade", "Industrial grade", "Mil-spec", "Restricted", "Classified", "Covert", "Melee Weapon"]}
+$qualities_eng = {'570' => ["Common", "Uncommon", "Rare", "Mythical", "Legendary", "Ancient", "Arcana"], '730' => ["Consumer grade", "Industrial grade", "Mil-spec", "Restricted", "Classified", "Covert", "Melee Weapon"]}
+$quality_color = {'570' => ["common", "uncommon", "rare", "mythical", "legendary", "ancient", "arcana"], '730' => ["common", "uncommon", "rare", "mythical", "legendary", "ancient", "immortal"]}
 
 #init lot grid
 $LotGrid = []
