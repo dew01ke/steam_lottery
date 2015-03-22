@@ -269,7 +269,18 @@ li.chance {
     float: right;
 }
 
-/** DOTA 2 QUALITY **/
+/** QUALITY COLOR FOR TEXT **/
+
+.common_color { color: rgb(176, 195, 217); }
+.uncommon_color { color: rgb(94, 152, 217);}
+.rare_color { color: rgb(75, 105, 255); }
+.mythical_color { color: rgb(136, 71, 255); }
+.legendary_color { color: rgb(211, 44, 230); }
+.ancient_color { color: rgb(235, 75, 75); }
+.immortal_color { color: rgb(228, 174, 51); }
+.arcana_color { color: rgb(173, 229, 92); }
+
+/** QUALITY COLOR FOR BACKGROUND MAIN PAGE **/
 
 .common {
     border-top-color: rgb(176, 195, 217); background-image: linear-gradient(rgb(176, 195, 217), rgb(38, 42, 45)), linear-gradient(rgb(176, 195, 217), rgb(38, 42, 45));
@@ -294,36 +305,6 @@ li.chance {
 }
 .arcana {
     border-top-color: rgb(173, 229, 92); background-image: linear-gradient(rgb(173, 229, 92), rgb(38, 42, 45)), linear-gradient(rgb(173, 229, 92), rgb(38, 42, 45));
-}
-
-/** CS:GO QUALITY **/
-
-.stattrack {
-    color: #CF6A32
-}
-.consumer {
-    border-top-color: rgb(176, 195, 217); background-image: linear-gradient(rgb(176, 195, 217), rgb(38, 42, 45)), linear-gradient(rgb(176, 195, 217), rgb(38, 42, 45));
-}
-.industrial {
-    border-top-color: rgb(94, 152, 217); background-image: linear-gradient(rgb(94, 152, 217), rgb(38, 42, 45)), linear-gradient(rgb(94, 152, 217), rgb(38, 42, 45));
-}
-.mil-spec {
-    border-top-color: rgb(75, 105, 255); background-image: linear-gradient(rgb(75, 105, 255), rgb(38, 42, 45)), linear-gradient(rgb(75, 105, 255), rgb(38, 42, 45));
-}
-.restricted {
-    border-top-color: rgb(136, 71, 255); background-image: linear-gradient(rgb(136, 71, 255), rgb(38, 42, 45)), linear-gradient(rgb(136, 71, 255), rgb(38, 42, 45));
-}
-.classified {
-    border-top-color: rgb(211, 44, 230); background-image: linear-gradient(rgb(211, 44, 230), rgb(38, 42, 45)), linear-gradient(rgb(211, 44, 230), rgb(38, 42, 45));
-}
-.covert {
-    border-top-color: rgb(235, 75, 75); background-image: linear-gradient(rgb(235, 75, 75), rgb(38, 42, 45)), linear-gradient(rgb(235, 75, 75), rgb(38, 42, 45));
-}
-.knife {
-    border-top-color: rgb(134, 80, 172); background-image: linear-gradient(rgb(134, 80, 172), rgb(38, 42, 45)), linear-gradient(rgb(134, 80, 172), rgb(38, 42, 45));
-}
-.contraband {
-    border-top-color: rgb(228, 174, 57); background-image: linear-gradient(rgb(228, 174, 57), rgb(38, 42, 45)), linear-gradient(rgb(228, 174, 57), rgb(38, 42, 45));
 }
 
 .accept, .accept:link, .accept:visited {
