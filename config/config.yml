@@ -2,7 +2,7 @@ development:
   test_string: "it's test string, check it"
 
   #Общие настройки
-  lottery_title: "Стандартный заголовок из конфига"
+  lottery_title: "девол_Стандартный заголовок из конфига"
 
   #Работа со steamcommunity
   steam_rsa_url: "https://steamcommunity.com/login/getrsakey/"
@@ -16,4 +16,19 @@ development:
   api_key: "40203AB5100825DF97F990FCE10E7916"
 
 production:
+  test_string: "it's test string, check it"
+
+  #Общие настройки
+  lottery_title: "прод_Стандартный заголовок из конфига"
+
+  #Работа со steamcommunity
+  steam_rsa_url: "https://steamcommunity.com/login/getrsakey/"
+  steam_auth_url: "https://steamcommunity.com/login/dologin/"
+  steam_trade_url: "https://steamcommunity.com/tradeoffer/new/send"
+
+  #Работа с openid
+  steam_openid: "http://steamcommunity.com/openid"
+
+  #Ключи
+  api_key: "40203AB5100825DF97F990FCE10E7916"
 test:
