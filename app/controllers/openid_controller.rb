@@ -1,5 +1,5 @@
 class OpenidController < ApplicationController
-  require "openid"
+  require 'openid'
   require 'openid/extensions/sreg'
   require 'openid/extensions/pape'
   require 'openid/store/filesystem'
@@ -25,11 +25,17 @@ class OpenidController < ApplicationController
         u.banned = 0
       end
       user.save
+
+      #Файл, в котором хранится аватарка
+      path_to_avatar = File.join(File.dirname(File.expand_path("../", __FILE__)), 'assets', 'images', 'avatars', id + ".jpg")
+      #Загружаем аватарку в память
+      resource_avatar = $http.httpRequest("GET", user_info[0]['avatarfull'])
+      #Сохраняем на диск
+      File.open(path_to_avatar, 'wb') { |fp| fp.write(resource_avatar) }
     end
 
     #Устанавливаем сессию
     session[:is_logged] = true
-    session[:avatar_url] = user_info[0]['avatarfull']
     session[:steam_login] = user_info[0]['personaname']
     session[:coin_count] = (User.find_by steam64: id).points
     session[:steam_id] = id

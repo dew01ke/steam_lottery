@@ -26,7 +26,7 @@
   <div id="sidebar" class="right">
     <% if session[:is_logged] != nil %>
         <div id="user">
-          <img id="avatar" class="left" src="<%= session[:avatar_url] %>">
+          <img id="avatar" class="left" src="<%= image_path("avatars/"+ session[:steam_id] + ".jpg") %>">
           <div id="balance" class="right">
             <div class="stats left">
               <div class="username"><%= session[:steam_login] %></div>
