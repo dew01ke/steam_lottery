@@ -26,7 +26,10 @@ class GatewayController < ApplicationController
     lot2=percentage.index(percentage.max)
     percentage[lot2]=-1
     lot3=percentage.index(percentage.max)
-    tmp=[{'lot' => $LotGrid[lot1]['data'], 'lotid' => lot1},{'lot' => $LotGrid[lot2]['data'], 'lotid' => lot2},{'lot' => $LotGrid[lot3]['data'], 'lotid' => lot3}]
+    tmp=[]
+    tmp.push({'reference_id' => $LotID[lot1], 'display_name_rus' => $LotGrid[lot1]['data']['item']['display_name_rus'], 'display_name_eng' => $LotGrid[lot1]['data']['item']['display_name_eng'], 'quality_rus' => $LotGrid[lot1]['data']['item']['quality_rus'], 'quality_eng' => $LotGrid[lot1]['data']['item']['quality_eng'], 'total_slots' => $LotGrid[lot1]['data']['slots'], 'quality_color' => $LotGrid[lot1]['data']['item']['quality_color']})
+    tmp.push({'reference_id' => $LotID[lot2], 'display_name_rus' => $LotGrid[lot2]['data']['item']['display_name_rus'], 'display_name_eng' => $LotGrid[lot2]['data']['item']['display_name_eng'], 'quality_rus' => $LotGrid[lot2]['data']['item']['quality_rus'], 'quality_eng' => $LotGrid[lot2]['data']['item']['quality_eng'], 'total_slots' => $LotGrid[lot2]['data']['slots'], 'quality_color' => $LotGrid[lot2]['data']['item']['quality_color']})
+    tmp.push({'reference_id' => $LotID[lot3], 'display_name_rus' => $LotGrid[lot3]['data']['item']['display_name_rus'], 'display_name_eng' => $LotGrid[lot3]['data']['item']['display_name_eng'], 'quality_rus' => $LotGrid[lot3]['data']['item']['quality_rus'], 'quality_eng' => $LotGrid[lot3]['data']['item']['quality_eng'], 'total_slots' => $LotGrid[lot3]['data']['slots'], 'quality_color' => $LotGrid[lot3]['data']['item']['quality_color']})
     return JSON.generate(tmp)
   end
 
@@ -39,7 +42,7 @@ class GatewayController < ApplicationController
         myslots = 0
       end
       otherslots = t['vacant'] - myslots
-      tmp.push({'display_name_rus' => t['data']['item']['display_name_rus'], 'display_name_eng' => t['data']['item']['display_name_eng'], 'quality_rus' => t['data']['item']['quality_rus'], 'quality_eng' => t['data']['item']['quality_eng'], 'total_slots' => t['data']['slots'], 'myslots' => myslots, 'otherslots' => otherslots, 'quality_color' => t['data']['item']['quality_color']})
+      tmp.push({'grid_id' => lotid, 'reference_id' => $LotID[lotid], 'display_name_rus' => t['data']['item']['display_name_rus'], 'display_name_eng' => t['data']['item']['display_name_eng'], 'quality_rus' => t['data']['item']['quality_rus'], 'quality_eng' => t['data']['item']['quality_eng'], 'total_slots' => t['data']['slots'], 'myslots' => myslots, 'otherslots' => otherslots, 'quality_color' => t['data']['item']['quality_color']})
     end
     return JSON.generate(tmp)
   end

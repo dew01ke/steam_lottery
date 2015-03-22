@@ -51,6 +51,9 @@ class LotController < ApplicationController
     $LotGrid[lotid]['data'] = data
     $LotGrid[lotid]['slot_info'] = Array.new(data['slots'],0)
     $LotGrid[lotid]['vacant'] = 0
+    $LotOffset = $LotOffset + 1
+    $LotID[lotid] = $LotOffset
+    puts "Lot " + lotid.to_s + " received offset " + $LotID[lotid].to_s
   end
 
   def finalizeLot(lotid)
@@ -66,6 +69,18 @@ class LotController < ApplicationController
     a['user_id'] = $LotGrid[lotid]['slot_info'][winner]
     a.save
     puts a['item_steam_id'].to_s + "  " + a['price_id'].to_s + "  " + a['bot_id'].to_s + "  " + a['user_id'].to_s
+
+    #save raffle info
+    b=ShortFinishedRaffle.new
+    b['item_steam_id'] = $LotGrid[lotid]['data']['item']['item_steam_id']
+    b['winner_id'] = $LotGrid[lotid]['slot_info'][winner]
+    b['slot_info'] = JSON.generate($LotGrid[lotid]['slot_info'])
+    b['item_name_rus'] = $LotGrid[lotid]['data']['item']['display_name_rus']
+    b['item_name_eng'] = $LotGrid[lotid]['data']['item']['display_name_eng']
+    b['quality'] = $LotGrid[lotid]['data']['item']['quality_color']
+    b['slots'] = $LotGrid[lotid]['data']['slots']
+    b['slot_price'] = $LotGrid[lotid]['data']['slot_price']
+    b.save
 
     #generate new raffle
     #push to queue
