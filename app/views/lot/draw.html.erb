@@ -28,52 +28,64 @@
 </table>
 
 <% content_for :js do %>
-    <script type="text/javascript">
-        var gid = <%= @this_gid %>;
+<script type="text/javascript">
+    var gid = <%= @this_gid %>;
+    <% if session[:is_logged] %>
+    var sid = <%= session[:steam_id] %>;
+    <% else %>
+    var sid = 0;
+    <% end %>
+
+    $(document).ready(function() {
         <% if session[:is_logged] %>
-        var sid = <%= session[:steam_id] %>;
-        <% else %>
-        var sid = 0;
-        <% end %>
+            $("td#buy").click(function(){
+                var pid = $(this).data("id");
 
-        $(document).ready(function() {
-            <% if session[:is_logged] %>
-                $("td#buy").click(function(){
-                    var pid = $(this).data("id");
+                $(this).addClass('loading');
 
-                    $(this).css('background', "url(/assets/lot/loader.gif) #16191b no-repeat center center");
-
-                    $.getJSON('/gateway/buyslot/' + gid + "/" + pid, function(response) {
-                        if (response['success'] == true) {
-                            $(this).html("");
-                            $(this).removeAttr('id');
-                            $(this).css('background', "url(/assets/avatars/" + sid + ".jpg) #16191b no-repeat center center");
-                            $(this).css('background-size', 'cover');
-                        } else {
-                            alert(response['message'])
-                        }
-                    });
-
-                    updateSlots();
+                $.getJSON('/gateway/buyslot/' + gid + "/" + pid, function(response) {
+                    if (response['success'] == true) {
+                        $(this).html("");
+                        $(this).removeAttr('id');
+                        $(this).css('background', "url(/assets/avatars/" + sid + ".jpg) #16191b no-repeat center center");
+                        $(this).css('background-size', 'cover');
+                    } else {
+                        alert(response['message']);
+                    }
                 });
-            <% end %>
-            updateSlots();
-        });
 
-        function updateSlots() {
-            $.getJSON('/gateway/getslots/' + gid, function(response) {
-                var json = JSON.parse(response);
-                $.each(json, function(i, j) {
-                    var slot = $('#places').find('td[data-id="' + i + '"]');
-                    if (j != "0") {
-                        $(slot).html("");
-                        $(slot).removeAttr('id');
-                        $(slot).css('background', "url(/assets/avatars/" + j + ".jpg) #16191b no-repeat center center");
-                        $(slot).css('background-size', 'cover');
-                    };
-                });
-                setTimeout("updateSlots()", 10000);
+                updateSlots();
             });
-        }
-    </script>
+        <% end %>
+        updateSlots();
+        updateEnding();
+    });
+
+    function updateSlots() {
+        $.getJSON('/gateway/getslots/' + gid, function(response) {
+            var json = JSON.parse(response);
+            $.each(json, function(i, j) {
+                var slot = $('#places').find('td[data-id="' + i + '"]');
+                if (j != "0") {
+                    $(slot).html("");
+                    $(slot).removeAttr('id');
+                    $(slot).css('background', "url(/assets/avatars/" + j + ".jpg) #16191b no-repeat center center");
+                    $(slot).css('background-size', 'cover');
+                };
+            });
+            setTimeout("updateSlots()", 10000);
+        });
+    }
+
+    function updateEnding() {
+        $.getJSON('/gateway/getending', function(response) {
+            var json = JSON.parse(response);
+            $("#ending").empty();
+            $.each(json, function(key, value){
+                $("#ending").append('<a href="/lot/'+value['global_id']+'"><li class="chance"><img class="left" src="<%= image_url('empty_small.jpg') %>" width="80"><div id="item-chance" class="right"><div id="name">'+value['display_name_rus']+'</div><div id="desc">'+value['quality_rus']+'</div></div></li></a>');
+            });
+            setTimeout("updateEnding()", 30000);
+        });
+    };
+</script>
 <% end %>

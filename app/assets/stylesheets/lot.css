@@ -80,3 +80,6 @@ td:hover {
     background-size: cover;
     cursor: pointer;
 }
+td:hover.loading, td.loading {
+    background: url(./lot/loader.gif) #16191b no-repeat center center;
+}
