@@ -30,28 +30,33 @@
 <% content_for :js do %>
     <script type="text/javascript">
         var gid = <%= @this_gid %>;
+        <% if session[:is_logged] %>
         var sid = <%= session[:steam_id] %>;
+        <% else %>
+        var sid = 0;
+        <% end %>
 
         $(document).ready(function() {
-            $("td#buy").click(function(){
-                var pid = $(this).data("id");
+            <% if session[:is_logged] %>
+                $("td#buy").click(function(){
+                    var pid = $(this).data("id");
 
-                $(this).css('background', "url(/assets/lot/loader.gif) #16191b no-repeat center center");
+                    $(this).css('background', "url(/assets/lot/loader.gif) #16191b no-repeat center center");
 
-                $.getJSON('/gateway/buyslot/' + gid + "/" + pid, function(response) {
-                    if (response['success'] == true) {
-                        $(this).html("");
-                        $(this).removeAttr('id');
-                        $(this).css('background', "url(/assets/avatars/" + sid + ".jpg) #16191b no-repeat center center");
-                        $(this).css('background-size', 'cover');
-                    } else {
-                        alert(response['message'])
-                    }
+                    $.getJSON('/gateway/buyslot/' + gid + "/" + pid, function(response) {
+                        if (response['success'] == true) {
+                            $(this).html("");
+                            $(this).removeAttr('id');
+                            $(this).css('background', "url(/assets/avatars/" + sid + ".jpg) #16191b no-repeat center center");
+                            $(this).css('background-size', 'cover');
+                        } else {
+                            alert(response['message'])
+                        }
+                    });
+
+                    updateSlots();
                 });
-
-                updateSlots();
-            });
-
+            <% end %>
             updateSlots();
         });
 
