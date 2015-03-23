@@ -1,186 +1,23 @@
 <div class="pool">
-  <div class="row">
-    <div class="item">
-      <div class="dota-marker">DOTA 2</div>
-      <a href="#"><img class="ancient" src="<%= image_url('empty.jpg') %>"></a>
-      <div class="slot-count">
-        <div class="filled" style="width: 0%;"></div>
-        <div class="owned" style="width: 0%;"></div>
-        <div class="free" style="width: 0%;"></div>
+  <% (0..$LotGrid.count-1).each do |i| %>
+      <% if i % 4 == 0 or i == 0 %>
+          <div class="row">
+      <% end %>
+
+      <div class="item">
+        <div class="dota-marker">DOTA 2</div>
+        <a href="#"><img class="<%= $LotGrid[i]['data']['item']['quality_color'].to_s %>" src="<%= image_url('empty.jpg') %>"></a>
+        <div class="slot-count">
+          <div class="filled" style="width: 0;"></div>
+          <div class="owned" style="width: 0;"></div>
+          <div class="free" style="width: 0;"></div>
+        </div>
+        <div class="title"><%= $LotGrid[i]['data']['item']['display_name_rus'].to_s %></div>
+        <div class="quality"><%= $LotGrid[i]['data']['item']['quality_rus'].to_s %></div>
       </div>
-      <div class="title">{title}</div>
-      <div class="quality">{title}</div>
-    </div>
-    <div class="item">
-      <div class="dota-marker">DOTA 2</div>
-      <a href="#"><img class="ancient" src="<%= image_url('empty.jpg') %>"></a>
-      <div class="slot-count">
-        <div class="filled" style="width: 0%;"></div>
-        <div class="owned" style="width: 0%;"></div>
-        <div class="free" style="width: 0%;"></div>
-      </div>
-      <div class="title">{title}</div>
-      <div class="quality">{title}</div>
-    </div>
-    <div class="item">
-      <div class="dota-marker">DOTA 2</div>
-      <a href="#"><img class="ancient" src="<%= image_url('empty.jpg') %>"></a>
-      <div class="slot-count">
-        <div class="filled" style="width: 0%;"></div>
-        <div class="owned" style="width: 0%;"></div>
-        <div class="free" style="width: 0%;"></div>
-      </div>
-      <div class="title">{title}</div>
-      <div class="quality">{title}</div>
-    </div>
-    <div class="item">
-      <div class="dota-marker">DOTA 2</div>
-      <a href="#"><img class="ancient" src="<%= image_url('empty.jpg') %>"></a>
-      <div class="slot-count">
-        <div class="filled" style="width: 0%;"></div>
-        <div class="owned" style="width: 0%;"></div>
-        <div class="free" style="width: 0%;"></div>
-      </div>
-      <div class="title">{title}</div>
-      <div class="quality">{title}</div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="item">
-      <div class="dota-marker">DOTA 2</div>
-      <a href="#"><img class="ancient" src="<%= image_url('empty.jpg') %>"></a>
-      <div class="slot-count">
-        <div class="filled" style="width: 0%;"></div>
-        <div class="owned" style="width: 0%;"></div>
-        <div class="free" style="width: 0%;"></div>
-      </div>
-      <div class="title">{title}</div>
-      <div class="quality">{title}</div>
-    </div>
-    <div class="item">
-      <div class="dota-marker">DOTA 2</div>
-      <a href="#"><img class="ancient" src="<%= image_url('empty.jpg') %>"></a>
-      <div class="slot-count">
-        <div class="filled" style="width: 0%;"></div>
-        <div class="owned" style="width: 0%;"></div>
-        <div class="free" style="width: 0%;"></div>
-      </div>
-      <div class="title">{title}</div>
-      <div class="quality">{title}</div>
-    </div>
-    <div class="item">
-      <div class="dota-marker">DOTA 2</div>
-      <a href="#"><img class="ancient" src="<%= image_url('empty.jpg') %>"></a>
-      <div class="slot-count">
-        <div class="filled" style="width: 0%;"></div>
-        <div class="owned" style="width: 0%;"></div>
-        <div class="free" style="width: 0%;"></div>
-      </div>
-      <div class="title">{title}</div>
-      <div class="quality">{title}</div>
-    </div>
-    <div class="item">
-      <div class="dota-marker">DOTA 2</div>
-      <a href="#"><img class="ancient" src="<%= image_url('empty.jpg') %>"></a>
-      <div class="slot-count">
-        <div class="filled" style="width: 0%;"></div>
-        <div class="owned" style="width: 0%;"></div>
-        <div class="free" style="width: 0%;"></div>
-      </div>
-      <div class="title">{title}</div>
-      <div class="quality">{title}</div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="item">
-      <div class="dota-marker">DOTA 2</div>
-      <a href="#"><img class="ancient" src="<%= image_url('empty.jpg') %>"></a>
-      <div class="slot-count">
-        <div class="filled" style="width: 0%;"></div>
-        <div class="owned" style="width: 0%;"></div>
-        <div class="free" style="width: 0%;"></div>
-      </div>
-      <div class="title">{title}</div>
-      <div class="quality">{title}</div>
-    </div>
-    <div class="item">
-      <div class="dota-marker">DOTA 2</div>
-      <a href="#"><img class="ancient" src="<%= image_url('empty.jpg') %>"></a>
-      <div class="slot-count">
-        <div class="filled" style="width: 0%;"></div>
-        <div class="owned" style="width: 0%;"></div>
-        <div class="free" style="width: 0%;"></div>
-      </div>
-      <div class="title">{title}</div>
-      <div class="quality">{title}</div>
-    </div>
-    <div class="item">
-      <div class="dota-marker">DOTA 2</div>
-      <a href="#"><img class="ancient" src="<%= image_url('empty.jpg') %>"></a>
-      <div class="slot-count">
-        <div class="filled" style="width: 0%;"></div>
-        <div class="owned" style="width: 0%;"></div>
-        <div class="free" style="width: 0%;"></div>
-      </div>
-      <div class="title">{title}</div>
-      <div class="quality">{title}</div>
-    </div>
-    <div class="item">
-      <div class="dota-marker">DOTA 2</div>
-      <a href="#"><img class="ancient" src="<%= image_url('empty.jpg') %>"></a>
-      <div class="slot-count">
-        <div class="filled" style="width: 0%;"></div>
-        <div class="owned" style="width: 0%;"></div>
-        <div class="free" style="width: 0%;"></div>
-      </div>
-      <div class="title">{title}</div>
-      <div class="quality">{title}</div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="item">
-      <div class="dota-marker">DOTA 2</div>
-      <a href="#"><img class="ancient" src="<%= image_url('empty.jpg') %>"></a>
-      <div class="slot-count">
-        <div class="filled" style="width: 0%;"></div>
-        <div class="owned" style="width: 0%;"></div>
-        <div class="free" style="width: 0%;"></div>
-      </div>
-      <div class="title">{title}</div>
-      <div class="quality">{title}</div>
-    </div>
-    <div class="item">
-      <div class="dota-marker">DOTA 2</div>
-      <a href="#"><img class="ancient" src="<%= image_url('empty.jpg') %>"></a>
-      <div class="slot-count">
-        <div class="filled" style="width: 0%;"></div>
-        <div class="owned" style="width: 0%;"></div>
-        <div class="free" style="width: 0%;"></div>
-      </div>
-      <div class="title">{title}</div>
-      <div class="quality">{title}</div>
-    </div>
-    <div class="item">
-      <div class="dota-marker">DOTA 2</div>
-      <a href="#"><img class="ancient" src="<%= image_url('empty.jpg') %>"></a>
-      <div class="slot-count">
-        <div class="filled" style="width: 0%;"></div>
-        <div class="owned" style="width: 0%;"></div>
-        <div class="free" style="width: 0%;"></div>
-      </div>
-      <div class="title">{title}</div>
-      <div class="quality">{title}</div>
-    </div>
-    <div class="item">
-      <div class="dota-marker">DOTA 2</div>
-      <a href="#"><img class="ancient" src="<%= image_url('empty.jpg') %>"></a>
-      <div class="slot-count">
-        <div class="filled" style="width: 0%;"></div>
-        <div class="owned" style="width: 0%;"></div>
-        <div class="free" style="width: 0%;"></div>
-      </div>
-      <div class="title">{title}</div>
-      <div class="quality">{title}</div>
-    </div>
-  </div>
+
+      <% if i % 4 == 3 %>
+          </div>
+      <% end %>
+  <% end %>
 </div>
