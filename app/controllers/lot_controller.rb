@@ -1,5 +1,24 @@
 class LotController < ApplicationController
 
+  #Отдельные страницы раздач
+  def draw
+    #Получаем параметр
+    request_id = params[:lotid].to_i
+
+    #Проверяем на число
+    if request_id.is_a? Integer
+      #Находим в массиве
+      (0..$LotGrid.count - 1).each do |i|
+        #Наш лот - активный
+        if $LotGrid[i]['global_id'] == request_id
+          @this_lot = $LotGrid[i]
+        else
+          #проверка архивных
+        end
+      end
+    end
+  end
+
   def testgrid
   end
 

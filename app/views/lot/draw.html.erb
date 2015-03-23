@@ -1,0 +1,28 @@
+<div class="navigation">
+  <div class="back left"><%= link_to raw("&larr; на главную"), controller: "application", action: "index"  %></div>
+</div>
+
+<div id="item-title" class="<%= @this_lot['data']['item']['quality_color'] %>_color"><%= @this_lot['data']['item']['display_name_rus'] %></div>
+<div id="item-quality"><%= @this_lot['data']['item']['quality_rus'] %></div>
+
+<div id="preview">
+  <img width="360" height="360" src="<%= image_url('empty_big.jpg') %>">
+  <div class="stattrak hide"></div>
+</div>
+
+<div id="item-cost"><%= @this_lot['data']['slot_price'] %> габенов за слот</div>
+
+<table cellpadding="3" cellspacing="8">
+  <% (0..@this_lot['data']['slots'] - 1).each do |i| %>
+
+      <% if i % 12 == 0 or i == 0 %>
+          <tr>
+      <% end %>
+
+      <td><%= i + 1 %></td>
+
+      <% if i % 12 == 11 %>
+          </tr>
+      <% end %>
+  <% end %>
+</table>

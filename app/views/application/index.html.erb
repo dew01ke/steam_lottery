@@ -5,8 +5,12 @@
       <% end %>
 
       <div class="item">
-        <div class="dota-marker">DOTA 2</div>
-        <a href="#"><img class="<%= $LotGrid[i]['data']['item']['quality_color'].to_s %>" src="<%= image_url('empty.jpg') %>"></a>
+        <% if $LotGrid[0]['data']['item']['appid'] == 570 %>
+            <div class="dota-marker">DOTA 2</div>
+        <% else %>
+            <div class="cs-marker">CS:GO</div>
+        <% end %>
+        <a href="/lot/<%= $LotGrid[i]['global_id'] %>"><img class="<%= $LotGrid[i]['data']['item']['quality_color'].to_s %>" src="<%= image_url('empty_small.jpg') %>"></a>
         <div class="slot-count">
           <div class="filled" style="width: 0;"></div>
           <div class="owned" style="width: 0;"></div>

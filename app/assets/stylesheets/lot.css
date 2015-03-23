@@ -1,0 +1,79 @@
+.hide {
+    display: none;
+}
+.navigation {
+    width: 100%;
+    height: 35px;
+}
+.back {
+    padding: 0 0 0 15px;
+    height: 35px;
+    line-height: 35px;
+    color: #777979;
+}
+#item-title {
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    font-size: 30px;
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: -1px
+}
+#item-quality {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    font-size: 16px;
+    color: #c9c9c9;
+    text-align: center;
+    font-weight: 400;
+    letter-spacing: -1px
+}
+#preview {
+    margin: 0 auto;
+    padding: 0;
+    width: 360px;
+    height: 360px;
+}
+#preview .stattrak {
+    position: absolute;
+    padding: 0;
+    margin-top: -128px;
+    margin-left: 296px;
+    width: 128px;
+    height: 128px;
+    background: url(./lot/stattrak.png) no-repeat;
+}
+#item-cost {
+    width: 200px;
+    height: 45px;
+    padding: 0 10px;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    background: #0a1010;
+    border: 8px solid #16191b;
+    line-height: 45px;
+    font-size: 16px;
+    color: #c9c9c9;
+    text-align: center;
+    font-weight: 400;
+}
+table {
+	margin: 0 auto;
+	padding-bottom: 23px;
+}
+td {
+    width: 50px;
+    height: 50px;
+    background: #16191b;
+    overflow: hidden;
+    color: #3b4446;
+    border: 2px solid #16191b;
+    text-align: center;
+}
+td:hover {
+	background: #222628;
+    border: 2px solid #222628;
+}
