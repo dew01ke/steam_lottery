@@ -13,6 +13,9 @@ Rails.application.routes.draw do
   get 'gateway/getending'
   get 'gateway/buyslot/:lotid/:slotid' => 'gateway#buyslot'
 
+  #Отдельный лот с вещью
+  get 'lot/:lotid' => 'lot#draw'
+
   #testing routes below
   
   get 'id64/:api_key/:steamlogin' => 'papi#id64'
