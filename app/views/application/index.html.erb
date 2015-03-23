@@ -4,7 +4,7 @@
           <div class="row">
       <% end %>
 
-      <div class="item">
+      <div class="item" data-id="<%= $LotGrid[i]['global_id'] %>">
         <% if $LotGrid[0]['data']['item']['appid'] == 570 %>
             <div class="dota-marker">DOTA 2</div>
         <% else %>
@@ -14,7 +14,6 @@
         <div class="slot-count">
           <div class="filled" style="width: 0;"></div>
           <div class="owned" style="width: 0;"></div>
-          <div class="free" style="width: 0;"></div>
         </div>
         <div class="title"><%= $LotGrid[i]['data']['item']['display_name_rus'].to_s %></div>
         <div class="quality"><%= $LotGrid[i]['data']['item']['quality_rus'].to_s %></div>
@@ -27,20 +26,38 @@
 </div>
 
 <% content_for :js do %>
-<script type="text/javascript">
-    $(document).ready(function() {
-        updateEnding();
-    });
-
-    function updateEnding() {
-        $.getJSON('/gateway/getending', function(response) {
-            var json = JSON.parse(response);
-            $("#ending").empty();
-            $.each(json, function(key, value){
-                $("#ending").append('<a href="/lot/'+value['global_id']+'"><li class="chance"><img class="left" src="<%= image_url('empty_small.jpg') %>" width="80"><div id="item-chance" class="right"><div id="name">'+value['display_name_rus']+'</div><div id="desc">'+value['quality_rus']+'</div></div></li></a>');
-            });
-            setTimeout("updateEnding()", 30000);
+    <script type="text/javascript">
+        $(document).ready(function() {
+            updateCount();
+            updateEnding();
         });
-    };
-</script>
+
+        function updateEnding() {
+            $.getJSON('/gateway/getending', function(response) {
+                var json = JSON.parse(response);
+                $("#ending").empty();
+                $.each(json, function(key, value){
+                    $("#ending").append('<a href="/lot/'+value['global_id']+'"><li class="chance"><img class="left" src="<%= image_url('empty_small.jpg') %>" width="80"><div id="item-chance" class="right"><div id="name">'+value['display_name_rus']+'</div><div id="desc">'+value['quality_rus']+'</div></div></li></a>');
+                });
+                setTimeout("updateEnding()", 30000);
+            });
+        }
+
+        function updateCount() {
+            $.getJSON('/gateway/getgrid', function(response) {
+                var json = JSON.parse(response);
+
+                $.each(json, function(i, j) {
+                    var mslots = Math.floor((j['myslots'] / j['total_slots']) * 100);
+                    var oslots = Math.floor((j['otherslots'] / j['total_slots']) * 100);
+
+                    var slot = $('div.row').find('.item[data-id="' + j['global_id'] + '"]');
+
+                    $(slot).find(".slot-count .filled").css("width", oslots + "%");
+                    $(slot).find(".slot-count .owned").css("width", mslots + "%");
+                });
+                setTimeout("updateCount()", 30000);
+            });
+        }
+    </script>
 <% end %>

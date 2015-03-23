@@ -322,3 +322,11 @@ li.chance {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#60872c', endColorstr='#395a1a',GradientType=0 );
     color: #d8fead;
 }
+
+.nothing {
+    color: #c9c9c9;
+    font-size: 14px;
+    margin: 0;
+    padding: 0 15px 15px 15px;
+    text-align: center;
+}
