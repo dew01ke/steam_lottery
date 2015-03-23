@@ -36,11 +36,14 @@
             $("td#buy").click(function(){
                 var pid = $(this).data("id");
 
+                $(this).css('background', "url(/assets/lot/loader.gif) #16191b no-repeat center center");
+
                 $.getJSON('/gateway/buyslot/' + gid + "/" + pid, function(response) {
                     if (response['success'] == true) {
                         $(this).html("");
                         $(this).removeAttr('id');
-                        $(this).css('background-image', "url(/assets/avatars/" + sid + ".jpg)");
+                        $(this).css('background', "url(/assets/avatars/" + sid + ".jpg) #16191b no-repeat center center");
+                        $(this).css('background-size', 'cover');
                     } else {
                         alert(response['message'])
                     }
@@ -60,7 +63,8 @@
                     if (j != "0") {
                         $(slot).html("");
                         $(slot).removeAttr('id');
-                        $(slot).css('background-image', "url(/assets/avatars/" + j + ".jpg)");
+                        $(slot).css('background', "url(/assets/avatars/" + j + ".jpg) #16191b no-repeat center center");
+                        $(slot).css('background-size', 'cover');
                     };
                 });
                 setTimeout("updateSlots()", 10000);
