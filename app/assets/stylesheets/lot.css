@@ -72,8 +72,11 @@ td {
     color: #3b4446;
     border: 2px solid #16191b;
     text-align: center;
+    background-size: cover;
 }
 td:hover {
 	background: #222628;
     border: 2px solid #222628;
+    background-size: cover;
+    cursor: pointer;
 }

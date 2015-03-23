@@ -9,19 +9,23 @@ class GatewayController < ApplicationController
   end
 
   def buyslot
-    @a=buySlot(params[:lotid], params[:slotid]).to_s
+    @a = buySlot(params[:lotid], params[:slotid]).to_json
+    render :json => @a
   end
 
   def getgrid
-    @a=getGrid.to_s
+    @a = getGrid.to_json
+    render :json => @a
   end
 
   def getslots
-    @a=getSlots(params[:lotid]).to_s
+    @a = getSlots(params[:lotid]).to_json
+    render :json => @a
   end
 
   def getending
-    @a=getEnding.to_s
+    @a = getEnding.to_json
+    render :json => @a
   end
 
   def testgateway
@@ -30,8 +34,9 @@ class GatewayController < ApplicationController
     @c = getGrid
   end
 
-  def getSlots(lotid)
-    lotid=lotid.to_i
+  def getSlots(referenceid)
+    lotid=$LotGrid.index{|x| x['global_id'] == referenceid.to_i}
+    lotid.to_i
     return JSON.generate($LotGrid[lotid]['slot_info'])
   end
 

@@ -12,17 +12,59 @@
 
 <div id="item-cost"><%= @this_lot['data']['slot_price'] %> габенов за слот</div>
 
-<table cellpadding="3" cellspacing="8">
+<table id="places" cellpadding="3" cellspacing="8">
   <% (0..@this_lot['data']['slots'] - 1).each do |i| %>
 
       <% if i % 12 == 0 or i == 0 %>
           <tr>
       <% end %>
 
-      <td><%= i + 1 %></td>
+      <td id="buy" data-id="<%= i %>"><%= i + 1 %></td>
 
       <% if i % 12 == 11 %>
           </tr>
       <% end %>
   <% end %>
 </table>
+
+<% content_for :js do %>
+    <script type="text/javascript">
+        var gid = <%= @this_gid %>;
+        var sid = <%= session[:steam_id] %>;
+
+        $(document).ready(function() {
+            $("td#buy").click(function(){
+                var pid = $(this).data("id");
+
+                $.getJSON('/gateway/buyslot/' + gid + "/" + pid, function(response) {
+                    if (response['success'] == true) {
+                        $(this).html("");
+                        $(this).removeAttr('id');
+                        $(this).css('background-image', "url(/assets/avatars/" + sid + ".jpg)");
+                    } else {
+                        alert(response['message'])
+                    }
+                });
+
+                updateSlots();
+            });
+
+            updateSlots();
+        });
+
+        function updateSlots() {
+            $.getJSON('/gateway/getslots/' + gid, function(response) {
+                var json = JSON.parse(response);
+                $.each(json, function(i, j) {
+                    var slot = $('#places').find('td[data-id="' + i + '"]');
+                    if (j != "0") {
+                        $(slot).html("");
+                        $(slot).removeAttr('id');
+                        $(slot).css('background-image', "url(/assets/avatars/" + j + ".jpg)");
+                    };
+                });
+                setTimeout("updateSlots()", 10000);
+            });
+        }
+    </script>
+<% end %>

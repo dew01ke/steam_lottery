@@ -12,6 +12,7 @@ class LotController < ApplicationController
         #Наш лот - активный
         if $LotGrid[i]['global_id'] == request_id
           @this_lot = $LotGrid[i]
+          @this_gid = $LotGrid[i]['global_id']
         else
           #проверка архивных
         end
