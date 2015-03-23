@@ -38,7 +38,7 @@ class LotController < ApplicationController
     total_price = slot_cost * cur_slots
     puts "Total item price:" + total_price.to_s
 
-    item = {'item_steam_id' => a['item_steam_id'], 'price_id' => a['price_id'], 'bot_id' => a['bot_id'], 'display_name_rus' => a.price['display_name_rus'], 'display_name_eng' => a.price['display_name_eng'], 'quality_rus' => $qualities_rus[a.price['appid'].to_s][a.price['quality'].to_i - 1], 'quality_eng' => $qualities_eng[a.price['appid'].to_s][a.price['quality'].to_i - 1], 'quality_color' => $quality_color[a.price['appid'].to_s][a.price['quality'].to_i - 1]}
+    item = {'item_steam_id' => a['item_steam_id'], 'price_id' => a['price_id'], 'bot_id' => a['bot_id'], 'display_name_rus' => a.price['display_name_rus'], 'display_name_eng' => a.price['display_name_eng'], 'quality_rus' => $qualities_rus[a.price['appid'].to_s][a.price['quality'].to_i - 1], 'quality_eng' => $qualities_eng[a.price['appid'].to_s][a.price['quality'].to_i - 1], 'quality_color' => $quality_color[a.price['appid'].to_s][a.price['quality'].to_i - 1], 'appid' => a.price['appid']}
     puts item['item_steam_id']
     a.destroy
 
@@ -52,8 +52,8 @@ class LotController < ApplicationController
     $LotGrid[lotid]['slot_info'] = Array.new(data['slots'],0)
     $LotGrid[lotid]['vacant'] = 0
     $LotOffset = $LotOffset + 1
-    $LotID[lotid] = $LotOffset
-    puts "Lot " + lotid.to_s + " received offset " + $LotID[lotid].to_s
+    $LotGrid[lotid]['global_id'] = $LotOffset
+    puts "Lot " + lotid.to_s + " received offset " + $LotGrid[lotid]['global_id'].to_s
   end
 
   def finalizeLot(lotid)
@@ -72,6 +72,7 @@ class LotController < ApplicationController
 
     #save raffle info
     b=ShortFinishedRaffle.new
+    b['id'] = $LotGrid[lotid]['global_id']
     b['item_steam_id'] = $LotGrid[lotid]['data']['item']['item_steam_id']
     b['winner_id'] = $LotGrid[lotid]['slot_info'][winner]
     b['slot_info'] = JSON.generate($LotGrid[lotid]['slot_info'])
