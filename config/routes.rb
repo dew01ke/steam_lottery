@@ -36,6 +36,7 @@ Rails.application.routes.draw do
   get 'lot/testgrid'
   get 'gateway/testbuy/:lotid/:slotid' => 'gateway#testbuy'
   get 'gateway/testgateway/:lotid' => 'gateway#testgateway'
+  get 'profile/update'
 
 
   root :to => 'application#index'

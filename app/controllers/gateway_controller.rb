@@ -36,8 +36,17 @@ class GatewayController < ApplicationController
 
   def getSlots(referenceid)
     lotid=$LotGrid.index{|x| x['global_id'] == referenceid.to_i}
-    lotid.to_i
-    return JSON.generate($LotGrid[lotid]['slot_info'])
+    if (lotid.nil? == false)
+      lotid.to_i
+      return JSON.generate($LotGrid[lotid]['slot_info'])
+    else
+      a=ShortFinishedRaffle.where(id: referenceid)
+      if (a.count == 1)
+        a=ShortFinishedRaffle.find(referenceid)
+        return JSON.generate(JSON.parse(a['slot_info']))
+      end
+    end
+
   end
 
   def getEnding

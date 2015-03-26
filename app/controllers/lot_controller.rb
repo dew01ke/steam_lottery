@@ -7,14 +7,19 @@ class LotController < ApplicationController
 
     #Проверяем на число
     if request_id.is_a? Integer
-      #Находим в массиве
-      (0..$LotGrid.count - 1).each do |i|
-        #Наш лот - активный
-        if $LotGrid[i]['global_id'] == request_id
-          @this_lot = $LotGrid[i]
-          @this_gid = $LotGrid[i]['global_id']
-        else
-          #проверка архивных
+      #Ищем среди активных раздач
+      lotid=$LotGrid.index{|x| x['global_id'] == request_id.to_i}
+      #Если нашли
+      if (lotid.nil? == false)
+        @this_lot = $LotGrid[lotid]
+        @this_gid = $LotGrid[lotid]['global_id']
+      else
+        #проверка архивных
+        a=ShortFinishedRaffle.where(id: request_id)
+        if (a.count == 1)
+          a=ShortFinishedRaffle.find(request_id)
+          @this_lot = {'global_id' => request_id, 'data' => {'slots' => a['slots'], 'slot_price' => a['slot_price'], 'item' => {'display_name_rus' => a.price['display_name_rus'], 'display_name_eng' => a.price['display_name_eng'], 'quality_rus' => $qualities_rus[a.price['appid'].to_s][a.price['quality'].to_i - 1], 'quality_eng' => $qualities_eng[a.price['appid'].to_s][a.price['quality'].to_i - 1], 'quality_color' => $quality_color[a.price['appid'].to_s][a.price['quality'].to_i - 1], 'appid' => a.price['appid']}}}
+          @this_gid = request_id
         end
       end
     end
@@ -71,6 +76,7 @@ class LotController < ApplicationController
     $LotGrid[lotid]['data'] = data
     $LotGrid[lotid]['slot_info'] = Array.new(data['slots'],0)
     $LotGrid[lotid]['vacant'] = 0
+    $LotGrid[lotid]['started'] = Time.now().strftime("%F %T")
     $LotOffset = $LotOffset + 1
     $LotGrid[lotid]['global_id'] = $LotOffset
     puts "Lot " + lotid.to_s + " received offset " + $LotGrid[lotid]['global_id'].to_s
@@ -96,11 +102,10 @@ class LotController < ApplicationController
     b['item_steam_id'] = $LotGrid[lotid]['data']['item']['item_steam_id']
     b['winner_id'] = $LotGrid[lotid]['slot_info'][winner]
     b['slot_info'] = JSON.generate($LotGrid[lotid]['slot_info'])
-    b['item_name_rus'] = $LotGrid[lotid]['data']['item']['display_name_rus']
-    b['item_name_eng'] = $LotGrid[lotid]['data']['item']['display_name_eng']
-    b['quality'] = $LotGrid[lotid]['data']['item']['quality_color']
     b['slots'] = $LotGrid[lotid]['data']['slots']
     b['slot_price'] = $LotGrid[lotid]['data']['slot_price']
+    b['price_id'] = $LotGrid[lotid]['data']['item']['price_id']
+    b['started'] = $LotGrid[lotid]['started']
     b.save
 
     #generate new raffle
