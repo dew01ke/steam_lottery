@@ -127,7 +127,7 @@ class AuthController < ApplicationController
 		return {"login" => login, "code" => code}
 	end
 
-	def inventoryView(tradeOfferUrl, appid)
+	def inventoryView(steam32, appid)
 		icon = [[],[]]
 		id = (tradeOfferUrl.match(/http[s]*:\/\/steamcommunity.com\/tradeoffer\/new\/\?partner=(\d{8})/)[1]).to_i + 76561197960265728
 		if id != nil

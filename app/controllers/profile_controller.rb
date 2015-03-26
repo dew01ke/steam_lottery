@@ -1,5 +1,17 @@
 class ProfileController < ApplicationController
 
+  def addFunds
+    #soon coming
+  end
+
+  def lastOperations
+    #soon coming
+  end
+
+  def cashOut
+    #soon coming
+  end
+
   def update
     if (session[:steam_id].nil? == false)
       updateUserInfo(session[:steam_id])

@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
 
+  #Профиль
+  get 'profile/addfunds' => 'profile#addFunds'
+  get 'profile/lastoperations' => 'profile#lastOperations'
+  get 'profile/cashout' => 'profile#cashOut'
+
   #Авторизация и все действия с ней
   get 'openid/index'
   get 'openid/start'
@@ -12,6 +17,7 @@ Rails.application.routes.draw do
   get 'gateway/getslots/:lotid' => 'gateway#getslots'
   get 'gateway/getending'
   get 'gateway/buyslot/:lotid/:slotid' => 'gateway#buyslot'
+  get 'gateway/getinventory/:appid/:steam32'  => 'gateway#getinventory'
 
   #Отдельный лот с вещью
   get 'lot/:lotid' => 'lot#draw'

@@ -1,0 +1,42 @@
+<div class="navigation">
+  <div class="back left"><a href="#">&larr; на главную</a></div>
+  <div class="prof right"><a href="#">в профиль &rarr;</a></div>
+</div>
+
+<div class="pay-title">Последние операции</div>
+
+<table class="operations" width="800" border="1">
+  <tr>
+    <td class="operations-title">Операция</td>
+    <td class="operations-title">Сумма</td>
+    <td class="operations-title">Доп. информация</td>
+    <td class="operations-title">Дата</td>
+  </tr>
+  <tr>
+    <td>Вывод вещей</td>
+    <td>20000</td>
+    <td></td>
+    <td>3 марта 2015</td>
+  </tr>
+  <tr>
+    <td>Пополнение</td>
+    <td>4</td>
+    <td>5</td>
+    <td>6</td>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td>2</td>
+    <td>3</td>
+    <td>4</td>
+  </tr>
+</table>
+
+<% content_for :profile_nav do %>
+    <div class="profile-nav">
+      <div class="sub-pay"><a href="#">Пополнить баланс</a></div>
+      <div class="sub"><a href="#">История операций</a></div>
+      <div class="sub"><a href="#">Забрать выигрыш</a></div>
+      <div class="sub"><a href="#">Обновить данные профиля</a></div>
+    </div>
+<% end %>

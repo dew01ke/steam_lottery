@@ -8,6 +8,7 @@
   <%= stylesheet_link_tag "preset", media: "all" %>
   <%= stylesheet_link_tag "main", media: "all" %>
   <%= stylesheet_link_tag "lot", media: "all" %>
+  <%= stylesheet_link_tag "profile", media: "all" %>
 
   <!-- <%= javascript_include_tag "jquery-2.1.3.min" %> -->
   <%= javascript_include_tag "http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" %>
@@ -43,6 +44,8 @@
         </div>
     <% end %>
 
+    <%= yield :profile_nav %>
+
     <div id="sideblock">
       <div id="sidename">Скоро завершатся</div>
       <div id="sidebody">
@@ -64,7 +67,7 @@
 <div id="footer">
   <div id="wrapper">
     <div class="project left">This is Nice shit for u! © 2015 - All Rights Reserved<br>Powered by <a href="#">Steam</a>.</div>
-    <div class="authors right">Coded by <a href="#">Андрей</a>, <a href="#">Влад</a> и <a href="#">Илюшка-хуюшка</a><br>Running in Ruby</div>
+    <div class="authors right">Coded by <a href="#">Андрей</a> и <a href="#">Влад</a><br>Running in Ruby on Rails</div>
   </div>
 </div>
 
