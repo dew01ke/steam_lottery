@@ -1,0 +1,73 @@
+<div class="navigation">
+  <div class="back left"><a href="#">&larr; на главную</a></div>
+  <div class="prof right"><a href="#">в профиль &rarr;</a></div>
+</div>
+
+<div class="pay-title">Пополнить баланс</div>
+
+<div class="step">
+  <b>Шаг 1.</b> Укажите ссылку для обмена (<a href="">где её найти?</a>):
+</div>
+
+<div class="tradeoffer">
+  <input id="tradeOfferLink" type="text" value="https://steamcommunity.com/tradeoffer/new/?partner=86493268&token=RD-gii2a">
+</div>
+
+<div class="category centered">
+  <div class="backpack">Инвентарь</div>
+  <div class="dota"><a href="#" onclick="loadInventory(570);">Dota 2</a></div>
+  <div class="csgo"><a href="#" onclick="loadInventory(730);">CS:GO</a></div>
+</div>
+
+<div id="bp" style="display: none">
+  <div class="step">
+    <b>Шаг 2.</b> Выберите вещи, которые вы хотите обменять на габены:
+  </div>
+
+  <ul class="backpack-items">
+  </ul>
+
+  <div class="total-cost">
+    За предложенные вещи Вы получите <b>2500</b> габенов
+  </div>
+
+  <div class="centered">
+    <a class="sendtradeoffer">Создать обмен</a>
+  </div>​
+</div>
+
+<script>
+    function loadInventory(appId) {
+        var tradeOffer_link = $('#tradeOfferLink').val();
+        var steam32 = tradeOffer_link.match(/http[s]*:\/\/steamcommunity.com\/tradeoffer\/new\/\?partner=(\d{8})/)[1];
+
+        $.getJSON('/gateway/getinventory/' + appId + '/' + steam32, function(response) {
+            var json = JSON.parse(response);
+            $(".backpack-items").empty();
+            $("#bp").show();
+            $.each(json, function(key, value){
+                $(".backpack-items").append('<li><img height="105" src="http://steamcommunity-a.akamaihd.net/economy/image/' + value["image_url"] + '"><div class="cost">XXX габенов</div></li>');
+            });
+        });
+        /*
+         $.ajax({
+         type: "GET",
+         url: "/gateway/getinventory",
+         data: data,
+         success: function(response) {
+         alert(response)
+         },
+         dataType: "json"
+         });
+         */
+    }
+</script>
+
+<% content_for :profile_nav do %>
+    <div class="profile-nav">
+      <div class="sub-pay"><a href="#">Пополнить баланс</a></div>
+      <div class="sub"><a href="#">История операций</a></div>
+      <div class="sub"><a href="#">Забрать выигрыш</a></div>
+      <div class="sub"><a href="#">Обновить данные профиля</a></div>
+    </div>
+<% end %>
