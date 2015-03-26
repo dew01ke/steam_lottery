@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
 
   #Профиль
-  get 'profile/addfunds' => 'profile#addfunds'
+  get 'profile/addfunds' => 'profile#addFunds'
   get 'profile/lastoperations' => 'profile#lastOperations'
   get 'profile/cashout' => 'profile#cashOut'
 
