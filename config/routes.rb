@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get 'profile/addfunds' => 'profile#addFunds'
   get 'profile/lastoperations' => 'profile#lastOperations'
   get 'profile/cashout' => 'profile#cashOut'
+  get 'profile' => 'profile#index'
 
   #Авторизация и все действия с ней
   get 'openid/index'

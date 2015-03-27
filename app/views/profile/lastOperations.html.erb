@@ -1,42 +1,46 @@
-<div class="navigation">
-  <div class="back left"><%= link_to raw("&larr; на главную"), controller: "application", action: "index" %></div>
-  <div class="prof right"><a href="#">в профиль &rarr;</a></div>
-</div>
-
-<div class="pay-title">Последние операции</div>
-
-<table class="operations" width="800" border="1">
-  <tr>
-    <td class="operations-title">Операция</td>
-    <td class="operations-title">Сумма</td>
-    <td class="operations-title">Доп. информация</td>
-    <td class="operations-title">Дата</td>
-  </tr>
-  <tr>
-    <td>Вывод вещей</td>
-    <td>20000</td>
-    <td></td>
-    <td>3 марта 2015</td>
-  </tr>
-  <tr>
-    <td>Пополнение</td>
-    <td>4</td>
-    <td>5</td>
-    <td>6</td>
-  </tr>
-  <tr>
-    <td>1</td>
-    <td>2</td>
-    <td>3</td>
-    <td>4</td>
-  </tr>
-</table>
-
-<% content_for :profile_nav do %>
-    <div class="profile-nav">
-      <div class="sub-pay"><%= link_to "Пополнить баланс", controller: "profile", action: "addFunds" %></div>
-      <div class="sub"><%= link_to "История операций", controller: "profile", action: "lastOperations" %></div>
-      <div class="sub"><%= link_to "Забрать выигрыш", controller: "profile", action: "cashOut" %></div>
-      <div class="sub"><%= link_to "Обновить данные профиля", controller: "profile", action: "update" %></div>
+<% if session[:is_logged] != nil %>
+    <div class="navigation">
+      <div class="back left"><%= link_to raw("&larr; на главную"), controller: "application", action: "index" %></div>
+      <div class="prof right"><a href="#">в профиль &rarr;</a></div>
     </div>
+
+    <div class="pay-title">Последние операции</div>
+
+    <table class="operations" width="800" border="1">
+      <tr>
+        <td class="operations-title">Операция</td>
+        <td class="operations-title">Сумма</td>
+        <td class="operations-title">Доп. информация</td>
+        <td class="operations-title">Дата</td>
+      </tr>
+      <tr>
+        <td>Вывод вещей</td>
+        <td>20000</td>
+        <td></td>
+        <td>3 марта 2015</td>
+      </tr>
+      <tr>
+        <td>Пополнение</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+      </tr>
+    </table>
+
+    <% content_for :profile_nav do %>
+        <div class="profile-nav">
+          <div class="sub-pay"><%= link_to "Пополнить баланс", controller: "profile", action: "addFunds" %></div>
+          <div class="sub"><%= link_to "История операций", controller: "profile", action: "lastOperations" %></div>
+          <div class="sub"><%= link_to "Забрать выигрыш", controller: "profile", action: "cashOut" %></div>
+          <div class="sub"><%= link_to "Обновить данные профиля", controller: "profile", action: "update" %></div>
+        </div>
+    <% end %>
+<% else %>
+    <font size="72" color="red">Нужно авторизоаться. Не знаете как?</font>
 <% end %>

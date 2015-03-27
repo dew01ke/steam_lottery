@@ -1,5 +1,9 @@
 class ProfileController < ApplicationController
 
+  def index
+    #soon coming
+  end
+
   def addFunds
     #soon coming
   end
