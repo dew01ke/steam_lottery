@@ -9,7 +9,7 @@ class GatewayController < ApplicationController
   end
 
   def getinventory
-    @a = getInventory(params[:appid], params[:steam32]).to_json
+    @a = getInventory(params[:appid]).to_json
     render :json => @a
   end
 
@@ -39,8 +39,8 @@ class GatewayController < ApplicationController
     @c = getGrid
   end
 
-  def getInventory(appid, steam32)
-    steam64 = steam32.to_i + 76561197960265728
+  def getInventory(appid)
+    steam64 = session[:steam_id].to_i
     inventory = $papi.getBackpack(steam64, appid)
 
     tmp = []

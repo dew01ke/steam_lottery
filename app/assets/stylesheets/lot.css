@@ -74,12 +74,14 @@ table#places td {
     text-align: center;
     background-size: cover;
 }
+
 table#places td:hover {
 	background: #222628;
     border: 2px solid #222628;
     background-size: cover;
     cursor: pointer;
 }
-table#places td:hover.loading, td.loading {
+
+table#places td:hover.loading, table#places td.loading {
     background: url(./lot/loader.gif) #16191b no-repeat center center;
 }

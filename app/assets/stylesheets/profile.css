@@ -1,3 +1,12 @@
+.marker-check {
+    position: absolute;
+    margin-top: -111px;
+    width: 158px;
+    height: 105px;
+    background: rgba(0,0,0,0.5);
+    background-image: url(./profile/check.png);
+    background-repeat: no-repeat;
+}
 .operations {
     margin: 0 auto;
     margin-bottom: 30px;
@@ -122,14 +131,14 @@ ul.available-items li {
     color: #686868;
 }
 .category {
-    width: 282px;
+    width: 345px;
     height: 32px;
-    padding: 30px 0 10px 0;
+    padding: 20px 0 40px 0;
     margin: 0 auto;
 }
 .category .backpack {
     float: left;
-    width: 140px;
+    width: 200px;
     height: 19px;
     line-height: 19px;
     border: 1px solid #686868;

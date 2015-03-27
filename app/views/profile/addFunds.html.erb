@@ -5,6 +5,7 @@
 
 <div class="pay-title">Пополнить баланс</div>
 
+<!--
 <div class="step">
   <b>Шаг 1.</b> Укажите ссылку для обмена (<a href="">где её найти?</a>):
 </div>
@@ -12,42 +13,56 @@
 <div class="tradeoffer">
   <input id="tradeOfferLink" type="text" value="https://steamcommunity.com/tradeoffer/new/?partner=86493268&token=RD-gii2a">
 </div>
+-->
 
 <div class="category centered">
-  <div class="backpack">Инвентарь</div>
+  <div class="backpack">Получить инвентарь из</div>
   <div class="dota"><a href="#" onclick="loadInventory(570);">Dota 2</a></div>
   <div class="csgo"><a href="#" onclick="loadInventory(730);">CS:GO</a></div>
 </div>
 
 <div id="bp" style="display: none">
-  <div class="step">
-    <b>Шаг 2.</b> Выберите вещи, которые вы хотите обменять на габены:
-  </div>
+  <div id="signal" class="total-cost">Выберите вещи, которые вы хотите обменять на габены:</div>
 
   <ul class="backpack-items">
   </ul>
 
-  <div class="total-cost">
-    За предложенные вещи Вы получите <b>2500</b> габенов
-  </div>
+  <div id="ac" style="display: none">
+      <div class="total-cost">За предложенные вещи Вы получите <b>2500</b> габенов</div>
 
-  <div class="centered">
-    <a class="sendtradeoffer">Создать обмен</a>
-  </div>​
+    <div class="centered">
+      <a class="sendtradeoffer">Создать обмен</a>
+    </div>​
+  </div>
 </div>
 
 <script>
-    function loadInventory(appId) {
-        var tradeOffer_link = $('#tradeOfferLink').val();
-        var steam32 = tradeOffer_link.match(/http[s]*:\/\/steamcommunity.com\/tradeoffer\/new\/\?partner=(\d{8})/)[1];
+    $(document).ready(function() {
+        $("ul.backpack-items").on("click", "li", function() {
+            if ($(this).has(".marker-check").length) {
+                $(this).find("div.marker-check").remove();
+            } else {
+                $(this).append('<div class="marker-check"></div>')
+            }
+        });
+    });
 
-        $.getJSON('/gateway/getinventory/' + appId + '/' + steam32, function(response) {
+    function loadInventory(appId) {
+        //var tradeOffer_link = $('#tradeOfferLink').val();
+        //var steam32 = tradeOffer_link.match(/http[s]*:\/\/steamcommunity.com\/tradeoffer\/new\/\?partner=(\d{8})/)[1];
+
+        $.getJSON('/gateway/getinventory/' + appId, function(response) {
             var json = JSON.parse(response);
             $(".backpack-items").empty();
             $("#bp").show();
-            $.each(json, function(key, value){
-                $(".backpack-items").append('<li><img height="105" src="http://steamcommunity-a.akamaihd.net/economy/image/' + value["image_url"] + '"><div class="cost">XXX габенов</div></li>');
-            });
+
+            if (json.length == 0) {
+                $("#signal").text("К сожалению, у Вас нет подходящих вещей.");
+            } else {
+                $.each(json, function(key, value){
+                    $(".backpack-items").append('<li><img height="105" src="http://steamcommunity-a.akamaihd.net/economy/image/' + value["image_url"] + '"><div class="cost">XXX габенов</div></li>');
+                });
+            }
         });
     }
 </script>

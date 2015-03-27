@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   get 'gateway/getslots/:lotid' => 'gateway#getslots'
   get 'gateway/getending'
   get 'gateway/buyslot/:lotid/:slotid' => 'gateway#buyslot'
-  get 'gateway/getinventory/:appid/:steam32'  => 'gateway#getinventory'
+  get 'gateway/getinventory/:appid'  => 'gateway#getinventory'
 
   #Отдельный лот с вещью
   get 'lot/:lotid' => 'lot#draw'
