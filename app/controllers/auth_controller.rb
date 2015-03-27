@@ -7,13 +7,7 @@ class AuthController < ApplicationController
   require 'faraday'
 
   def index
-    #Получаем сначала sessionid
-    #$http.httpRequest("POST", "https://steamcommunity.com")
-		@icon123 = inventoryView("https://steamcommunity.com/tradeoffer/new/?partner=86493268&token=RD-gii2a", 570)
-    #Получаем токены
-    #steamLogin("dew01ke", "GBCZ")
-
-    puts $is_global
+    #coming soon
   end
 
   def sendTradeOffer(offer_name)
@@ -127,7 +121,7 @@ class AuthController < ApplicationController
 		return {"login" => login, "code" => code}
 	end
 
-	def inventoryView(tradeOfferUrl, appid)
+	def inventoryView(steam32, appid)
 		icon = [[],[]]
 		id = (tradeOfferUrl.match(/http[s]*:\/\/steamcommunity.com\/tradeoffer\/new\/\?partner=(\d{8})/)[1]).to_i + 76561197960265728
 		if id != nil

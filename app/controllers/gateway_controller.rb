@@ -8,6 +8,11 @@ class GatewayController < ApplicationController
     redirect_to '/lot/testgrid'
   end
 
+  def getinventory
+    @a = getInventory(params[:appid]).to_json
+    render :json => @a
+  end
+
   def buyslot
     @a = buySlot(params[:lotid], params[:slotid]).to_json
     render :json => @a
@@ -32,6 +37,21 @@ class GatewayController < ApplicationController
     @a = getSlots(params[:lotid])
     @b = getEnding
     @c = getGrid
+  end
+
+  def getInventory(appid)
+    steam64 = session[:steam_id].to_i
+    inventory = $papi.getBackpack(steam64, appid)
+
+    tmp = []
+
+    inventory['rgDescriptions'].each do |desc|
+      if desc[1]['tradable'] == 1
+        tmp.push({'title' => desc[1]['market_hash_name'].to_s, 'image_url' => desc[1]['icon_url_large'].to_s})
+      end
+    end
+
+    return JSON.generate(tmp)
   end
 
   def getSlots(referenceid)
