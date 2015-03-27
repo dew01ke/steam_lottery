@@ -76,7 +76,8 @@ class LotController < ApplicationController
     $LotGrid[lotid]['data'] = data
     $LotGrid[lotid]['slot_info'] = Array.new(data['slots'],0)
     $LotGrid[lotid]['vacant'] = 0
-    $LotGrid[lotid]['started'] = Time.now().strftime("%F %T")
+    #время начала, тип Time (!) для удобных вычислений, приводится к нужному виду в момент вставки при помощи .strftime("%F %T")
+    $LotGrid[lotid]['started'] = Time.now()
     $LotOffset = $LotOffset + 1
     $LotGrid[lotid]['global_id'] = $LotOffset
     puts "Lot " + lotid.to_s + " received offset " + $LotGrid[lotid]['global_id'].to_s
@@ -105,8 +106,36 @@ class LotController < ApplicationController
     b['slots'] = $LotGrid[lotid]['data']['slots']
     b['slot_price'] = $LotGrid[lotid]['data']['slot_price']
     b['price_id'] = $LotGrid[lotid]['data']['item']['price_id']
-    b['started'] = $LotGrid[lotid]['started']
+    b['started'] = $LotGrid[lotid]['started'].strftime("%F %T")
     b.save
+
+    users_participated = $LotGrid[lotid]['slot_info'].uniq
+    users_participated.each do |t|
+      c=Operation.new
+      puts t
+      c['user_steamid'] = t
+      c['created_at'] = Time.now().strftime("%F %T")
+      puts Time.now().strftime("%F %T")
+      c['is_deposit'] = false
+      c['is_item'] = false
+      c['item_name'] = "Points spent on raffle " + $LotGrid[lotid]['global_id'].to_s
+
+      c['amount'] = $LotGrid[lotid]['slot_info'].count{|x| x == t} * $LotGrid[lotid]['data']['slot_price']
+      c.save
+    end
+
+    d=Stat.new
+    d['price_id'] = $LotGrid[lotid]['data']['item']['price_id']
+    d['finished'] = Time.now().strftime("%F %T")
+
+    tmp_time = Time.now() - $LotGrid[lotid]['started']
+    tmp_hours = (tmp_time/3600).to_i
+    tmp_minutes = ((tmp_time - tmp_hours*3600)/60).to_i
+    tmp_seconds = (tmp_time - tmp_hours*3600 - tmp_minutes*60).to_i
+
+    d['total_time'] = tmp_hours.to_s + ":" + tmp_minutes.to_s + ":" + tmp_seconds.to_s
+    puts "Total time:" + tmp_hours.to_s + ":" + tmp_minutes.to_s + ":" + tmp_seconds.to_s
+    d.save
 
     #generate new raffle
     #push to queue
@@ -119,7 +148,7 @@ class LotController < ApplicationController
     puts "Lot number " + lotid.to_s + " is prepared in queue"
     $LotQueueCounter = $LotQueueCounter + 1
     puts $LotQueueCounter.to_s + " lots in queue"
-    if ($LotQueueCounter > 1)
+    if ($LotQueueCounter > ($LotGrid.size*0.4).ceil.to_i)
       puts "Critical mass reached, pushing"
       pushQueue()
     end

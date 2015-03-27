@@ -32,11 +32,9 @@ Rails.application.routes.draw do
 
   get 'asset/:api_key/:appid' => 'papi#asset'
 
-  get 'lot/testgen/:cost' => 'lot#testgen'
-  get 'lot/testgrid'
-  get 'gateway/testbuy/:lotid/:slotid' => 'gateway#testbuy'
   get 'gateway/testgateway/:lotid' => 'gateway#testgateway'
   get 'profile/update'
+  get 'stats/teststats'
 
 
   root :to => 'application#index'

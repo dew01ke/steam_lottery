@@ -53,6 +53,9 @@ class GatewayController < ApplicationController
     percentage=Array.new($LotGrid.size,0)
     $LotGrid.each.with_index do |t,lotid|
       percentage[lotid] = t['vacant']/ t['data']['slots'].to_f
+      if percentage[lotid]>0.98
+        percentage[lotid] = -1
+      end
     end
     lot1=percentage.index(percentage.max)
     percentage[lot1]=-1

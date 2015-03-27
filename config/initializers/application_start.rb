@@ -16,17 +16,25 @@ end
 
 #init lot grid
 $LotGrid = []
-$LotGrid.push({'minprice' => 10, 'maxprice' => 25, 'data' => {}, 'slot_info' => []})
-$LotGrid.push({'minprice' => 25, 'maxprice' => 50, 'data' => {}, 'slot_info' => []})
-$LotGrid.push({'minprice' => 50, 'maxprice' => 80, 'data' => {}, 'slot_info' => []})
-$LotGrid.push({'minprice' => 80, 'maxprice' => 110, 'data' => {}, 'slot_info' => []})
+$LotGrid.push({'minprice' => 10, 'maxprice' => 40, 'data' => {}, 'slot_info' => []})
+$LotGrid.push({'minprice' => 60, 'maxprice' => 150, 'data' => {}, 'slot_info' => []})
+$LotGrid.push({'minprice' => 200, 'maxprice' => 380, 'data' => {}, 'slot_info' => []})
+$LotGrid.push({'minprice' => 380, 'maxprice' => 610, 'data' => {}, 'slot_info' => []})
+$LotGrid.push({'minprice' => 700, 'maxprice' => 950, 'data' => {}, 'slot_info' => []})
+$LotGrid.push({'minprice' => 1000, 'maxprice' => 1310, 'data' => {}, 'slot_info' => []})
+$LotGrid.push({'minprice' => 1380, 'maxprice' => 1710, 'data' => {}, 'slot_info' => []})
+$LotGrid.push({'minprice' => 1780, 'maxprice' => 2710, 'data' => {}, 'slot_info' => []})
 
 $LotID = Array.new($LotGrid.size,0)
 
 $lot.setLotInGrid(0,$lot.generateLot(20))
 $lot.setLotInGrid(1,$lot.generateLot(100))
-$lot.setLotInGrid(2,$lot.generateLot(480))
-$lot.setLotInGrid(3,$lot.generateLot(950))
+$lot.setLotInGrid(2,$lot.generateLot(250))
+$lot.setLotInGrid(3,$lot.generateLot(500))
+$lot.setLotInGrid(4,$lot.generateLot(800))
+$lot.setLotInGrid(5,$lot.generateLot(1200))
+$lot.setLotInGrid(6,$lot.generateLot(1500))
+$lot.setLotInGrid(7,$lot.generateLot(2050))
 #create lot queue
 $LotQueue = []
 $LotQueueCounter = 0
