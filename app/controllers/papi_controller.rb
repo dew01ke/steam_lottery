@@ -87,7 +87,7 @@ class PapiController < ApplicationController
 
   def getBackpack(steamid64, appid)
     url = 'http://steamcommunity.com/profiles/' + steamid64.to_s + '/inventory/json/' + appid.to_s + '/2'
-    request = $http.httpRequest("GET", url, {})
+    request = $http.httpRequest("GET", url, {'l' => 'russian'})
 
     if (request != -1)
       response = JSON.parse(request)
