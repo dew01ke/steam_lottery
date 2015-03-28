@@ -106,7 +106,7 @@ class LotController < ApplicationController
     b['slots'] = $LotGrid[lotid]['data']['slots']
     b['slot_price'] = $LotGrid[lotid]['data']['slot_price']
     b['price_id'] = $LotGrid[lotid]['data']['item']['price_id']
-    b['started'] = $LotGrid[lotid]['started'].strftime("%F %T")
+    b['started'] = $LotGrid[lotid]['started']
     b.save
 
     users_participated = $LotGrid[lotid]['slot_info'].uniq
@@ -114,8 +114,7 @@ class LotController < ApplicationController
       c=Operation.new
       puts t
       c['user_steamid'] = t
-      c['created_at'] = Time.now().strftime("%F %T")
-      puts Time.now().strftime("%F %T")
+      c['created_at'] = Time.now()
       c['is_deposit'] = false
       c['is_item'] = false
       c['item_name'] = "Points spent on raffle " + $LotGrid[lotid]['global_id'].to_s
@@ -126,7 +125,7 @@ class LotController < ApplicationController
 
     d=Stat.new
     d['price_id'] = $LotGrid[lotid]['data']['item']['price_id']
-    d['finished'] = Time.now().strftime("%F %T")
+    d['finished'] = Time.now()
 
     tmp_time = Time.now() - $LotGrid[lotid]['started']
     tmp_hours = (tmp_time/3600).to_i

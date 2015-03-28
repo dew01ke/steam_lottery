@@ -8,6 +8,12 @@ $qualities_rus = {'570' => ["Частое", "Нечастое", "Редкое", 
 $qualities_eng = {'570' => ["Common", "Uncommon", "Rare", "Mythical", "Legendary", "Ancient", "Arcana"], '730' => ["Consumer grade", "Industrial grade", "Mil-spec", "Restricted", "Classified", "Covert", "Melee Weapon"]}
 $quality_color = {'570' => ["common", "uncommon", "rare", "mythical", "legendary", "ancient", "arcana"], '730' => ["common", "uncommon", "rare", "mythical", "legendary", "ancient", "immortal"]}
 
+all_prices = Price.all
+$prices = Array.new(all_prices.last['id'])
+all_prices.each do |t|
+  $prices[t[:id]] = {'item_hash_name' => t['item_hash_name'],'item_cost' => t['item_cost'],'last_update' => t['last_update'],'quality' => t['quality'],'display_name_rus' => t['display_name_rus'],'display_name_eng' => t['display_name_eng'], 'appid' => t['appid']}
+end
+
 if  (ShortFinishedRaffle.all.size == 0)
   $LotOffset = 0
 else

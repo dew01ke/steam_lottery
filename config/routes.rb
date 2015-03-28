@@ -40,6 +40,7 @@ Rails.application.routes.draw do
   get 'asset/:api_key/:appid' => 'papi#asset'
 
   get 'gateway/testgateway/:lotid' => 'gateway#testgateway'
+  get 'gateway/testbuy/:market_hash_name' => 'gateway#testbuy'
   get 'profile/update'
   get 'stats/teststats'
 

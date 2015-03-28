@@ -10,14 +10,14 @@ class StatsController < ApplicationController
   def getActiveUsers(days)
     cur_time = Time.now()
     begin_time = cur_time - (days*60*60*24)
-    begin_time_rd = Time.gm(begin_time.year,begin_time.month,begin_time.day)
+    begin_time_rd = Time.new(begin_time.year,begin_time.month,begin_time.day)
     return a=Operation.where("created_at" => begin_time_rd..cur_time).group("user_steamid").count.count
   end
 
   def getAverageSpendings(days)
     cur_time = Time.now()
     begin_time = cur_time - (days*60*60*24)
-    begin_time_rd = Time.gm(begin_time.year,begin_time.month,begin_time.day)
+    begin_time_rd = Time.new(begin_time.year,begin_time.month,begin_time.day)
     sum = 0
     a=Operation.where("created_at" => begin_time_rd..cur_time).group("user_steamid").sum("amount").values.each do |t|
       sum = sum + t
@@ -32,7 +32,7 @@ class StatsController < ApplicationController
   def getFinishedLotPriceTable(days,interval)
     cur_time = Time.now()
     begin_time = cur_time - (days*60*60*24)
-    begin_time_rd = Time.gm(begin_time.year,begin_time.month,begin_time.day)
+    begin_time_rd = Time.new(begin_time.year,begin_time.month,begin_time.day)
     min_price = Price.all.order("item_cost ASC").first['item_cost']
     max_price = Price.all.order("item_cost DESC").first['item_cost']
 
@@ -47,7 +47,7 @@ class StatsController < ApplicationController
   def getAverageTimePriceTable(days,interval)
     cur_time = Time.now()
     begin_time = cur_time - (days*60*60*24)
-    begin_time_rd = Time.gm(begin_time.year,begin_time.month,begin_time.day)
+    begin_time_rd = Time.new(begin_time.year,begin_time.month,begin_time.day)
     min_price = Price.all.order("item_cost ASC").first['item_cost']
     max_price = Price.all.order("item_cost DESC").first['item_cost']
 
@@ -63,7 +63,7 @@ class StatsController < ApplicationController
   def getAverageTimeItemTable(days)
     cur_time = Time.now()
     begin_time = cur_time - (days*60*60*24)
-    begin_time_rd = Time.gm(begin_time.year,begin_time.month,begin_time.day)
+    begin_time_rd = Time.new(begin_time.year,begin_time.month,begin_time.day)
     itemstotal=Price.all.count
     counter = 1
     a=[]

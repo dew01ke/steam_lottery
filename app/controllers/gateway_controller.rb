@@ -4,8 +4,7 @@ class GatewayController < ApplicationController
   layout false
 
   def testbuy
-    puts buySlot(params[:lotid],params[:slotid])
-    redirect_to '/lot/testgrid'
+      #getItemPrice(570,"Sentinel Hood")
   end
 
   def getinventory
@@ -47,11 +46,99 @@ class GatewayController < ApplicationController
 
     inventory['rgDescriptions'].each do |desc|
       if desc[1]['tradable'] == 1
-        tmp.push({'title' => desc[1]['market_hash_name'].to_s, 'image_url' => desc[1]['icon_url_large'].to_s})
+        price_result = getItemPrice(appid, desc[1]['market_hash_name'].to_s)
+
+        #если шмотка новая и нужно вписать название и качество
+        if price_result['success']==2
+          $prices[price_result['arrayid']]['display_name_rus'] = desc[1]['market_name']
+          quality = ""
+          desc[1]['tags'].each do |t|
+            if t['category']=="Rarity"
+              quality = t['internal_name'].split('_')
+              if quality.size>1
+                quality = quality[1]
+              else
+                quality = quality[0]
+              end
+            end
+          end
+          quality.downcase!
+          quality = $quality_color[appid.to_s].index{|x| x==quality}
+          $prices[price_result['arrayid']]['quality'] = quality
+          fetchprice = Price.find(price_result['arrayid'])
+          fetchprice['quality'] = quality
+          fetchprice['display_name_rus'] = desc[1]['market_name']
+          fetchprice.save
+        end
+
+        #если все норм, в т.ч. с ценой, отправляем шмотку на вывод
+        if price_result['success'] > 0
+          tmp.push({'title' => desc[1]['market_hash_name'].to_s, 'image_url' => desc[1]['icon_url_large'].to_s, 'price' => price_result['price']})
+        end
       end
     end
 
     return JSON.generate(tmp)
+  end
+
+
+  #Коды для success
+  #-1 - все плохо
+  #1 - все отлично
+  #2 - шмотки не было в БД, цену получили, но нужно будет дописать имя и качество
+  def getItemPrice(appid,market_hash_name)
+    #ищем шмотку в массиве
+    a=$prices.find_index{|x| if (x.nil? ==false)
+                               x['item_hash_name'] == market_hash_name
+                             end}
+    if (a.nil? == false)
+      puts "Item found!"
+      if (Time.zone.now() - $prices[a]['last_update'] > 24*60*60)
+        #шмотка есть в БД, цена старая
+        puts "Updating..."
+        result = updateItemPrice(a)
+        return result
+      else
+        #шмотка есть в БД, цена норм
+        puts "We got the price!"
+        return {'success' => 1, 'price' => $prices[a]['item_cost']}
+      end
+    else
+      #шмотки нет в БД, писец, создаем
+      puts "No item here, creating"
+      c={}
+      c['item_hash_name'] = market_hash_name
+      c['appid'] = appid
+      c['display_name_eng'] = market_hash_name
+      c['display_name_rus'] = market_hash_name
+      c['last_update'] = Time.new(2010,10,10)
+      c['quality'] = 0
+      c['item_cost'] = 0
+      tmp=Price.create(c)
+      tmp.save
+      arrid = Price.where('item_hash_name' => market_hash_name).first['id']
+      $prices[arrid] = c
+      return {'success' => 2, 'price' => updateItemPrice(arrid)['price'], 'arrayid' => arrid}
+    end
+  end
+
+  def updateItemPrice(arrayid)
+    a=$papi.getPricesByHashname($prices[arrayid]['appid'], $prices[arrayid]['item_hash_name'])
+    if a['success'] == true
+      price = a['lowest_price'].match(/[.]*(\d+[.|,]+\d+)[.]*/)[1]
+      price = (price.to_f * 100).to_i
+      $prices[arrayid]['item_cost'] = price
+      $prices[arrayid]['last_update'] = Time.now()
+      fetchprice=Price.find(arrayid)
+      fetchprice['item_cost'] = price
+      fetchprice['last_update'] = $prices[arrayid]['last_update']
+      fetchprice.save
+      return {'success' => 1, 'price' => price}
+      puts "Updated!"
+    else
+      return {'success' => -1, 'price' => -1}
+      puts "Not updated"
+    end
   end
 
   def getSlots(referenceid)

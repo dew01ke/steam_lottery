@@ -9,7 +9,7 @@ class ProfileController < ApplicationController
   end
 
   def lastOperations
-    #soon coming
+    a=Operation.where("user_steamid" => session[:steam_id])
   end
 
   def cashOut
