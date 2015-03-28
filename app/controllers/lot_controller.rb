@@ -148,7 +148,7 @@ class LotController < ApplicationController
     puts "Lot number " + lotid.to_s + " is prepared in queue"
     $LotQueueCounter = $LotQueueCounter + 1
     puts $LotQueueCounter.to_s + " lots in queue"
-    if ($LotQueueCounter > ($LotGrid.size*0.4).ceil.to_i)
+    if ($LotQueueCounter > ($LotGrid.size*0.4).to_i)
       puts "Critical mass reached, pushing"
       pushQueue()
     end

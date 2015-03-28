@@ -22,7 +22,11 @@ class StatsController < ApplicationController
     a=Operation.where("created_at" => begin_time_rd..cur_time).group("user_steamid").sum("amount").values.each do |t|
       sum = sum + t
     end
-    return sum / a.size
+    if a.size==0
+      return 0
+    else
+      return sum / a.size
+    end
   end
 
   def getFinishedLotPriceTable(days,interval)
