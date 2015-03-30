@@ -15,6 +15,9 @@ development:
   #Ключи
   api_key: "40203AB5100825DF97F990FCE10E7916"
 
+  #Сколько минут ждать подтверждения
+  tradeoffer_timeout: 1
+
 production:
   test_string: "it's test string, check it"
 
@@ -31,4 +34,7 @@ production:
 
   #Ключи
   api_key: "40203AB5100825DF97F990FCE10E7916"
+
+  #Сколько минут ждать подтверждения
+  tradeoffer_timeout: 5
 test:

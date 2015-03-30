@@ -34,6 +34,20 @@ class PapiController < ApplicationController
     @result = getAssetPrices(params[:api_key], params[:appid])
   end
 
+  def cancelTradeOffer(api_key, tradeofferid)
+    url = "http://api.steampowered.com/IEconService/CancelTradeOffer/v1/"
+    data = {"key" => api_key, "tradeofferid" => tradeofferid}
+
+    request = $http.httpRequest("POST", url, data)
+    response = JSON.parse(request)
+
+    if (request != -1) and (response != nil)
+      return 1
+    else
+      return -1
+    end
+  end
+
   def getHistoricalTradeOffers(api_key)
     url = "http://api.steampowered.com/IEconService/GetTradeOffers/v1/"
 

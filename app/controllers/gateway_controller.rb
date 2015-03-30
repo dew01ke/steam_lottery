@@ -44,13 +44,29 @@ class GatewayController < ApplicationController
   def checkAcception
     puts "BEGIN checking acception"
     puts $ActiveTradeOffers
-    puts session[:unique_id]
 
     $ActiveTradeOffers.each do |id|
       #Смотрим, чтобы структура не равна {"1" => []}
       if $ActiveTradeOffers[id[0]] != []
         #Извлекаем данные о текущем боте из БД
         this_bot = Bot.find(id[0])
+
+        #Получаем список протухших раздач
+        expired = $ActiveTradeOffers[id[0]].select {|value| ((Time.now - value["timestamp"].to_time) / 60).floor >= APP_CONFIG['tradeoffer_timeout']}
+        expired.each_with_index do |e, i|
+          if $papi.cancelTradeOffer(this_bot.api_key, e['tradeofferid']).to_i == 1
+            puts "Trade offer #{e['tradeofferid']} canceled by System"
+
+            #Удаляем уведомление, если прошел таймоут
+            if session[:unique_id] == e['unique_id']
+              puts "clear Notification"
+              clearNotification()
+            end
+
+            #Удаляем
+            $ActiveTradeOffers[id[0]].delete_at(i)
+          end
+        end
 
         #Загружаем историю об завершенных офферах
         history = $papi.getHistoricalTradeOffers(this_bot.api_key)
@@ -91,10 +107,6 @@ class GatewayController < ApplicationController
       end
     end
 
-    #397854691
-    #http://api.steampowered.com/IEconService/CancelTradeOffer/v1/?key=4D063033D580930A672EF343AF279531&tradeofferid=397854691
-
-    puts session[:unique_id]
     puts $ActiveTradeOffers
     puts "END checking acception"
   end
@@ -181,7 +193,7 @@ class GatewayController < ApplicationController
         if $ActiveTradeOffers.exclude?(bot_id)
           $ActiveTradeOffers[bot_id] = []
         end
-        $ActiveTradeOffers[bot_id].push({"tradeofferid" => response_data["tradeofferid"], "steam64" => session[:steam_id], "unique_id" => @unique_id,  "coins" => 1000})
+        $ActiveTradeOffers[bot_id].push({"tradeofferid" => response_data["tradeofferid"], "steam64" => session[:steam_id], "unique_id" => @unique_id, "timestamp" => "#{Time.now}",  "coins" => 1000})
 
         #Вывод успешного результата
         @a = JSON.generate({"success" => true, "uid" => @unique_id, 'tid' => response_data["tradeofferid"]})
