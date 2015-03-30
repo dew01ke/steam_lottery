@@ -19,30 +19,26 @@ Rails.application.routes.draw do
   get 'gateway/getending'
   get 'gateway/buyslot/:lotid/:slotid' => 'gateway#buyslot'
   get 'gateway/getinventory/:appid'  => 'gateway#getinventory'
+  post 'gateway/addfunds' => 'gateway#makeTradeOffer'
 
   #Отдельный лот с вещью
   get 'lot/:lotid' => 'lot#draw'
 
+
   #testing routes below
-  
   get 'id64/:api_key/:steamlogin' => 'papi#id64'
-
   get 'backpackAppid/:steamid64/:api_key/:appid' => 'papi#backpackAppid'
-
   get 'backpackLogin/:steamlogin/:appid' => 'papi#backpackLogin'
-
   get 'backpack/:steamid64/:appid' => 'papi#backpack'
-
   get 'userinfo/:steamid64/:api_key' => 'papi#userinfo'
-
   get 'pricebyhash/:appid/:market_hash_name' => 'papi#pricebyhash'
-
   get 'asset/:api_key/:appid' => 'papi#asset'
-
   get 'gateway/testgateway/:lotid' => 'gateway#testgateway'
   get 'gateway/testbuy/:market_hash_name' => 'gateway#testbuy'
   get 'profile/update'
   get 'stats/teststats'
+  get 'clear' => 'gateway#clearNotification'
+  get 'acception' => 'gateway#checkAcception'
 
 
   root :to => 'application#index'

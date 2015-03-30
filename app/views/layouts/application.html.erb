@@ -10,8 +10,10 @@
   <%= stylesheet_link_tag "lot", media: "all" %>
   <%= stylesheet_link_tag "profile", media: "all" %>
 
-  <!-- <%= javascript_include_tag "jquery-2.1.3.min" %> -->
+  <%= stylesheet_link_tag "amaran.min", media: "all" %>
+
   <%= javascript_include_tag "http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" %>
+  <%= javascript_include_tag "jquery.amaran.min.js" %>
 </head>
 <body>
 <div id="header">
@@ -46,15 +48,7 @@
 
     <%= yield :profile_nav %>
 
-    <div id="sideblock">
-      <div id="sidename">Скоро завершатся</div>
-      <div id="sidebody">
-        <ul id="ending">
-          <p class="nothing">Пока ничего нет.</p>
-        </ul>
-      </div>
-    </div>
-
+    <%= yield :ending %>
   </div>
 </div>
 
@@ -71,6 +65,27 @@
   </div>
 </div>
 
+<% if session[:notification] != nil %>
+    <script type="text/javascript">
+        $(function() {
+            $.amaran({
+                content:{
+                    bgcolor: '#d25a3e',
+                    color: '#fff',
+                    message: '<center>Примите трейдоффер №<%= session[:unique_id] %><br><a href="https://steamcommunity.com/tradeoffer/<%= session[:tradeofferid] %>">Открыть steamcommuniry.com</a></center>'
+                },
+                theme:'colorful',
+                sticky: true,
+                closeOnClick: false,
+                onClick: function(){
+                    alert("TEST ACTION");
+                }
+            });
+        });
+    </script>
+<% end %>
+
+<%= yield :notification %>
 <%= yield :js %>
 </body>
 </html>

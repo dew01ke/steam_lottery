@@ -1,7 +1,7 @@
 <% if session[:is_logged] != nil %>
     <div class="navigation">
       <div class="back left"><%= link_to raw("&larr; на главную"), controller: "application", action: "index" %></div>
-      <div class="prof right"><a href="#">в профиль &rarr;</a></div>
+      <div class="prof right"><%= link_to raw("в профиль &rarr;"), controller: "profile", action: "index" %></div>
     </div>
 
     <div class="pay-title">Последние операции</div>

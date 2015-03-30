@@ -1,5 +1,35 @@
 <% if session[:is_logged] != nil %>
     <font size="72" color="white">СТАТИСТИКА, СКОЛЬКО ВЫИГРАЛ, ГРАФИКИ</font>
+
+    <% content_for :ending do %>
+        <div id="sideblock">
+          <div id="sidename">Скоро завершатся</div>
+          <div id="sidebody">
+            <ul id="ending">
+              <p class="nothing">Пока ничего нет.</p>
+            </ul>
+          </div>
+        </div>
+    <% end %>
+
+    <% content_for :js do %>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                updateEnding();
+            });
+
+            function updateEnding() {
+                $.getJSON('/gateway/getending', function(response) {
+                    var json = JSON.parse(response);
+                    $("#ending").empty();
+                    $.each(json, function(key, value){
+                        $("#ending").append('<a href="/lot/'+value['global_id']+'"><li class="chance"><img class="left" src="<%= image_url('empty_small.jpg') %>" width="80"><div id="item-chance" class="right"><div id="name">'+value['display_name_rus']+'</div><div id="desc">'+value['quality_rus']+'</div></div></li></a>');
+                    });
+                    setTimeout("updateEnding()", 30000);
+                });
+            }
+        </script>
+    <% end %>
 <% else %>
     <font size="72" color="red">Нужно авторизоаться. Не знаете как?</font>
 <% end %>

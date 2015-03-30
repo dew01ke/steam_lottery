@@ -25,6 +25,17 @@
   <% end %>
 </div>
 
+<% content_for :ending do %>
+    <div id="sideblock">
+      <div id="sidename">Скоро завершатся</div>
+      <div id="sidebody">
+        <ul id="ending">
+          <p class="nothing">Пока ничего нет.</p>
+        </ul>
+      </div>
+    </div>
+<% end %>
+
 <% content_for :js do %>
     <script type="text/javascript">
         $(document).ready(function() {
