@@ -90,4 +90,12 @@ class NetController < ApplicationController
     end
   end
 
+  def clearCookie()
+    @@cookie_store = {}
+  end
+
+  def clearHeader()
+    @@header_store = {}
+  end
+
 end

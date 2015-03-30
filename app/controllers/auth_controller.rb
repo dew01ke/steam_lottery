@@ -10,26 +10,6 @@ class AuthController < ApplicationController
     #coming soon
   end
 
-  def sendTradeOffer(offer_name)
-    $http.addHeader({
-                         "User-Agent" => "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 YaBrowser/14.12.2125.10034 Safari/537.36",
-                         "Content-Type" => "application/x-www-form-urlencoded; charset=UTF-8",
-                         "Referer" => "https://steamcommunity.com/tradeoffer/new/?partner=36107861"
-                     })
-
-    body = {
-        "sessionid" => $http.getCookie("sessionid"),
-        "serverid" => "1",
-        "partner" => "76561197996373589",
-        "tradeoffermessage" => offer_name,
-        "json_tradeoffer" => '{"newversion":true,"version":2,"me":{"assets":[{"appid":730,"contextid":"2","amount":1,"assetid":"1802822393"}],"currency":[],"ready":false},"them":{"assets":[],"currency":[],"ready":false}}',
-        "captcha" => "",
-        "trade_offer_create_params" => "{}"
-    }
-
-    $http.httpRequest("POST", APP_CONFIG['steam_trade_url'], body)
-  end
-
   def logout
     reset_session
     redirect_to :action => 'index', :controller => 'application'
@@ -121,28 +101,6 @@ class AuthController < ApplicationController
 		return {"login" => login, "code" => code}
 	end
 
-	def inventoryView(steam32, appid)
-		icon = [[],[]]
-		id = (tradeOfferUrl.match(/http[s]*:\/\/steamcommunity.com\/tradeoffer\/new\/\?partner=(\d{8})/)[1]).to_i + 76561197960265728
-		if id != nil
-			inventory = $papi.getBackpack(id, appid)
-			if inventory != -1
-				inventory['rgDescriptions'].each do |desc|
-					if desc[1]['tradable'] == 1
-						icon[0][icon[0].size] = desc[1]['market_hash_name']
-						icon[1][icon[1].size] = 'http://steamcommunity-a.akamaihd.net/economy/image/' + desc[1]['icon_url_large'].to_s
-					end
-				end
-				return icon
-			else
-				return -1
-			end
-		else
-			return -1
-		end
-	end
-
-
   #######
   #Возвращает Unix Timestamp
   #######
@@ -155,7 +113,7 @@ class AuthController < ApplicationController
   #######
   def resend
     #Отправляем запрос с добавленными данными
-    response = $http.httpRequest("POST", @@steam_auth_url, {'password' => params[:password],
+    response = $http.httpRequest("POST", APP_CONFIG['steam_auth_url'], {'password' => params[:password],
                                                              'username' => params[:username],
                                                              'rsatimestamp' => params[:rsatimestamp],
                                                              'donotcache' => params[:donotcache],

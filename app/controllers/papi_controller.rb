@@ -34,6 +34,22 @@ class PapiController < ApplicationController
     @result = getAssetPrices(params[:api_key], params[:appid])
   end
 
+  def getHistoricalTradeOffers(api_key)
+    url = "http://api.steampowered.com/IEconService/GetTradeOffers/v1/"
+
+    flags = {"get_sent_offers" => "true", "historical_only" => "true"}
+    data = {"key" => api_key, "format" => "json", "input_json" => flags.to_json}
+
+    request = $http.httpRequest("GET", url, data)
+
+    if (request != -1)
+      response = JSON.parse(request)
+      return response['response']['trade_offers_sent']
+    else
+      return -1
+    end
+  end
+
   #returns steam64
   def getSteam64(steamlogin, api_key)
     url="http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/"

@@ -45,3 +45,6 @@ $lot.setLotInGrid(7,$lot.generateLot(2050))
 $LotQueue = []
 $LotQueueCounter = 0
 
+#Созданные трейдофферы
+$ActiveTradeOffers = {}
+

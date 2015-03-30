@@ -38,24 +38,184 @@ class GatewayController < ApplicationController
     @c = getGrid
   end
 
+  ######
+  ######УДАЛИТЬ, ТОЛЬКО ДЛЯ ТЕСТА || ЗАПУСКАЕМ РАЗ В 30 СЕК
+  ######
+  def checkAcception
+    puts "BEGIN checking acception"
+    puts $ActiveTradeOffers
+    puts session[:unique_id]
+
+    $ActiveTradeOffers.each do |id|
+      #Смотрим, чтобы структура не равна {"1" => []}
+      if $ActiveTradeOffers[id[0]] != []
+        #Извлекаем данные о текущем боте из БД
+        this_bot = Bot.find(id[0])
+
+        #Загружаем историю об завершенных офферах
+        history = $papi.getHistoricalTradeOffers(this_bot.api_key)
+
+        #Проверяем полученную историю
+        history.each do |offer|
+
+          #Если есть совпадение
+          toid = $ActiveTradeOffers[id[0]].index{ |active| active['tradeofferid'] == offer['tradeofferid'] }
+
+          if (toid.nil? == false)
+            #Статус трейдоффера из истории
+            if offer["trade_offer_state"].to_i == 3
+              puts "Tradeoffer accepted successfully. Adding points (" + $ActiveTradeOffers[id[0]][toid]['coins'].to_s + ") to user with id=" + $ActiveTradeOffers[id[0]][toid]['steam64'].to_s
+
+              #Удаляем уведомление, если принято
+              if session[:unique_id] == $ActiveTradeOffers[id[0]][toid]['unique_id']
+                puts "clear Notification"
+                clearNotification()
+              end
+
+              #Удаляем принятую
+              $ActiveTradeOffers[id[0]].delete_at(toid)
+            else
+              puts "Tradeoffer was declined by user"
+
+              #Удаляем уведомление, если отклонено
+              if session[:unique_id] == $ActiveTradeOffers[id[0]][toid]['unique_id']
+                puts "clear Notification"
+                clearNotification()
+              end
+
+              #Удаляем отмененную
+              $ActiveTradeOffers[id[0]].delete_at(toid)
+            end
+          end
+        end
+      end
+    end
+
+    #397854691
+    #http://api.steampowered.com/IEconService/CancelTradeOffer/v1/?key=4D063033D580930A672EF343AF279531&tradeofferid=397854691
+
+    puts session[:unique_id]
+    puts $ActiveTradeOffers
+    puts "END checking acception"
+  end
+
+  ######
+  ######УДАЛИТЬ, ТОЛЬКО ДЛЯ ТЕСТА
+  ######
+  def clearNotification()
+    session.delete(:notification)
+    session.delete(:unique_id)
+    session.delete(:tradeofferid)
+  end
+
+  def makeTradeOffer
+    ######
+    ####тут необходимо сделать проверку на наличие в инвентаре нужных вещей
+    ######
+
+    #Уникальный токен для данного действия
+    @unique_id = Digest::MD5.hexdigest(Time.now.to_i.to_s + rand(123456).to_s)[4..8].upcase!
+
+    #НЕТ ФИЛЬТРАЦИИ
+    user_appid = params[:appId]
+    #НЕТ ФИЛЬТРАЦИИ
+    user_items = params[:myitems]
+    #Вещи, которые мы хотим забрать
+    pick_items = []
+    #Ид бота
+    bot_id = 1
+
+    #Составляем массив нужных вещей
+    user_items.each do |item|
+      pick_items.push({"appid" => user_appid, "contextid" => "2", "amount" => 1, "assetid" => item})
+    end
+
+    #Выбираем первого бота
+    bot = Bot.find(bot_id)
+
+    #Очищаем все данные - необязательно, ибо куки все перепишутся
+    $http.clearCookie()
+    $http.clearHeader()
+
+    #Заполняем куки
+    $http.addCookie({
+                        'sessionid' => bot.last_sessionid,
+                        'steamLogin' => (bot.steam64.to_s + "%7C%7C" + bot.token),
+                        'steamLoginSecure' => (bot.steam64.to_s + "%7C%7C" + bot.token_secure),
+                        ('steamMachineAuth' + bot.steam64.to_s) => bot.webcookie,
+                        'steamCC_92_42_31_160' => "RU"
+                    })
+
+    #Заполняем заголовок
+    $http.addHeader({
+                        "User-Agent" => bot.user_agent,
+                        "Content-Type" => "application/x-www-form-urlencoded; charset=UTF-8",
+                        "Referer" => "https://steamcommunity.com/tradeoffer/new/?partner=86493268"
+                    })
+    #Заполняем сам запрос
+    body = {
+        "sessionid" => bot.last_sessionid,
+        "serverid" => "1",
+        "partner" => "76561198046758996",
+        "tradeoffermessage" => ("Токен действия: #{@unique_id}"),
+        "json_tradeoffer" => '{"newversion":true,"version":2,"me":{"assets":[],"currency":[],"ready":false},"them":{"assets":' + pick_items.to_json + ',"currency":[],"ready":false}}',
+        "captcha" => "",
+        "trade_offer_create_params" => "{}"
+    }
+
+    #Посылаем запрос
+    response = $http.httpRequest("POST", APP_CONFIG['steam_trade_url'], body)
+
+    puts response
+    #Если ответ вернулся нормальный, то
+    if response != -1
+      #Парсим ответ
+      response_data = JSON.parse(response)
+
+      if response_data["tradeofferid"].to_i > 0
+        session[:notification] = true
+        session[:unique_id] = @unique_id
+        session[:tradeofferid] = response_data["tradeofferid"]
+
+        #Добавляем на проверку принятия трейдоффера
+        if $ActiveTradeOffers.exclude?(bot_id)
+          $ActiveTradeOffers[bot_id] = []
+        end
+        $ActiveTradeOffers[bot_id].push({"tradeofferid" => response_data["tradeofferid"], "steam64" => session[:steam_id], "unique_id" => @unique_id,  "coins" => 1000})
+
+        #Вывод успешного результата
+        @a = JSON.generate({"success" => true, "uid" => @unique_id, 'tid' => response_data["tradeofferid"]})
+        render :json => @a
+      else
+        @a = JSON.generate({"success" => false})
+        render :json => @a
+      end
+    else
+      @a = JSON.generate({"success" => false})
+      render :json => @a
+    end
+  end
+
   def getInventory(appid)
     steam64 = session[:steam_id].to_i
     inventory = $papi.getBackpack(steam64, appid)
 
     tmp = []
 
-    inventory['rgDescriptions'].each do |desc|
-      if desc[1]['tradable'] == 1
-        price_result = getItemPrice(appid, desc[1]['market_hash_name'].to_s)
+    inventory['rgInventory'].each do |item|
+      current = inventory['rgDescriptions'][item[1]['classid'].to_s + '_' + item[1]['instanceid'].to_s]
+
+      if current['tradable'] == 1
+        price_result = getItemPrice(appid, current['market_hash_name'].to_s)
 
         #если шмотка новая и нужно вписать название и качество
-        if price_result['success']==2
-          $prices[price_result['arrayid']]['display_name_rus'] = desc[1]['market_name']
+        if price_result['success'] == 2
+          $prices[price_result['arrayid']]['display_name_rus'] = current['market_name']
           quality = ""
-          desc[1]['tags'].each do |t|
+          current['tags'].each do |t|
             if t['category']=="Rarity"
               quality = t['internal_name'].split('_')
-              if quality.size>1
+              if quality.size > 1
                 quality = quality[1]
               else
                 quality = quality[0]
@@ -63,17 +223,17 @@ class GatewayController < ApplicationController
             end
           end
           quality.downcase!
-          quality = $quality_color[appid.to_s].index{|x| x==quality}
+          quality = $quality_color[appid.to_s].index{|x| x == quality}
           $prices[price_result['arrayid']]['quality'] = quality
           fetchprice = Price.find(price_result['arrayid'])
           fetchprice['quality'] = quality
-          fetchprice['display_name_rus'] = desc[1]['market_name']
+          fetchprice['display_name_rus'] = current['market_name']
           fetchprice.save
         end
 
         #если все норм, в т.ч. с ценой, отправляем шмотку на вывод
         if price_result['success'] > 0
-          tmp.push({'title' => desc[1]['market_hash_name'].to_s, 'image_url' => desc[1]['icon_url_large'].to_s, 'price' => price_result['price']})
+          tmp.push({'title' => current['market_hash_name'].to_s, 'image_url' => current['icon_url_large'].to_s, 'price' => price_result['price'], 'id' => item[1]['id'].to_s})
         end
       end
     end

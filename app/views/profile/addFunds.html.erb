@@ -1,7 +1,7 @@
 <% if session[:is_logged] != nil %>
     <div class="navigation">
       <div class="back left"><%= link_to raw("&larr; на главную"), controller: "application", action: "index" %></div>
-      <div class="prof right"><a href="#">в профиль &rarr;</a></div>
+      <div class="prof right"><%= link_to raw("в профиль &rarr;"), controller: "profile", action: "index" %></div>
     </div>
 
     <div class="pay-title">Пополнить баланс</div>
@@ -12,6 +12,11 @@
       <div class="csgo"><a href="#" onclick="loadInventory(730);">CS:GO</a></div>
     </div>
 
+    <div id="status" style="display: none">
+        <div class="loading"></div>
+        <p id="message">Подождите, Ваш инвентарь загружается...</p>
+    </div>
+
     <div id="bp" style="display: none">
       <div id="signal" class="total-cost">Выберите вещи, которые вы хотите обменять на габены:</div>
 
@@ -19,32 +24,56 @@
       </ul>
 
       <div id="ac" style="display: none">
-          <div class="total-cost">За предложенные вещи Вы получите <b>2500</b> габенов</div>
+          <div class="total-cost">За предложенные вещи Вы получите <span id="total">0</span> габенов</div>
 
         <div class="centered">
-          <a class="sendtradeoffer">Создать обмен</a>
+          <a class="sendtradeoffer" onclick="addFunds();">Создать обмен</a>
         </div>​
       </div>
     </div>
 
+    <div class="couriers"></div>
+
     <script>
-        var selItems = 0;
+        var active_appId = 0;
+        var totalCost = 0;
+        var Items = [];
+        var token = "<%= form_authenticity_token %>";
+
+        $.ajaxSetup({
+            beforeSend: function () {
+                $("#bp").hide();
+                $(".couriers").show();
+                $("#status").show();
+                $("#ac").hide();
+            },
+            complete: function () {
+                $("#bp").show();
+                $(".couriers").hide();
+                $("#status").hide();
+                $("#ac").hide();
+            }
+        });
 
         $(document).ready(function() {
             $("ul.backpack-items").on("click", "li", function() {
                 if ($(this).has(".marker-check").length) {
                     $(this).find("div.marker-check").remove();
-                    selItems--;
+                    Items.splice(Items.indexOf($(this).data("id")), 1);
+                    totalCost -= $(this).data("cost");
                 } else {
                     $(this).append('<div class="marker-check"></div>');
-                    selItems++;
+                    Items.push($(this).data("id"));
+                    totalCost += $(this).data("cost");
                 }
 
-                if (selItems > 0) {
+                if (Items.length > 0) {
                     $("#ac").show();
                 } else {
                     $("#ac").hide();
                 }
+
+                $("#total").text(totalCost);
             });
         });
 
@@ -52,9 +81,21 @@
             if (appId == 570) {
                 $('.csgo').removeClass('active');
                 $('.dota').addClass('active');
+
+                active_appId = 570;
+                totalCost = 0;
+                Items = [];
+
+                $("#message").text("Подождите, Ваш инвентарь загружается...");
             } else {
                 $('.dota').removeClass('active');
                 $('.csgo').addClass('active');
+
+                active_appId = 730;
+                totalCost = 0;
+                Items = [];
+
+                $("#message").text("Подождите, Ваш инвентарь загружается...");
             }
 
             $.getJSON('/gateway/getinventory/' + appId, function(response) {
@@ -64,13 +105,51 @@
                 if (json.length == 0) {
                     $("#signal").text("К сожалению, у Вас нет подходящих вещей.");
                 } else {
+                    $("#signal").text("Выберите вещи, которые вы хотите обменять на габены:");
+
                     $.each(json, function(key, value){
-                        $(".backpack-items").append('<li><img height="105" src="http://steamcommunity-a.akamaihd.net/economy/image/' + value["image_url"] + '"><div class="cost">XXX габенов</div></li>');
+                        $(".backpack-items").append('<li data-id="' + value["id"] +  '" data-cost="' + value["price"] + '"><img height="105" src="http://steamcommunity-a.akamaihd.net/economy/image/' + value["image_url"] + '"><div class="cost">' + value["price"] + ' габенов</div></li>');
                     });
-                };
+                }
 
                 $("#bp").show();
             });
+        }
+
+        function addFunds() {
+            $("#message").text("Подождите, пока мы создаем предложение обмена");
+
+            if (Items.length > 0) {
+                $.ajax({
+                    url: '/gateway/addfunds',
+                    type: "POST",
+                    data: {'authenticity_token': token, 'appId': active_appId, 'myitems': Items},
+                    success: function(response) {
+                        $.each(Items, function(i, j) {
+                            $("ul.backpack-items").find('li[data-id="'+j+'"]').remove();
+                        });
+
+                        Items = [];
+                        totalCost = 0;
+                        $("#ac").hide();
+
+                        $.amaran({
+                            content:{
+                                bgcolor: '#d25a3e',
+                                color: '#fff',
+                                message: '<center>Примите трейдоффер №'+response['uid']+'<br><a href="https://steamcommunity.com/tradeoffer/'+response['tid']+'">Открыть steamcommuniry.com</a></center>'
+                            },
+                            theme:'colorful',
+                            sticky: true,
+                            closeOnClick: false,
+                            onClick: function(){
+                                alert("TEST ACTION");
+                            }
+                        });
+                    },
+                    dataType: 'json'
+                });
+            }
         }
     </script>
 
