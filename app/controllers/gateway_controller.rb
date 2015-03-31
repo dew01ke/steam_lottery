@@ -1,5 +1,7 @@
 class GatewayController < ApplicationController
 
+  require 'digest/md5'
+
   #Запрещаем вывод в лайоут
   layout false
 
@@ -44,15 +46,52 @@ class GatewayController < ApplicationController
   def checkAcception
     puts "BEGIN checking acception"
     puts $ActiveTradeOffers
-
-    $ActiveTradeOffers.each do |id|
+    
+    $ActiveTradeOffers.each do |id, active_offers|
       #Смотрим, чтобы структура не равна {"1" => []}
-      if $ActiveTradeOffers[id[0]] != []
+      if $ActiveTradeOffers[id].any?
         #Извлекаем данные о текущем боте из БД
-        this_bot = Bot.find(id[0])
+        this_bot = Bot.find(id)
+
+        #Загружаем историю об завершенных офферах
+        history = $papi.getHistoricalTradeOffers(this_bot.api_key)
+
+        #Проверяем полученную историю
+        history.each do |offer|
+
+          #Если есть совпадение
+          toid = $ActiveTradeOffers[id].index{ |active| active['tradeofferid'] == offer['tradeofferid'] }
+
+          if (toid.nil? == false)
+            #Статус трейдоффера из истории
+            if offer["trade_offer_state"].to_i == 3
+              puts "Tradeoffer accepted successfully. Adding points (" + $ActiveTradeOffers[id][toid]['coins'].to_s + ") to user with id=" + $ActiveTradeOffers[id][toid]['steam64'].to_s
+
+              #Удаляем уведомление, если принято
+              if session[:unique_id] == $ActiveTradeOffers[id][toid]['unique_id']
+                puts "clear Notification"
+                clearNotification()
+              end
+
+              #Удаляем принятую
+              $ActiveTradeOffers[id].delete_at(toid)
+            else
+              puts "Tradeoffer was declined by user"
+
+              #Удаляем уведомление, если отклонено
+              if session[:unique_id] == $ActiveTradeOffers[id][toid]['unique_id']
+                puts "clear Notification"
+                clearNotification()
+              end
+
+              #Удаляем отмененную
+              $ActiveTradeOffers[id].delete_at(toid)
+            end
+          end
+        end
 
         #Получаем список протухших раздач
-        expired = $ActiveTradeOffers[id[0]].select {|value| ((Time.now - value["timestamp"].to_time) / 60).floor >= APP_CONFIG['tradeoffer_timeout']}
+        expired = $ActiveTradeOffers[id].select {|value| ((Time.now - value["timestamp"].to_time) / 60).floor >= APP_CONFIG['tradeoffer_timeout']}
         expired.each_with_index do |e, i|
           if $papi.cancelTradeOffer(this_bot.api_key, e['tradeofferid']).to_i == 1
             puts "Trade offer #{e['tradeofferid']} canceled by System"
@@ -64,46 +103,10 @@ class GatewayController < ApplicationController
             end
 
             #Удаляем
-            $ActiveTradeOffers[id[0]].delete_at(i)
+            $ActiveTradeOffers[id].delete_at(i)
           end
         end
 
-        #Загружаем историю об завершенных офферах
-        history = $papi.getHistoricalTradeOffers(this_bot.api_key)
-
-        #Проверяем полученную историю
-        history.each do |offer|
-
-          #Если есть совпадение
-          toid = $ActiveTradeOffers[id[0]].index{ |active| active['tradeofferid'] == offer['tradeofferid'] }
-
-          if (toid.nil? == false)
-            #Статус трейдоффера из истории
-            if offer["trade_offer_state"].to_i == 3
-              puts "Tradeoffer accepted successfully. Adding points (" + $ActiveTradeOffers[id[0]][toid]['coins'].to_s + ") to user with id=" + $ActiveTradeOffers[id[0]][toid]['steam64'].to_s
-
-              #Удаляем уведомление, если принято
-              if session[:unique_id] == $ActiveTradeOffers[id[0]][toid]['unique_id']
-                puts "clear Notification"
-                clearNotification()
-              end
-
-              #Удаляем принятую
-              $ActiveTradeOffers[id[0]].delete_at(toid)
-            else
-              puts "Tradeoffer was declined by user"
-
-              #Удаляем уведомление, если отклонено
-              if session[:unique_id] == $ActiveTradeOffers[id[0]][toid]['unique_id']
-                puts "clear Notification"
-                clearNotification()
-              end
-
-              #Удаляем отмененную
-              $ActiveTradeOffers[id[0]].delete_at(toid)
-            end
-          end
-        end
       end
     end
 
@@ -126,7 +129,9 @@ class GatewayController < ApplicationController
     ######
 
     #Уникальный токен для данного действия
-    @unique_id = Digest::MD5.hexdigest(Time.now.to_i.to_s + rand(123456).to_s)[4..8].upcase!
+    @unique_id = Digest::MD5.hexdigest(session[:steam_id] + Time.now.to_s)[4..8].upcase!
+    puts "UID"
+    puts @unique_id
 
     #НЕТ ФИЛЬТРАЦИИ
     user_appid = params[:appId]
