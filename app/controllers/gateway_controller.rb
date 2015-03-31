@@ -151,16 +151,15 @@ class GatewayController < ApplicationController
     bot = Bot.find(bot_id)
 
     #Очищаем все данные - необязательно, ибо куки все перепишутся
-    $http.clearCookie()
-    $http.clearHeader()
+    #$http.clearCookie()
+    #$http.clearHeader()
 
     #Заполняем куки
     $http.addCookie({
                         'sessionid' => bot.last_sessionid,
                         'steamLogin' => (bot.steam64.to_s + "%7C%7C" + bot.token),
                         'steamLoginSecure' => (bot.steam64.to_s + "%7C%7C" + bot.token_secure),
-                        ('steamMachineAuth' + bot.steam64.to_s) => bot.webcookie,
-                        'steamCC_92_42_31_160' => "RU"
+                        ('steamMachineAuth' + bot.steam64.to_s) => bot.webcookie
                     })
 
     #Заполняем заголовок
