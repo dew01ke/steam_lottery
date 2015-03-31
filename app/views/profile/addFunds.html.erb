@@ -18,7 +18,7 @@
     </div>
 
     <% if session[:notification] != nil %>
-        <div style="text-align: center; background: #963222; padding: 15px; color: #c9c9c9;">
+        <div class="notification">
           Пожалуйста, примите от нас трейдоффер. Специальный номер <b>№<%= session[:unique_id] %></b>.
         </div>
     <% else %>
@@ -32,7 +32,7 @@
               <div class="total-cost">За предложенные вещи Вы получите <span id="total">0</span> габенов</div>
 
             <div class="centered">
-              <a class="sendtradeoffer" onclick="addFunds();">Создать обмен</a>
+              <a class="GreenButton" onclick="acceptAction(this);">Создать обмен</a>
             </div>​
           </div>
         </div>
@@ -46,6 +46,7 @@
             var totalCost = 0;
             var Items = [];
             var token = "<%= form_authenticity_token %>";
+            var isClicked = false;
 
             $.ajaxSetup({
                 beforeSend: function () {
@@ -83,6 +84,17 @@
                     $("#total").text(totalCost);
                 });
             });
+
+            function acceptAction(button) {
+                if (!isClicked) {
+                    $(button).text('Вы уверены?');
+                    isClicked = true;
+                } else {
+                    $(button).text('Создать обмен');
+                    addFunds();
+                    isClicked = false;
+                }
+            }
 
             function loadInventory(appId) {
                 if (appId == 570) {
@@ -132,10 +144,6 @@
                         type: "POST",
                         data: {'authenticity_token': token, 'appId': active_appId, 'myitems': Items},
                         success: function(response) {
-                            $.each(Items, function(i, j) {
-                                $("ul.backpack-items").find('li[data-id="'+j+'"]').remove();
-                            });
-
                             Items = [];
                             totalCost = 0;
 

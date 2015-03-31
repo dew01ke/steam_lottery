@@ -1,3 +1,9 @@
+.notification {
+    text-align: center;
+    background: #963222;
+    padding: 15px;
+    color: #c9c9c9;
+}
 #status {
     margin-bottom: 30px;
     overflow: hidden;
@@ -256,6 +262,55 @@ ul.backpack-items li .cost {
     color: #c9c9c9;
     font-weight: 400;
 }
+.GreenButton, .GreenButton:link, .GreenButton:visited  {
+    cursor: pointer;
+    display: inline-block;
+    border-radius: 2px;
+    padding: 10px 18px;
+    -webkit-transition: none;
+    -moz-transition: none;
+    -o-transition: none;
+    transition: none;
+    background: #60872c; /* Old browsers */
+    background: -moz-linear-gradient(top,  #60872c 0%, #395a1a 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#60872c), color-stop(100%,#395a1a)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #60872c 0%,#395a1a 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #60872c 0%,#395a1a 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #60872c 0%,#395a1a 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #60872c 0%,#395a1a 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#60872c', endColorstr='#395a1a',GradientType=0 ); /* IE6-9 */
+    color: #c1e799;
+}
+
+.GreenButton:hover {
+    background: #6d9a32; /* Old browsers */
+    background: -moz-linear-gradient(top,  #6d9a32 0%, #477020 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#6d9a32), color-stop(100%,#477020)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #6d9a32 0%,#477020 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #6d9a32 0%,#477020 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #6d9a32 0%,#477020 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #6d9a32 0%,#477020 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6d9a32', endColorstr='#477020',GradientType=0 ); /* IE6-9 */
+    color: #eee;
+}
+
+.GreenButton:active {
+    background: #4c6b23; /* Old browsers */
+    background: -moz-linear-gradient(top,  #4c6b23 0%, #2d4715 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4c6b23), color-stop(100%,#2d4715)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #4c6b23 0%,#2d4715 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #4c6b23 0%,#2d4715 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #4c6b23 0%,#2d4715 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #4c6b23 0%,#2d4715 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c6b23', endColorstr='#2d4715',GradientType=0 ); /* IE6-9 */
+    color: #899e72;
+
+    -moz-box-shadow:    inset 1px 0px 2px #000000;
+    -webkit-box-shadow: inset 1px 0px 2px #000000;
+    box-shadow:         inset 1px 0px 2px #000000;
+}
+
+/*
 .sendtradeoffer {
      cursor: pointer;
      display: inline-block;
@@ -282,6 +337,7 @@ ul.backpack-items li .cost {
      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#60872c', endColorstr='#395a1a',GradientType=0 );
      color: #d8fead;
 }
+*/
 .toinventory {
     border-radius: 0 2px 2px 0;
 }

@@ -70,22 +70,17 @@
         $(function() {
             $.amaran({
                 content:{
-                    bgcolor: '#d25a3e',
+                    bgcolor: '#963222',
                     color: '#fff',
-                    message: '<center>Примите трейдоффер №<%= session[:unique_id] %><br><a href="https://steamcommunity.com/tradeoffer/<%= session[:tradeofferid] %>">Открыть steamcommuniry.com</a></center>'
+                    message: '<center>Примите трейдоффер <b>№<%= session[:unique_id] %></b><br><a target="_blank" href="https://steamcommunity.com/tradeoffer/<%= session[:tradeofferid] %>">Перейти на steamcommunity.com</a></center>'
                 },
                 theme:'colorful',
                 sticky: true,
-                closeOnClick: false,
-                onClick: function(){
-                    alert("TEST ACTION");
-                }
+                closeOnClick: false
             });
         });
     </script>
 <% end %>
-
-<%= yield :notification %>
 <%= yield :js %>
 </body>
 </html>

@@ -106,7 +106,6 @@ class GatewayController < ApplicationController
             $ActiveTradeOffers[id].delete_at(i)
           end
         end
-
       end
     end
 
