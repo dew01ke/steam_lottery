@@ -1,5 +1,6 @@
 class GatewayController < ApplicationController
 
+  require 'digest'
   require 'digest/md5'
 
   #Запрещаем вывод в лайоут
@@ -67,6 +68,11 @@ class GatewayController < ApplicationController
             if offer["trade_offer_state"].to_i == 3
               puts "Tradeoffer accepted successfully. Adding points (" + $ActiveTradeOffers[id][toid]['coins'].to_s + ") to user with id=" + $ActiveTradeOffers[id][toid]['steam64'].to_s
 
+              #Пополняем счет
+              #
+              #
+              #
+
               #Удаляем уведомление, если принято
               if session[:unique_id] == $ActiveTradeOffers[id][toid]['unique_id']
                 puts "clear Notification"
@@ -123,14 +129,8 @@ class GatewayController < ApplicationController
   end
 
   def makeTradeOffer
-    ######
-    ####тут необходимо сделать проверку на наличие в инвентаре нужных вещей
-    ######
-
     #Уникальный токен для данного действия
     @unique_id = Digest::MD5.hexdigest(session[:steam_id] + Time.now.to_s)[4..8].upcase!
-    puts "UID"
-    puts @unique_id
 
     #НЕТ ФИЛЬТРАЦИИ
     user_appid = params[:appId]
@@ -140,10 +140,29 @@ class GatewayController < ApplicationController
     pick_items = []
     #Ид бота
     bot_id = 1
+    #Стоимость вводимых вещей
+    items_cost = 0
 
-    #Составляем массив нужных вещей
+    #Составляем массив нужных вещей и считаем цену
     user_items.each do |item|
-      pick_items.push({"appid" => user_appid, "contextid" => "2", "amount" => 1, "assetid" => item})
+      #Снимаем со строки Base64
+      deencrypted = Base64.urlsafe_decode64(item)
+
+      #Инициализируем алгоритм AES256
+      cipher = OpenSSL::Cipher::Cipher.new("aes-256-cbc")
+      cipher.decrypt
+      cipher.key = Digest::SHA256.digest(APP_CONFIG['secret_key'])
+      cipher.iv = deencrypted.slice!(0, 16)
+      decrypted = cipher.update(deencrypted) + cipher.final
+
+      #Извлекаем из строки assedid + market_hash_name
+      splitted = decrypted.split('@@')
+
+      #Извлекаем цену по item_hash_name
+      items_cost += $prices.select{|n| not n.nil? and n['item_hash_name'] == splitted[1]}[0]['item_cost']
+
+      #Добавляем в массив требуемых вещей
+      pick_items.push({"appid" => user_appid, "contextid" => "2", "amount" => 1, "assetid" => splitted[0]})
     end
 
     #Выбираем первого бота
@@ -196,7 +215,7 @@ class GatewayController < ApplicationController
         if $ActiveTradeOffers.exclude?(bot_id)
           $ActiveTradeOffers[bot_id] = []
         end
-        $ActiveTradeOffers[bot_id].push({"tradeofferid" => response_data["tradeofferid"], "steam64" => session[:steam_id], "unique_id" => @unique_id, "timestamp" => "#{Time.now}",  "coins" => 1000})
+        $ActiveTradeOffers[bot_id].push({"tradeofferid" => response_data["tradeofferid"], "steam64" => session[:steam_id], "unique_id" => @unique_id, "timestamp" => "#{Time.now}",  "coins" => items_cost})
 
         #Вывод успешного результата
         @a = JSON.generate({"success" => true, "uid" => @unique_id, 'tid' => response_data["tradeofferid"]})
@@ -248,7 +267,17 @@ class GatewayController < ApplicationController
 
         #если все норм, в т.ч. с ценой, отправляем шмотку на вывод
         if price_result['success'] > 0
-          tmp.push({'title' => current['market_hash_name'].to_s, 'image_url' => current['icon_url_large'].to_s, 'price' => price_result['price'], 'id' => item[1]['id'].to_s})
+          #Строка состоящая из assetid + market_hash_name + salt(time)
+          item_identificator = "#{item[1]['id']}@@#{current['market_hash_name']}@@#{Time.now}"
+
+          #Инициализируем алгоритм шифрования AES256 + ключ SHA256
+          cipher = OpenSSL::Cipher::Cipher.new("aes-256-cbc")
+          cipher.encrypt
+          cipher.key = Digest::SHA256.digest(APP_CONFIG['secret_key'])
+          cipher.iv = initialization_vector = cipher.random_iv
+          encrypted = Base64.urlsafe_encode64(initialization_vector + cipher.update(item_identificator) + cipher.final)
+
+          tmp.push({'title' => current['market_hash_name'].to_s, 'image_url' => current['icon_url_large'].to_s, 'price' => price_result['price'], 'param' => encrypted})
         end
       end
     end
