@@ -69,9 +69,10 @@ class GatewayController < ApplicationController
               puts "Tradeoffer accepted successfully. Adding points (" + $ActiveTradeOffers[id][toid]['coins'].to_s + ") to user with id=" + $ActiveTradeOffers[id][toid]['steam64'].to_s
 
               #Пополняем счет
-              #
-              #
-              #
+              user = User.find_by(steam64: session[:steam_id])
+              user.points = user.points + $ActiveTradeOffers[id][toid]['coins'].to_i
+              session[:coin_count] = user.points
+              user.save
 
               #Удаляем уведомление, если принято
               if session[:unique_id] == $ActiveTradeOffers[id][toid]['unique_id']
