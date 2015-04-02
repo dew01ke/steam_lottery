@@ -72,6 +72,9 @@ class NetController < ApplicationController
       end
     end
 
+    puts "AZAZAZAZAZAZAZA"
+    puts request.body
+
     if request.status == 200
       return request.body
     else

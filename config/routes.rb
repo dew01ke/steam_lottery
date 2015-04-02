@@ -39,6 +39,9 @@ Rails.application.routes.draw do
   get 'stats/teststats'
   get 'clear' => 'gateway#clearNotification'
   get 'acception' => 'gateway#checkAcception'
+  get 'lotcancel/:gridid' => 'admin#cancel'
+  get 'editrange/:slotid/:minprice/:maxprice' => 'admin#editrange'
+  get 'admin/testadminstats'
 
 
   root :to => 'application#index'

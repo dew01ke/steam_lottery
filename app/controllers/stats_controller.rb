@@ -4,7 +4,7 @@ class StatsController < ApplicationController
     @b=getAverageSpendings(1)
     @c=getFinishedLotPriceTable(1,100)
     @d=getAverageTimePriceTable(1,500)
-    @e=getAverageTimeItemTable(1)
+    @e=getAverageTimeItemTable(15)
   end
 
   def getActiveUsers(days)
@@ -64,13 +64,15 @@ class StatsController < ApplicationController
     cur_time = Time.now()
     begin_time = cur_time - (days*60*60*24)
     begin_time_rd = Time.new(begin_time.year,begin_time.month,begin_time.day)
-    itemstotal=Price.all.count
-    counter = 1
+    itemstotal=$prices.size
     a=[]
-    while counter<itemstotal
-      a.push([Price.find(counter)['item_hash_name'], Stat.where("finished" => begin_time_rd..cur_time, "price_id" => counter).average("TIME_TO_SEC(total_time)").to_i])
-      counter = counter + 1
-    end
+    $prices.each.with_index {|x, index|
+      if (x.nil? == false)
+        a.push([x['item_hash_name'], Stat.where("finished" => begin_time_rd..cur_time, "price_id" => index).average("TIME_TO_SEC(total_time)").to_i])
+        puts index
+      end
+    }
+
     return a.sort_by{|x| -x[1]}
   end
 end

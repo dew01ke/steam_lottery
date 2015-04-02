@@ -210,6 +210,7 @@ class GatewayController < ApplicationController
       @a = JSON.generate({"success" => false})
       render :json => @a
     end
+    puts response.body
   end
 
   def getInventory(appid)
@@ -269,16 +270,7 @@ class GatewayController < ApplicationController
                              end}
     if (a.nil? == false)
       puts "Item found!"
-      if (Time.zone.now() - $prices[a]['last_update'] > 24*60*60)
-        #шмотка есть в БД, цена старая
-        puts "Updating..."
-        result = updateItemPrice(a)
-        return result
-      else
-        #шмотка есть в БД, цена норм
-        puts "We got the price!"
-        return {'success' => 1, 'price' => $prices[a]['item_cost']}
-      end
+      return {'success' => 1, 'price' => $prices[a]['item_cost']}
     else
       #шмотки нет в БД, писец, создаем
       puts "No item here, creating"

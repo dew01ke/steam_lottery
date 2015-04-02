@@ -18,7 +18,7 @@ class LotController < ApplicationController
         a=ShortFinishedRaffle.where(id: request_id)
         if (a.count == 1)
           a=ShortFinishedRaffle.find(request_id)
-          @this_lot = {'global_id' => request_id, 'data' => {'slots' => a['slots'], 'slot_price' => a['slot_price'], 'item' => {'display_name_rus' => a.price['display_name_rus'], 'display_name_eng' => a.price['display_name_eng'], 'quality_rus' => $qualities_rus[a.price['appid'].to_s][a.price['quality'].to_i - 1], 'quality_eng' => $qualities_eng[a.price['appid'].to_s][a.price['quality'].to_i - 1], 'quality_color' => $quality_color[a.price['appid'].to_s][a.price['quality'].to_i - 1], 'appid' => a.price['appid']}}}
+          @this_lot = {'global_id' => request_id, 'data' => {'slots' => a['slots'], 'slot_price' => a['slot_price'], 'item' => {'display_name_rus' => $prices[a['price_id']]['display_name_rus'], 'display_name_eng' => $prices[a['price_id']]['display_name_eng'], 'quality_rus' => $qualities_rus[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'quality_eng' => $qualities_eng[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'quality_color' => $quality_color[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'appid' => $prices[a['price_id']]['appid']}}}
           @this_gid = request_id
         end
       end
@@ -48,7 +48,7 @@ class LotController < ApplicationController
       end
     end
 
-    item_price = (1.4*a.price['item_cost']).ceil
+    item_price = (1.4*$prices[a['price_id']]['item_cost']).ceil
     puts "Item price*1.4:" + item_price.to_s
     min_slots = [((Math.sqrt(itemprice)-12)/12).ceil, 1].max
     puts "Min slots:" + (min_slots*12).to_s
@@ -63,11 +63,12 @@ class LotController < ApplicationController
     total_price = slot_cost * cur_slots
     puts "Total item price:" + total_price.to_s
 
-    item = {'item_steam_id' => a['item_steam_id'], 'price_id' => a['price_id'], 'bot_id' => a['bot_id'], 'display_name_rus' => a.price['display_name_rus'], 'display_name_eng' => a.price['display_name_eng'], 'quality_rus' => $qualities_rus[a.price['appid'].to_s][a.price['quality'].to_i - 1], 'quality_eng' => $qualities_eng[a.price['appid'].to_s][a.price['quality'].to_i - 1], 'quality_color' => $quality_color[a.price['appid'].to_s][a.price['quality'].to_i - 1], 'appid' => a.price['appid']}
+    item = {'item_steam_id' => a['item_steam_id'], 'price_id' => a['price_id'], 'bot_id' => a['bot_id'], 'display_name_rus' => $prices[a['price_id']]['display_name_rus'], 'display_name_eng' => $prices[a['price_id']]['display_name_eng'], 'quality_rus' => $qualities_rus[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'quality_eng' => $qualities_eng[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'quality_color' => $quality_color[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'appid' => $prices[a['price_id']]['appid'], 'deposited_by' => a['deposited_by']}
     puts item['item_steam_id']
+    puts item
     a.destroy
 
-    result = {'item' => item, 'slots' => cur_slots, 'slot_price' => slot_cost}
+    result = {'item' => item, 'slots' => cur_slots, 'slot_price' => slot_cost, 'winner' => nil}
     return result
   end
 
@@ -86,8 +87,10 @@ class LotController < ApplicationController
   def finalizeLot(lotid)
     #get winner
     winner = rand($LotGrid[lotid]['data']['slots'].to_i)
-    puts "Winner at lot " + lotid.to_s + " is " + winner.to_s + " with steamid " + $LotGrid[lotid]['slot_info'][winner]
+    $LotGrid[lotid]['data']['winner'] = $LotGrid[lotid]['slot_info'][winner]
+    puts "Winner at lot " + lotid.to_s + " is " + winner.to_s + " with steamid " + $LotGrid[lotid]['data']['winner'].to_s
 
+    if ($LotGrid[lotid]['slot_info'][winner].to_i > 0)
     #award winner
     a=PendingItem.new
     a['item_steam_id'] = $LotGrid[lotid]['data']['item']['item_steam_id']
@@ -115,9 +118,8 @@ class LotController < ApplicationController
       puts t
       c['user_steamid'] = t
       c['created_at'] = Time.now()
-      c['is_deposit'] = false
-      c['is_item'] = false
-      c['item_name'] = "Points spent on raffle " + $LotGrid[lotid]['global_id'].to_s
+      c['info'] = "Points spent on raffle " + $LotGrid[lotid]['global_id'].to_s
+      c['type'] = 1
 
       c['amount'] = $LotGrid[lotid]['slot_info'].count{|x| x == t} * $LotGrid[lotid]['data']['slot_price']
       c.save
@@ -135,6 +137,7 @@ class LotController < ApplicationController
     d['total_time'] = tmp_hours.to_s + ":" + tmp_minutes.to_s + ":" + tmp_seconds.to_s
     puts "Total time:" + tmp_hours.to_s + ":" + tmp_minutes.to_s + ":" + tmp_seconds.to_s
     d.save
+    end
 
     #generate new raffle
     #push to queue
