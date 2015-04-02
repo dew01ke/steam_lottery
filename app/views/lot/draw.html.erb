@@ -2,101 +2,106 @@
   <div class="back left"><%= link_to raw("&larr; на главную"), controller: "application", action: "index"  %></div>
 </div>
 
-<div id="item-title" class="<%= @this_lot['data']['item']['quality_color'] %>_color"><%= @this_lot['data']['item']['display_name_rus'] %></div>
-<div id="item-quality"><%= @this_lot['data']['item']['quality_rus'] %></div>
+<% if @this_gid != -1 %>
+    <div id="item-title" class="<%= @this_lot['data']['item']['quality_color'] %>_color"><%= @this_lot['data']['item']['display_name_rus'] %></div>
+    <div id="item-quality"><%= @this_lot['data']['item']['quality_rus'] %></div>
 
-<div id="preview">
-  <img width="360" height="360" src="<%= image_url('empty_big.jpg') %>">
-  <div class="stattrak hide"></div>
-</div>
-
-<div id="item-cost"><%= @this_lot['data']['slot_price'] %> габенов за слот</div>
-
-<table id="places" cellpadding="3" cellspacing="8">
-  <% (0..@this_lot['data']['slots'] - 1).each do |i| %>
-
-      <% if i % 12 == 0 or i == 0 %>
-          <tr>
-      <% end %>
-
-      <td id="buy" data-id="<%= i %>"><%= i + 1 %></td>
-
-      <% if i % 12 == 11 %>
-          </tr>
-      <% end %>
-  <% end %>
-</table>
-
-<% content_for :ending do %>
-    <div id="sideblock">
-      <div id="sidename">Скоро завершатся</div>
-      <div id="sidebody">
-        <ul id="ending">
-          <p class="nothing">Пока ничего нет.</p>
-        </ul>
-      </div>
+    <div id="preview">
+      <img width="360" height="360" src="<%= image_url('empty_big.jpg') %>">
+      <div class="stattrak hide"></div>
     </div>
-<% end %>
 
-<% content_for :js do %>
-<script type="text/javascript">
-    var gid = <%= @this_gid %>;
-    <% if session[:is_logged] %>
-    var sid = <%= session[:steam_id] %>;
-    <% else %>
-    var sid = 0;
+    <div id="item-cost"><%= @this_lot['data']['slot_price'] %> габенов за слот</div>
+
+    <table id="places" cellpadding="3" cellspacing="8">
+      <% (0..@this_lot['data']['slots'] - 1).each do |i| %>
+
+          <% if i % 12 == 0 or i == 0 %>
+              <tr>
+          <% end %>
+
+          <td id="buy" data-id="<%= i %>"><%= i + 1 %></td>
+
+          <% if i % 12 == 11 %>
+              </tr>
+          <% end %>
+      <% end %>
+    </table>
+
+    <% content_for :ending do %>
+        <div id="sideblock">
+          <div id="sidename">Скоро завершатся</div>
+          <div id="sidebody">
+            <ul id="ending">
+              <p class="nothing">Пока ничего нет.</p>
+            </ul>
+          </div>
+        </div>
     <% end %>
 
-    $(document).ready(function() {
+    <% content_for :js do %>
+    <script type="text/javascript">
+        var gid = <%= @this_gid %>;
         <% if session[:is_logged] %>
-            $("td#buy").click(function(){
-                var pid = $(this).data("id");
-
-                $(this).addClass('loading');
-
-                $.getJSON('/gateway/buyslot/' + gid + "/" + pid, function(response) {
-                    if (response['success'] == true) {
-                        $(this).html("");
-                        $(this).removeAttr('id');
-                        $(this).css('background', "url(/assets/avatars/" + sid + ".jpg) #16191b no-repeat center center");
-                        $(this).css('background-size', 'cover');
-                    } else {
-                        alert(response['message']);
-                    }
-                });
-
-                updateSlots();
-            });
+        var sid = <%= session[:steam_id] %>;
+        <% else %>
+        var sid = 0;
         <% end %>
-        updateSlots();
-        updateEnding();
-    });
 
-    function updateSlots() {
-        $.getJSON('/gateway/getslots/' + gid, function(response) {
-            var json = JSON.parse(response);
-            $.each(json, function(i, j) {
-                var slot = $('#places').find('td[data-id="' + i + '"]');
-                if (j != "0") {
-                    $(slot).html("");
-                    $(slot).removeAttr('id');
-                    $(slot).css('background', "url(/assets/avatars/" + j + ".jpg) #16191b no-repeat center center");
-                    $(slot).css('background-size', 'cover');
-                };
-            });
-            setTimeout("updateSlots()", 10000);
-        });
-    }
+        $(document).ready(function() {
+            <% if session[:is_logged] %>
+                $("td#buy").click(function(){
+                    var pid = $(this).data("id");
 
-    function updateEnding() {
-        $.getJSON('/gateway/getending', function(response) {
-            var json = JSON.parse(response);
-            $("#ending").empty();
-            $.each(json, function(key, value){
-                $("#ending").append('<a href="/lot/'+value['global_id']+'"><li class="chance"><img class="left" src="<%= image_url('empty_small.jpg') %>" width="80"><div id="item-chance" class="right"><div id="name">'+value['display_name_rus']+'</div><div id="desc">'+value['quality_rus']+'</div></div></li></a>');
-            });
-            setTimeout("updateEnding()", 30000);
+                    $(this).addClass('loading');
+
+                    $.getJSON('/gateway/buyslot/' + gid + "/" + pid, function(response) {
+                        if (response['success'] == true) {
+                            $(this).html("");
+                            $(this).removeAttr('id');
+                            $(this).css('background', "url(/assets/avatars/" + sid + ".jpg) #16191b no-repeat center center");
+                            $(this).css('background-size', 'cover');
+                        } else {
+                            alert(response['message']);
+                        }
+                    });
+
+                    updateSlots();
+                });
+            <% end %>
+            updateSlots();
+            updateEnding();
         });
-    }
-</script>
+
+        function updateSlots() {
+            $.getJSON('/gateway/getslots/' + gid, function(response) {
+                var json = JSON.parse(response);
+                $.each(json, function(i, j) {
+                    var slot = $('#places').find('td[data-id="' + i + '"]');
+                    if (j != "0") {
+                        $(slot).html("");
+                        $(slot).removeAttr('id');
+                        $(slot).css('background', "url(/assets/avatars/" + j + ".jpg) #16191b no-repeat center center");
+                        $(slot).css('background-size', 'cover');
+                    };
+                });
+                setTimeout("updateSlots()", 10000);
+            });
+        }
+
+        function updateEnding() {
+            $.getJSON('/gateway/getending', function(response) {
+                var json = JSON.parse(response);
+                $("#ending").empty();
+                $.each(json, function(key, value){
+                    $("#ending").append('<a href="/lot/'+value['global_id']+'"><li class="chance"><img class="left" src="<%= image_url('empty_small.jpg') %>" width="80"><div id="item-chance" class="right"><div id="name">'+value['display_name_rus']+'</div><div id="desc">'+value['quality_rus']+'</div></div></li></a>');
+                });
+                setTimeout("updateEnding()", 30000);
+            });
+        }
+    </script>
+    <% end %>
+
+<% else %>
+    <font size="50" color="#ffffff">Ошибка, данный лот устарел и был удален</font>
 <% end %>
