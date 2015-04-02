@@ -12,11 +12,14 @@ development:
   #Работа с openid
   steam_openid: "http://steamcommunity.com/openid"
 
-  #Ключи
+  #Ключи DEV API
   api_key: "40203AB5100825DF97F990FCE10E7916"
 
   #Сколько минут ждать подтверждения
   tradeoffer_timeout: 1
+
+  #Секретный ключ для шифрования assetid и marker_hash_name
+  secret_key: "i_want_one_million_dollars"
 
 production:
   test_string: "it's test string, check it"
@@ -32,9 +35,12 @@ production:
   #Работа с openid
   steam_openid: "http://steamcommunity.com/openid"
 
-  #Ключи
+  #Ключи DEV API
   api_key: "40203AB5100825DF97F990FCE10E7916"
 
   #Сколько минут ждать подтверждения
   tradeoffer_timeout: 5
+
+  #Секретный ключ для шифрования assetid и marker_hash_name
+  secret_key: "i_want_one_million_dollars"
 test:

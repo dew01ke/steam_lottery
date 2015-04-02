@@ -72,7 +72,7 @@ class NetController < ApplicationController
       end
     end
 
-    puts "AZAZAZAZAZAZAZA"
+    #ТОЛЬКО ДЛЯ ДЕБАГА
     puts request.body
 
     if request.status == 200
