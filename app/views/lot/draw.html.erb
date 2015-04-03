@@ -2,16 +2,29 @@
   <div class="back left"><%= link_to raw("&larr; на главную"), controller: "application", action: "index"  %></div>
 </div>
 
+<div id="item-title" class="<%= @this_lot['data']['item']['quality_color'] %>_color"><%= @this_lot['data']['item']['display_name_rus'] %></div>
+<div id="item-quality"><%= @this_lot['data']['item']['quality_rus'] %></div>
+
 <% if @this_gid != -1 %>
-    <div id="item-title" class="<%= @this_lot['data']['item']['quality_color'] %>_color"><%= @this_lot['data']['item']['display_name_rus'] %></div>
-    <div id="item-quality"><%= @this_lot['data']['item']['quality_rus'] %></div>
+    <% if @this_lot['data']['winner'].nil? %>
+        <div id="preview">
+          <img width="360" height="360" src="<%= image_url('empty_big.jpg') %>">
+          <div class="stattrak hide"></div>
+        </div>
 
-    <div id="preview">
-      <img width="360" height="360" src="<%= image_url('empty_big.jpg') %>">
-      <div class="stattrak hide"></div>
-    </div>
+        <div id="item-cost"><%= @this_lot['data']['slot_price'] %> габенов за слот</div>
+    <% else %>
+        <div id="preview-winner">
+          <img class="item left" width="360" height="360" src="<%= image_url('empty_big.jpg') %>">
 
-    <div id="item-cost"><%= @this_lot['data']['slot_price'] %> габенов за слот</div>
+          <div class="arrow left"></div>
+
+          <div id="winner" class="right">
+            <img width="184" height="184" src="<%= image_path("avatars/"+ @this_lot['data']['winner'].to_s + ".jpg") %>">
+            <div class="crown"></div>
+          </div>
+        </div>
+    <% end %>
 
     <table id="places" cellpadding="3" cellspacing="8">
       <% (0..@this_lot['data']['slots'] - 1).each do |i| %>

@@ -18,7 +18,7 @@ class LotController < ApplicationController
         a=ShortFinishedRaffle.where(id: request_id)
         if (a.count == 1)
           a=ShortFinishedRaffle.find(request_id)
-          @this_lot = {'global_id' => request_id, 'data' => {'slots' => a['slots'], 'slot_price' => a['slot_price'], 'item' => {'display_name_rus' => $prices[a['price_id']]['display_name_rus'], 'display_name_eng' => $prices[a['price_id']]['display_name_eng'], 'quality_rus' => $qualities_rus[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'quality_eng' => $qualities_eng[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'quality_color' => $quality_color[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'appid' => $prices[a['price_id']]['appid']}}}
+          @this_lot = {'global_id' => request_id, 'data' => {'winner' => a['winner_id'], 'slots' => a['slots'], 'slot_price' => a['slot_price'], 'item' => {'display_name_rus' => $prices[a['price_id']]['display_name_rus'], 'display_name_eng' => $prices[a['price_id']]['display_name_eng'], 'quality_rus' => $qualities_rus[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'quality_eng' => $qualities_eng[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'quality_color' => $quality_color[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'appid' => $prices[a['price_id']]['appid']}}}
           @this_gid = request_id
         else
           #если не нашли в архтвных, то возвращаем ошибку
