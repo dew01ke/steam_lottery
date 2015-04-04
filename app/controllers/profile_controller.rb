@@ -14,6 +14,13 @@ class ProfileController < ApplicationController
 
   def cashOut
     #soon coming
+    won_items = PendingItem.where(:user_id => session[:steam_id])
+
+    @available_items = []
+
+    won_items.each do |item|
+      @available_items.push({'id' => item.item_steam_id})
+    end
   end
 
   def update

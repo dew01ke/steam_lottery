@@ -1,5 +1,4 @@
 class GatewayController < ApplicationController
-
   require 'digest'
   require 'digest/md5'
 
@@ -11,7 +10,8 @@ class GatewayController < ApplicationController
   end
 
   def getinventory
-    @a = getInventory(params[:appid]).to_json
+    #@a = getInventory(params[:appid]).to_json
+    @a = $trade.getInventory(session[:steam_id], params[:appid]).to_json
     render :json => @a
   end
 
@@ -41,94 +41,7 @@ class GatewayController < ApplicationController
     @c = getGrid
   end
 
-  ######
-  ######УДАЛИТЬ, ТОЛЬКО ДЛЯ ТЕСТА || ЗАПУСКАЕМ РАЗ В 30 СЕК
-  ######
-  def checkAcception
-    puts "BEGIN checking acception"
-    puts $ActiveTradeOffers
-    
-    $ActiveTradeOffers.each do |id, active_offers|
-      #Смотрим, чтобы структура не равна {"1" => []}
-      if $ActiveTradeOffers[id].any?
-        #Извлекаем данные о текущем боте из БД
-        this_bot = Bot.find(id)
-
-        #Загружаем историю об завершенных офферах
-        history = $papi.getHistoricalTradeOffers(this_bot.api_key)
-
-        #Проверяем полученную историю
-        history.each do |offer|
-
-          #Если есть совпадение
-          toid = $ActiveTradeOffers[id].index{ |active| active['tradeofferid'] == offer['tradeofferid'] }
-
-          if (toid.nil? == false)
-            #Статус трейдоффера из истории
-            if offer["trade_offer_state"].to_i == 3
-              puts "Tradeoffer accepted successfully. Adding points (" + $ActiveTradeOffers[id][toid]['coins'].to_s + ") to user with id=" + $ActiveTradeOffers[id][toid]['steam64'].to_s
-
-              #Пополняем счет
-              user = User.find_by(steam64: session[:steam_id])
-              user.points = user.points + $ActiveTradeOffers[id][toid]['coins'].to_i
-              session[:coin_count] = user.points
-              user.save
-
-              #Удаляем уведомление, если принято
-              if session[:unique_id] == $ActiveTradeOffers[id][toid]['unique_id']
-                puts "clear Notification"
-                clearNotification()
-              end
-
-              #Удаляем принятую
-              $ActiveTradeOffers[id].delete_at(toid)
-            else
-              puts "Tradeoffer was declined by user"
-
-              #Удаляем уведомление, если отклонено
-              if session[:unique_id] == $ActiveTradeOffers[id][toid]['unique_id']
-                puts "clear Notification"
-                clearNotification()
-              end
-
-              #Удаляем отмененную
-              $ActiveTradeOffers[id].delete_at(toid)
-            end
-          end
-        end
-
-        #Получаем список протухших раздач
-        expired = $ActiveTradeOffers[id].select {|value| ((Time.now - value["timestamp"].to_time) / 60).floor >= APP_CONFIG['tradeoffer_timeout']}
-        expired.each_with_index do |e, i|
-          if $papi.cancelTradeOffer(this_bot.api_key, e['tradeofferid']).to_i == 1
-            puts "Trade offer #{e['tradeofferid']} canceled by System"
-
-            #Удаляем уведомление, если прошел таймоут
-            if session[:unique_id] == e['unique_id']
-              puts "clear Notification"
-              clearNotification()
-            end
-
-            #Удаляем
-            $ActiveTradeOffers[id].delete_at(i)
-          end
-        end
-      end
-    end
-
-    puts $ActiveTradeOffers
-    puts "END checking acception"
-  end
-
-  ######
-  ######УДАЛИТЬ, ТОЛЬКО ДЛЯ ТЕСТА
-  ######
-  def clearNotification()
-    session.delete(:notification)
-    session.delete(:unique_id)
-    session.delete(:tradeofferid)
-  end
-
+=begin
   def makeTradeOffer
     #Уникальный токен для данного действия
     @unique_id = Digest::MD5.hexdigest(session[:steam_id] + Time.now.to_s)[4..8].upcase!
@@ -286,57 +199,7 @@ class GatewayController < ApplicationController
 
     return JSON.generate(tmp)
   end
-
-
-  #Коды для success
-  #-1 - все плохо
-  #1 - все отлично
-  #2 - шмотки не было в БД, цену получили, но нужно будет дописать имя и качество
-  def getItemPrice(appid,market_hash_name)
-    #ищем шмотку в массиве
-    a=$prices.find_index{|x| if (x.nil? ==false)
-                               x['item_hash_name'] == market_hash_name
-                             end}
-    if (a.nil? == false)
-      puts "Item found!"
-      return {'success' => 1, 'price' => $prices[a]['item_cost']}
-    else
-      #шмотки нет в БД, писец, создаем
-      puts "No item here, creating"
-      c={}
-      c['item_hash_name'] = market_hash_name
-      c['appid'] = appid
-      c['display_name_eng'] = market_hash_name
-      c['display_name_rus'] = market_hash_name
-      c['last_update'] = Time.new(2010,10,10)
-      c['quality'] = 0
-      c['item_cost'] = 0
-      tmp=Price.create(c)
-      tmp.save
-      arrid = Price.where('item_hash_name' => market_hash_name).first['id']
-      $prices[arrid] = c
-      return {'success' => 2, 'price' => updateItemPrice(arrid)['price'], 'arrayid' => arrid}
-    end
-  end
-
-  def updateItemPrice(arrayid)
-    a=$papi.getPricesByHashname($prices[arrayid]['appid'], $prices[arrayid]['item_hash_name'])
-    if a['success'] == true
-      price = a['lowest_price'].match(/[.]*(\d+[.|,]+\d+)[.]*/)[1]
-      price = (price.to_f * 100).to_i
-      $prices[arrayid]['item_cost'] = price
-      $prices[arrayid]['last_update'] = Time.now()
-      fetchprice=Price.find(arrayid)
-      fetchprice['item_cost'] = price
-      fetchprice['last_update'] = $prices[arrayid]['last_update']
-      fetchprice.save
-      return {'success' => 1, 'price' => price}
-      puts "Updated!"
-    else
-      return {'success' => -1, 'price' => -1}
-      puts "Not updated"
-    end
-  end
+=end
 
   def getSlots(referenceid)
     lotid=$LotGrid.index{|x| x['global_id'] == referenceid.to_i}

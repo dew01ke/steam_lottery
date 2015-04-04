@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   get 'gateway/getending'
   get 'gateway/buyslot/:lotid/:slotid' => 'gateway#buyslot'
   get 'gateway/getinventory/:appid'  => 'gateway#getinventory'
-  post 'gateway/addfunds' => 'gateway#makeTradeOffer'
+  post 'gateway/addfunds' => 'tradeoffer#sendTradeOffer'
 
   #Отдельный лот с вещью
   get 'lot/:lotid' => 'lot#draw'
@@ -37,8 +37,8 @@ Rails.application.routes.draw do
   get 'gateway/testbuy/:market_hash_name' => 'gateway#testbuy'
   get 'profile/update'
   get 'stats/teststats'
-  get 'clear' => 'gateway#clearNotification'
-  get 'acception' => 'gateway#checkAcception'
+  get 'clear' => 'tradeoffer#clearNotification'
+  get 'acception' => 'tradeoffer#checkAcception'
   get 'lotcancel/:gridid' => 'admin#cancel'
   get 'editrange/:slotid/:minprice/:maxprice' => 'admin#editrange'
   get 'admin/testadminstats'

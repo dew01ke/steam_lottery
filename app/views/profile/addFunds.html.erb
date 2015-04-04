@@ -144,7 +144,7 @@
                     $.ajax({
                         url: '/gateway/addfunds',
                         type: "POST",
-                        data: {'authenticity_token': token, 'appId': active_appId, 'myitems': Items},
+                        data: {'authenticity_token': token, 'appId': active_appId, 'myItems': Items},
                         success: function(response) {
                             Items = [];
                             totalCost = 0;
