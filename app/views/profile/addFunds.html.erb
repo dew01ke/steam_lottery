@@ -67,7 +67,7 @@
                 $("ul.backpack-items").on("click", "li", function() {
                     if ($(this).has(".marker-check").length) {
                         $(this).find("div.marker-check").remove();
-                        Items.splice(Items.indexOf($(this).data("id")), 1);
+                        Items.splice(Items.indexOf($(this).data("param")), 1);
                         totalCost -= $(this).data("cost");
                     } else {
                         if (Items.length < 12) {
@@ -95,6 +95,9 @@
                     $(button).text('Создать обмен');
                     addFunds();
                     isClicked = false;
+
+                    Items = [];
+                    totalCost = 0;
                 }
             }
 
@@ -129,7 +132,7 @@
                         $("#signal").text("Выберите вещи, которые вы хотите обменять на габены (не больше 12):");
 
                         $.each(json, function(key, value){
-                            $(".backpack-items").append('<li data-param="' + value["param"] +  '" data-cost="' + value["price"] + '"><img height="105" src="http://steamcommunity-a.akamaihd.net/economy/image/' + value["image_url"] + '"><div class="cost">' + value["price"] + ' габенов</div></li>');
+                            $(".backpack-items").append('<li data-param="' + value["param"] +  '" data-cost="' + value["price"] + '"><img alt="' + value["alt_name"] + '" height="105" src="/assets/items/' + value["image_url"] + '"><div class="cost">' + value["price"] + ' габенов</div></li>');
                         });
                     }
 

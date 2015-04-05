@@ -127,9 +127,8 @@ class TradeofferController < ApplicationController
         #если шмотка новая и нужно вписать название и качество
         if price_result['success'] == 2
           #кешируем пикчу
-          key='key'
-          digest = OpenSSL::Digest.new('sha1')
-          filename = OpenSSL::HMAC.hexdigest(digest, key, current['market_hash_name'].to_s)
+          #Выбираем название файла дешево и сердито
+          filename = Digest::SHA1.hexdigest(current['market_hash_name'].to_s)
           resource_pic = $http.httpRequest("GET", "http://steamcommunity-a.akamaihd.net/economy/image/" + current['icon_url_large'])
           path_to_avatar = File.join(File.dirname(File.expand_path("../", __FILE__)), 'assets', 'images', 'items', filename + ".png")
           File.open(path_to_avatar, 'wb') { |fp| fp.write(resource_pic) }
@@ -169,7 +168,9 @@ class TradeofferController < ApplicationController
           cipher.iv = initialization_vector = cipher.random_iv
           encrypted = Base64.urlsafe_encode64(initialization_vector + cipher.update(item_identificator) + cipher.final)
 
-          tmp.push({'title' => current['market_hash_name'].to_s, 'image_url' => current['icon_url_large'].to_s, 'price' => price_result['price'], 'param' => encrypted})
+          hashed_icon_url = Digest::SHA1.hexdigest(current['market_hash_name'].to_s) + ".png"
+
+          tmp.push({'alt_name' => current['market_hash_name'].to_s, 'image_url' => hashed_icon_url, 'price' => price_result['price'], 'param' => encrypted})
         end
         end
       end
