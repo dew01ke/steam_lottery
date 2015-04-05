@@ -155,10 +155,33 @@ class GatewayController < ApplicationController
       current = inventory['rgDescriptions'][item[1]['classid'].to_s + '_' + item[1]['instanceid'].to_s]
 
       if current['tradable'] == 1
-        price_result = getItemPrice(appid, current['market_hash_name'].to_s)
+        show = true
+        #фильтруем кейсы и музыку
+        current['tags'].each do |t|
+          if t['category']=="Type"
+            type = t['internal_name'].split('_')[2].downcase!
+            if (type.eql?("weaponcase") or type.eql?("musickit"))
+              #заныкать и никому не показывать
+              show = false
+            end
+          end
+        end
 
+        #если вдруг шмотка оказалась не кейсом и не музыкой. придется ее показывать
+        if show == true
+          
+        price_result = getItemPrice(appid, current['market_hash_name'].to_s)
         #если шмотка новая и нужно вписать название и качество
         if price_result['success'] == 2
+          #кешируем пикчу
+          key='key'
+          digest = OpenSSL::Digest.new('sha1')
+          filename = OpenSSL::HMAC.hexdigest(digest, key, current['market_hash_name'].to_s)
+          resource_pic = $http.httpRequest("GET", "http://steamcommunity-a.akamaihd.net/economy/image/" + current['icon_url_large'])
+          path_to_avatar = File.join(File.dirname(File.expand_path("../", __FILE__)), 'assets', 'images', 'items', filename + ".png")
+          File.open(path_to_avatar, 'wb') { |fp| fp.write(resource_pic) }
+          $prices[price_result['arrayid']]['image_url'] = filename + ".png"
+
           $prices[price_result['arrayid']]['display_name_rus'] = current['market_name']
           quality = ""
           current['tags'].each do |t|
@@ -177,6 +200,7 @@ class GatewayController < ApplicationController
           fetchprice = Price.find(price_result['arrayid'])
           fetchprice['quality'] = quality
           fetchprice['display_name_rus'] = current['market_name']
+          fetchprice['image_url'] = filename + ".png"
           fetchprice.save
         end
 
@@ -193,6 +217,7 @@ class GatewayController < ApplicationController
           encrypted = Base64.urlsafe_encode64(initialization_vector + cipher.update(item_identificator) + cipher.final)
 
           tmp.push({'title' => current['market_hash_name'].to_s, 'image_url' => current['icon_url_large'].to_s, 'price' => price_result['price'], 'param' => encrypted})
+        end
         end
       end
     end

@@ -12,6 +12,7 @@ class AdminController < ApplicationController
 
   def testadminstats
     @a=getTotalBotCost(1)
+    itemPoolStats
   end
 
   def banUser(steamid)
@@ -75,5 +76,12 @@ class AdminController < ApplicationController
       return 0
     end
     return sum
+  end
+
+  def itemPoolStats
+    puts a=Item.all.group('price_id').count
+    a.each do |t|
+      puts t[0].to_s + " " + t[1].to_s
+    end
   end
 end
