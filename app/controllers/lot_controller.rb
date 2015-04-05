@@ -36,56 +36,66 @@ class LotController < ApplicationController
   def generateLot(itemprice)
     itemprice=itemprice.to_i
     #выберем шмотки в интервале 0.9*цена - 1.1*цена, отсортируем по увеличению расхождения с ценой
-    price_bounds =0.9*itemprice..1.1*itemprice
+    price_bounds = [0.9*itemprice, 1.1*itemprice]
     string = "ABS(prices.item_cost-" + itemprice.to_s + ") ASC"
-    a=Item.joins(:price).where('prices.item_cost' => price_bounds).order(string).first
+    a=Item.joins(:price).where('frosen = 0 AND prices.item_cost BETWEEN ? AND ?', price_bounds[0], price_bounds[1]).order(string).first
 
     #а если ничегошеньки в этом интервале нет - возьмем ближайшую шмотку дешевле заданного
     if (a.nil?)
-      price_bounds =0..1.1*itemprice
-      a=Item.joins(:price).where('prices.item_cost' => price_bounds).order(string).first
+      price_bounds =[0, 1.1*itemprice]
+      a=Item.joins(:price).where('frosen = 0 AND prices.item_cost BETWEEN ? AND ?', price_bounds[0], price_bounds[1]).order(string).first
 
       #ну или дороже
       if (a.nil?)
-        price_bounds =1.1*itemprice..100000
-        a=Item.joins(:price).where('prices.item_cost' => price_bounds).order(string).first
+        price_bounds =[1.1*itemprice, 100000]
+        a=Item.joins(:price).where('frosen = 0 AND prices.item_cost BETWEEN ? AND ?', price_bounds[0], price_bounds[1]).order(string).first
       end
     end
 
-    item_price = (1.4*$prices[a['price_id']]['item_cost']).ceil
-    puts "Item price*1.4:" + item_price.to_s
-    min_slots = [((Math.sqrt(itemprice)-12)/12).ceil, 1].max
-    puts "Min slots:" + (min_slots*12).to_s
-    max_slots = [((1.3*Math.sqrt(itemprice+20)-2)/12).ceil,1].max
-    puts "Max slots:" + (max_slots*12).to_s
-    cur_slots = (rand(max_slots - min_slots+1)+min_slots)*12
-    puts "Current slots:" + cur_slots.to_s
+    if (a.nil? == false)
+      item_price = (1.4*$prices[a['price_id']]['item_cost']).ceil
+      puts "Item price*1.4:" + item_price.to_s
+      min_slots = [((Math.sqrt(itemprice)-12)/12).ceil, 1].max
+      puts "Min slots:" + (min_slots*12).to_s
+      max_slots = [((1.3*Math.sqrt(itemprice+20)-2)/12).ceil,1].max
+      puts "Max slots:" + (max_slots*12).to_s
+      cur_slots = (rand(max_slots - min_slots+1)+min_slots)*12
+      puts "Current slots:" + cur_slots.to_s
 
-    slot_cost = (item_price/cur_slots.to_f).ceil
-    puts "Slot cost:" + slot_cost.to_s
+      slot_cost = (item_price/cur_slots.to_f).ceil
+      puts "Slot cost:" + slot_cost.to_s
 
-    total_price = slot_cost * cur_slots
-    puts "Total item price:" + total_price.to_s
+      total_price = slot_cost * cur_slots
+      puts "Total item price:" + total_price.to_s
 
-    item = {'item_steam_id' => a['item_steam_id'], 'price_id' => a['price_id'], 'bot_id' => a['bot_id'], 'display_name_rus' => $prices[a['price_id']]['display_name_rus'], 'display_name_eng' => $prices[a['price_id']]['display_name_eng'], 'quality_rus' => $qualities_rus[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'quality_eng' => $qualities_eng[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'quality_color' => $quality_color[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'appid' => $prices[a['price_id']]['appid'], 'deposited_by' => a['deposited_by']}
-    puts item['item_steam_id']
-    puts item
-    a.destroy
+      item = {'item_steam_id' => a['item_steam_id'], 'price_id' => a['price_id'], 'bot_id' => a['bot_id'], 'display_name_rus' => $prices[a['price_id']]['display_name_rus'], 'display_name_eng' => $prices[a['price_id']]['display_name_eng'], 'quality_rus' => $qualities_rus[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'quality_eng' => $qualities_eng[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'quality_color' => $quality_color[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'appid' => $prices[a['price_id']]['appid'], 'deposited_by' => a['deposited_by']}
+      puts item['item_steam_id']
+      puts item
+      a['frosen'] = true
+      a.save
 
-    result = {'item' => item, 'slots' => cur_slots, 'slot_price' => slot_cost, 'winner' => nil}
+      result = {'item' => item, 'slots' => cur_slots, 'slot_price' => slot_cost, 'winner' => nil}
+    else
+      result = nil
+    end
     return result
   end
 
   def setLotInGrid(lotid, data)
     lotid=lotid.to_i
-    $LotGrid[lotid]['data'] = data
-    $LotGrid[lotid]['slot_info'] = Array.new(data['slots'],0)
-    $LotGrid[lotid]['vacant'] = 0
-    #время начала, тип Time (!) для удобных вычислений, приводится к нужному виду в момент вставки при помощи .strftime("%F %T")
-    $LotGrid[lotid]['started'] = Time.now()
-    $LotOffset = $LotOffset + 1
-    $LotGrid[lotid]['global_id'] = $LotOffset
-    puts "Lot " + lotid.to_s + " received offset " + $LotGrid[lotid]['global_id'].to_s
+    if data.nil? == false
+      $LotGrid[lotid]['data'] = data
+      $LotGrid[lotid]['slot_info'] = Array.new(data['slots'],0)
+      $LotGrid[lotid]['vacant'] = 0
+      #время начала, тип Time (!) для удобных вычислений, приводится к нужному виду в момент вставки при помощи .strftime("%F %T")
+      $LotGrid[lotid]['started'] = Time.now()
+      $LotOffset = $LotOffset + 1
+      $LotGrid[lotid]['global_id'] = $LotOffset
+      puts "Lot " + lotid.to_s + " received offset " + $LotGrid[lotid]['global_id'].to_s
+    else
+      $LotGrid[lotid]['data'] = data
+      $LotGrid[lotid]['vacant'] = 0
+    end
   end
 
   def finalizeLot(lotid)
@@ -141,6 +151,12 @@ class LotController < ApplicationController
     d['total_time'] = tmp_hours.to_s + ":" + tmp_minutes.to_s + ":" + tmp_seconds.to_s
     puts "Total time:" + tmp_hours.to_s + ":" + tmp_minutes.to_s + ":" + tmp_seconds.to_s
     d.save
+    end
+
+    #delete item from items table
+    delete_item = Item.where('item_steam_id' => $LotGrid[lotid]['data']['item']['item_steam_id']).first
+    if delete_item.nil? == false
+      delete_item.destroy
     end
 
     #generate new raffle
