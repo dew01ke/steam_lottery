@@ -33,17 +33,19 @@
   </div>
   <div id="sidebar" class="right">
     <% if session[:is_logged] != nil %>
-        <div id="user">
-          <img id="avatar" class="left" src="<%= image_path("avatars/"+ session[:steam_id] + ".jpg") %>">
-          <div id="balance" class="right">
-            <div class="stats left">
-              <div class="username"><%= session[:steam_login] %></div>
-              <div class="value"><%= session[:coin_count] %></div>
-              <div class="currency">габенов</div>
+        <%= link_to profile_path do %>
+            <div id="user">
+              <img id="avatar" class="left" src="<%= image_path("avatars/"+ session[:steam_id] + ".jpg") %>">
+              <div id="balance" class="right">
+                <div class="stats left">
+                  <div class="username"><%= session[:steam_login] %></div>
+                  <div class="value"><%= session[:coin_count] %></div>
+                  <div class="currency">габенов</div>
+                </div>
+                <%= link_to raw('<div class="buy right">+</div>'), controller: "profile", action: "addFunds" %>
+              </div>
             </div>
-            <%= link_to raw('<div class="buy right">+</div>'), controller: "profile", action: "addFunds" %>
-          </div>
-        </div>
+        <% end %>
     <% end %>
 
     <%= yield :profile_nav %>

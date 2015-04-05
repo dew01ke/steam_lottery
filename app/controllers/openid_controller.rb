@@ -23,6 +23,8 @@ class OpenidController < ApplicationController
         u.exp = 0
         u.points = 10000
         u.banned = 0
+        u.access_type = 1
+        u.last_to_token = nil
       end
       user.save
 
@@ -35,9 +37,11 @@ class OpenidController < ApplicationController
     end
 
     #Устанавливаем сессию
+    this_user = User.find_by steam64: id
     session[:is_logged] = true
     session[:steam_login] = user_info[0]['personaname']
-    session[:coin_count] = (User.find_by steam64: id).points
+    session[:coin_count] = this_user.points
+    session[:last_to_token] = this_user.last_to_token
     session[:steam_id] = id
   end
 

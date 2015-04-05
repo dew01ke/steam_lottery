@@ -46,7 +46,7 @@ class TradeofferController < ApplicationController
                 tmp['price_id'] = i['price_id'].to_i
                 tmp['deposited_by'] = session[:steam_id].to_i
                 tmp['created_at'] = Time.now()
-                tmp['bot_id'] = id.to_i;
+                tmp['bot_id'] = id.to_i
                 tmp.save
               end
 

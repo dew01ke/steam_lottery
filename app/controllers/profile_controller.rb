@@ -43,4 +43,46 @@ class ProfileController < ApplicationController
     #Сохраняем на диск
     File.open(path_to_avatar, 'wb') { |fp| fp.write(resource_avatar) }
   end
+
+  def setUpTradeOfferLink()
+    trade_url = params[:tourl]
+    parsed_url = trade_url.match(/[http|https]+:\/\/steamcommunity.com\/tradeoffer\/new\/\?partner=([\d]{8})&token=(.*)/)
+
+    puts trade_url
+
+    if not parsed_url.nil?
+      #Стим32 с ссылки
+      url_steam32 = parsed_url[1].to_i
+      #Токен с ссылки
+      url_token = parsed_url[2]
+      #Считаем оригинальный стим32
+      original_steam32 = (session[:steam_id].to_i - 76561197960265728)
+
+      #Если оригинальный стим 32 совпадает с ссылочным
+      if url_steam32 == original_steam32
+
+        #Обновляем бд, новым токеном
+        user = User.find_by(steam64: session[:steam_id])
+        user.last_to_token = url_token
+        session[:last_to_token] = url_token
+        user.save
+
+        @a = {'success' => true, 'message' => ''}.to_json
+        render :json => @a
+      else
+        puts "not your"
+
+        @a = {'success' => false, 'message' => 'this link not your'}.to_json
+        render :json => @a
+      end
+
+    else
+      puts "error: empty"
+
+      @a = {'success' => false, 'message' => 'not valid trade url'}.to_json
+      render :json => @a
+    end
+
+
+  end
 end
