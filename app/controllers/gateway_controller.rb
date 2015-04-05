@@ -230,7 +230,11 @@ class GatewayController < ApplicationController
     lotid=$LotGrid.index{|x| x['global_id'] == referenceid.to_i}
     if (lotid.nil? == false)
       lotid.to_i
-      return JSON.generate($LotGrid[lotid]['slot_info'])
+      if $LotGrid[lotid]['data'].nil? == false
+        return JSON.generate($LotGrid[lotid]['slot_info'])
+      else
+        return nil
+      end
     else
       a=ShortFinishedRaffle.where(id: referenceid)
       if (a.count == 1)
@@ -244,9 +248,13 @@ class GatewayController < ApplicationController
   def getEnding
     percentage=Array.new($LotGrid.size,0)
     $LotGrid.each.with_index do |t,lotid|
-      percentage[lotid] = t['vacant']/ t['data']['slots'].to_f
-      if percentage[lotid]>0.98
-        percentage[lotid] = -1
+      if t['data'].nil? == false
+        percentage[lotid] = t['vacant']/ t['data']['slots'].to_f
+        if percentage[lotid]>0.98
+          percentage[lotid] = -1
+        end
+      else
+        percentage[lotid] = -2
       end
     end
     lot1=percentage.index(percentage.max)
@@ -255,22 +263,32 @@ class GatewayController < ApplicationController
     percentage[lot2]=-1
     lot3=percentage.index(percentage.max)
     tmp=[]
-    tmp.push({'global_id' => $LotGrid[lot1]['global_id'], 'display_name_rus' => $LotGrid[lot1]['data']['item']['display_name_rus'], 'display_name_eng' => $LotGrid[lot1]['data']['item']['display_name_eng'], 'quality_rus' => $LotGrid[lot1]['data']['item']['quality_rus'], 'quality_eng' => $LotGrid[lot1]['data']['item']['quality_eng'], 'total_slots' => $LotGrid[lot1]['data']['slots'], 'quality_color' => $LotGrid[lot1]['data']['item']['quality_color'], 'appid' => $LotGrid[lot1]['data']['item']['appid']})
-    tmp.push({'global_id' => $LotGrid[lot2]['global_id'], 'display_name_rus' => $LotGrid[lot2]['data']['item']['display_name_rus'], 'display_name_eng' => $LotGrid[lot2]['data']['item']['display_name_eng'], 'quality_rus' => $LotGrid[lot2]['data']['item']['quality_rus'], 'quality_eng' => $LotGrid[lot2]['data']['item']['quality_eng'], 'total_slots' => $LotGrid[lot2]['data']['slots'], 'quality_color' => $LotGrid[lot2]['data']['item']['quality_color'], 'appid' => $LotGrid[lot2]['data']['item']['appid']})
-    tmp.push({'global_id' => $LotGrid[lot3]['global_id'], 'display_name_rus' => $LotGrid[lot3]['data']['item']['display_name_rus'], 'display_name_eng' => $LotGrid[lot3]['data']['item']['display_name_eng'], 'quality_rus' => $LotGrid[lot3]['data']['item']['quality_rus'], 'quality_eng' => $LotGrid[lot3]['data']['item']['quality_eng'], 'total_slots' => $LotGrid[lot3]['data']['slots'], 'quality_color' => $LotGrid[lot3]['data']['item']['quality_color'], 'appid' => $LotGrid[lot3]['data']['item']['appid']})
+    if $LotGrid[lot1]['data'].nil? == false
+      tmp.push({'global_id' => $LotGrid[lot1]['global_id'], 'display_name_rus' => $LotGrid[lot1]['data']['item']['display_name_rus'], 'display_name_eng' => $LotGrid[lot1]['data']['item']['display_name_eng'], 'quality_rus' => $LotGrid[lot1]['data']['item']['quality_rus'], 'quality_eng' => $LotGrid[lot1]['data']['item']['quality_eng'], 'total_slots' => $LotGrid[lot1]['data']['slots'], 'quality_color' => $LotGrid[lot1]['data']['item']['quality_color'], 'appid' => $LotGrid[lot1]['data']['item']['appid']})
+    end
+    if $LotGrid[lot2]['data'].nil? == false
+      tmp.push({'global_id' => $LotGrid[lot2]['global_id'], 'display_name_rus' => $LotGrid[lot2]['data']['item']['display_name_rus'], 'display_name_eng' => $LotGrid[lot2]['data']['item']['display_name_eng'], 'quality_rus' => $LotGrid[lot2]['data']['item']['quality_rus'], 'quality_eng' => $LotGrid[lot2]['data']['item']['quality_eng'], 'total_slots' => $LotGrid[lot2]['data']['slots'], 'quality_color' => $LotGrid[lot2]['data']['item']['quality_color'], 'appid' => $LotGrid[lot2]['data']['item']['appid']})
+    end
+    if $LotGrid[lot3]['data'].nil? == false
+      tmp.push({'global_id' => $LotGrid[lot3]['global_id'], 'display_name_rus' => $LotGrid[lot3]['data']['item']['display_name_rus'], 'display_name_eng' => $LotGrid[lot3]['data']['item']['display_name_eng'], 'quality_rus' => $LotGrid[lot3]['data']['item']['quality_rus'], 'quality_eng' => $LotGrid[lot3]['data']['item']['quality_eng'], 'total_slots' => $LotGrid[lot3]['data']['slots'], 'quality_color' => $LotGrid[lot3]['data']['item']['quality_color'], 'appid' => $LotGrid[lot3]['data']['item']['appid']})
+    end
     return JSON.generate(tmp)
   end
 
   def getGrid
     tmp=[]
     $LotGrid.each.with_index do |t,lotid|
-      if (session[:steam_id].nil? ==false)
-        myslots = t['slot_info'].count{|x| x==session[:steam_id]}
+      if t['data'].nil? == false
+        if (session[:steam_id].nil? ==false)
+          myslots = t['slot_info'].count{|x| x==session[:steam_id]}
+        else
+          myslots = 0
+        end
+        otherslots = t['vacant'] - myslots
+        tmp.push({'grid_id' => lotid, 'global_id' => t['global_id'], 'appid' => t['data']['item']['appid'], 'display_name_rus' => t['data']['item']['display_name_rus'], 'display_name_eng' => t['data']['item']['display_name_eng'], 'quality_rus' => t['data']['item']['quality_rus'], 'quality_eng' => t['data']['item']['quality_eng'], 'total_slots' => t['data']['slots'], 'myslots' => myslots, 'otherslots' => otherslots, 'quality_color' => t['data']['item']['quality_color']})
       else
-        myslots = 0
+        tmp.push(nil)
       end
-      otherslots = t['vacant'] - myslots
-      tmp.push({'grid_id' => lotid, 'global_id' => t['global_id'], 'appid' => t['data']['item']['appid'], 'display_name_rus' => t['data']['item']['display_name_rus'], 'display_name_eng' => t['data']['item']['display_name_eng'], 'quality_rus' => t['data']['item']['quality_rus'], 'quality_eng' => t['data']['item']['quality_eng'], 'total_slots' => t['data']['slots'], 'myslots' => myslots, 'otherslots' => otherslots, 'quality_color' => t['data']['item']['quality_color']})
     end
     return JSON.generate(tmp)
   end
