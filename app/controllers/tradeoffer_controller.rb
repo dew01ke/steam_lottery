@@ -39,6 +39,17 @@ class TradeofferController < ApplicationController
               session[:coin_count] = user.points
               user.save
 
+              #Вставляем инфу о полученных шмотках в пул
+              $ActiveTradeOffers[id][toid]['items_DB_info'].each do |i|
+                tmp=Item.new
+                tmp['item_steam_id'] = i['item_steam_id'].to_i
+                tmp['price_id'] = t['price_id'].to_i
+                tmp['deposited_by'] = session[:steam_id].to_i
+                tmp['created_at'] = Time.now()
+                tmp['bot_id'] = id.to_i;
+                tmp.save
+              end
+
               #Удаляем уведомление, если принято
               if session[:unique_id] == $ActiveTradeOffers[id][toid]['unique_id']
                 puts "clear Notification by acception"
@@ -186,6 +197,8 @@ class TradeofferController < ApplicationController
     user_appid = params[:appId]
     #Вещи, которые мы хотим забрать
     pick_items = []
+    #Нужная инфа для вставки в БД
+    items_DB = []
     #Стоимость вводимых вещей
     items_cost = 0
     #Ид бота
@@ -211,11 +224,15 @@ class TradeofferController < ApplicationController
 
       #Добавляем в массив требуемых вещей
       pick_items.push({"appid" => user_appid, "contextid" => "2", "amount" => 1, "assetid" => splitted[0]})
+
+      #Добавим в массив, хранящий инфу для БД
+      items_DB.push({"item_steam_id" => splitted[0], "price_id" => $prices.index{|n| not n.nil? and n['item_hash_name'] == splitted[1]}})
     end
 
     tradeoffer_response = makeTradeOffer(bot_id, session[:steam_id], [], pick_items)
 
     puts tradeoffer_response
+    puts items_DB
 
     #Если ответ вернулся нормальный, то
     if tradeoffer_response != -1
@@ -231,7 +248,7 @@ class TradeofferController < ApplicationController
         if $ActiveTradeOffers.exclude?(bot_id)
           $ActiveTradeOffers[bot_id] = []
         end
-        $ActiveTradeOffers[bot_id].push({"tradeofferid" => response_data["tradeofferid"], "steam64" => session[:steam_id], "unique_id" => @unique_id, "timestamp" => "#{Time.now}",  "coins" => items_cost})
+        $ActiveTradeOffers[bot_id].push({"tradeofferid" => response_data["tradeofferid"], "steam64" => session[:steam_id], "unique_id" => @unique_id, "timestamp" => "#{Time.now}",  "coins" => items_cost, "items_DB_info" => items_DB})
 
         #Вывод успешного результата
         @a = JSON.generate({"success" => true, "uid" => @unique_id, 'tid' => response_data["tradeofferid"]})
