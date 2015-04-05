@@ -153,6 +153,7 @@ class TradeofferController < ApplicationController
           fetchprice = Price.find(price_result['arrayid'])
           fetchprice['quality'] = quality
           fetchprice['display_name_rus'] = current['market_name']
+          fetchprice['image_url'] = filename + ".png"
           fetchprice.save
         end
 
