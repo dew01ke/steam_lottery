@@ -43,7 +43,7 @@ class TradeofferController < ApplicationController
               $ActiveTradeOffers[id][toid]['items_DB_info'].each do |i|
                 tmp=Item.new
                 tmp['item_steam_id'] = i['item_steam_id'].to_i
-                tmp['price_id'] = t['price_id'].to_i
+                tmp['price_id'] = i['price_id'].to_i
                 tmp['deposited_by'] = session[:steam_id].to_i
                 tmp['created_at'] = Time.now()
                 tmp['bot_id'] = id.to_i;
