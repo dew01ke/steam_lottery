@@ -4,21 +4,25 @@
     <div class="available-inventory">
       <div class="pay-title">Доступный инвентарь</div>
 
-      <div class="step cashout">Выберите вещи, которые вы хотите забрать:</div>
+      <% if not @available_items == [] %>
+          <div class="step cashout">Выберите вещи, которые вы хотите забрать:</div>
 
-      <ul class="available-items">
-        <% if not @available_items.nil? %>
-            <% @available_items.each do |item| %>
-                <li><img height="105" src="http://steamcommunity-a.akamaihd.net/economy/image/<%= item['id'] %>"></li>
+          <ul class="available-items">
+            <% if not @available_items.nil? %>
+                <% @available_items.each do |item| %>
+                    <li><img height="105" src="/assets/items/<%= item['image_url'] %>"></li>
+                <% end %>
             <% end %>
-        <% end %>
-      </ul>
+          </ul>
 
-      <div class="accept-terms">Забирая вещи, Вы соглашаетесь с условиями вывода.</div>
+          <div class="accept-terms">Забирая вещи, Вы соглашаетесь с условиями вывода.</div>
 
-      <div class="centered" style="padding-bottom: 30px;">
-        <a class="YellowButton" style="border-radius: 2px 0 0 2px;">Перевести в габены</a><a class="GreenButton" style="border-radius: 0 2px 2px 0;">Забрать в инвентарь</a>
-      </div>
+          <div class="centered" style="padding-bottom: 30px;">
+            <a class="YellowButton" style="border-radius: 2px 0 0 2px;">Перевести в габены</a><a class="GreenButton" style="border-radius: 0 2px 2px 0;">Забрать в инвентарь</a>
+          </div>
+      <% else %>
+          <div class="step cashout" style="padding-bottom: 30px;">Нет доступных вещей для вывода, попробуйте поучаствовать.</div>
+      <% end %>
     </div>
 
     <% content_for :profile_nav do %>

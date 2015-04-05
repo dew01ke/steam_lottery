@@ -13,13 +13,17 @@ class ProfileController < ApplicationController
   end
 
   def cashOut
-    #soon coming
-    won_items = PendingItem.where(:user_id => session[:steam_id])
+    won_items = PendingItem.joins(:price).where(:user_id => session[:steam_id])
 
     @available_items = []
 
     won_items.each do |item|
-      @available_items.push({'id' => item.item_steam_id})
+      hashed_image_url = item.price.image_url
+      if not hashed_image_url.nil?
+        @available_items.push({'id' => item.item_steam_id, 'image_url' => item.price.image_url})
+      else
+        @available_items.push({'id' => item.item_steam_id, 'image_url' => "../empty_small.jpg"})
+      end
     end
   end
 
