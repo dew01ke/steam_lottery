@@ -110,7 +110,8 @@ class TradeofferController < ApplicationController
         #фильтруем кейсы и музыку
         current['tags'].each do |t|
           if t['category']=="Type"
-            type = t['internal_name'].split('_')[2].downcase!
+            type = t['internal_name'].split('_')
+            type = type.last.downcase!
             if (type.eql?("weaponcase") or type.eql?("musickit"))
               #кейсы и музыку заныкать и никому не показывать
               show = false
