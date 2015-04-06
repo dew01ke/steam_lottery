@@ -99,6 +99,7 @@ class LotController < ApplicationController
   end
 
   def finalizeLot(lotid)
+    if $LotGrid[lotid]['data'].nil? == false
     #get winner
     winner = rand($LotGrid[lotid]['data']['slots'].to_i)
     $LotGrid[lotid]['data']['winner'] = $LotGrid[lotid]['slot_info'][winner]
@@ -158,6 +159,7 @@ class LotController < ApplicationController
     if delete_item.nil? == false
       delete_item.destroy
     end
+end
 
     #generate new raffle
     #push to queue
