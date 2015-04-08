@@ -4,20 +4,32 @@
           <div class="row">
       <% end %>
 
-      <div class="item" data-id="<%= $LotGrid[i]['global_id'] %>">
-        <% if $LotGrid[i]['data']['item']['appid'] == 570 %>
-            <div class="dota-marker">DOTA 2</div>
-        <% else %>
-            <div class="cs-marker">CS:GO</div>
-        <% end %>
-        <a href="/lot/<%= $LotGrid[i]['global_id'] %>"><img class="<%= $LotGrid[i]['data']['item']['quality_color'].to_s %>" src="<%= image_url('empty_small.jpg') %>"></a>
-        <div class="slot-count">
-          <div class="filled" style="width: 0;"></div>
-          <div class="owned" style="width: 0;"></div>
-        </div>
-        <div class="title"><%= $LotGrid[i]['data']['item']['display_name_rus'].to_s %></div>
-        <div class="quality"><%= $LotGrid[i]['data']['item']['quality_rus'].to_s %></div>
-      </div>
+      <% if not $LotGrid[i]['data'].nil? %>
+          <div class="item" data-id="<%= $LotGrid[i]['global_id'] %>">
+            <% if $LotGrid[i]['data']['item']['appid'] == 570 %>
+                <div class="dota-marker">DOTA 2</div>
+            <% else %>
+                <div class="cs-marker">CS:GO</div>
+            <% end %>
+            <a href="/lot/<%= $LotGrid[i]['global_id'] %>"><img class="<%= $LotGrid[i]['data']['item']['quality_color'].to_s %>" src="<%= image_url('empty_small.jpg') %>"></a>
+            <div class="slot-count">
+              <div class="filled" style="width: 0;"></div>
+              <div class="owned" style="width: 0;"></div>
+            </div>
+            <div class="title"><%= $LotGrid[i]['data']['item']['display_name_rus'].to_s %></div>
+            <div class="quality"><%= $LotGrid[i]['data']['item']['quality_rus'].to_s %></div>
+          </div>
+      <% else %>
+          <div class="item">
+            <a href="#"><img class="common" src="<%= image_url('empty_small.jpg') %>"></a>
+            <div class="slot-count">
+              <div class="filled" style="width: 0;"></div>
+              <div class="owned" style="width: 0;"></div>
+            </div>
+            <div class="title">Вакатное место</div>
+            <div class="quality">заказать</div>
+          </div>
+      <% end %>
 
       <% if i % 4 == 3 %>
           </div>

@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get 'profile/lastoperations' => 'profile#lastOperations'
   get 'profile/cashout' => 'profile#cashOut'
   get 'profile' => 'profile#index'
+  post 'profile' => 'profile#setUpTradeOfferLink'
 
   #Авторизация и все действия с ней
   get 'openid/index'

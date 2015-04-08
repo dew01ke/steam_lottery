@@ -75,7 +75,7 @@ class NetController < ApplicationController
     #ТОЛЬКО ДЛЯ ДЕБАГА
     puts request.body
 
-    if request.status == 200
+    if request.status == 200 or request.status == 500
       return request.body
     else
       return -1

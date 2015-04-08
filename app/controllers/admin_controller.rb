@@ -29,6 +29,7 @@ class AdminController < ApplicationController
   def cancelLot(gridid)
     gridid= gridid.to_i
 
+    if $LotGrid[gridid]['data'].nil? == false
     #получаем список участников
     users_participated = $LotGrid[gridid]['slot_info'].uniq
     #и возвращаем деньги
@@ -56,6 +57,7 @@ class AdminController < ApplicationController
     #перезапишем инфу для корректной финализации
     $LotGrid[gridid]['slot_info'] = Array.new($LotGrid[gridid]['data']['slots'], -1)
     $LotGrid[gridid]['vacant'] = $LotGrid[gridid]['data']['slots']
+  end
     $lot.finalizeLot(gridid)
   end
 

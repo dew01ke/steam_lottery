@@ -1,5 +1,23 @@
 <% if session[:is_logged] != nil %>
+    <div class="navigation">
+      <div class="back left"><%= link_to raw("&larr; на главную"), controller: "application", action: "index" %></div>
+    </div>
+
     <font size="72" color="white">СТАТИСТИКА, СКОЛЬКО ВЫИГРАЛ, ГРАФИКИ</font>
+
+    <div class="tradeoffer" style="background: #1e1e1e; margin: 20px 0; height: auto">
+      <div id="signal" class="total-cost" style="padding: 20px;">Моя ссылка обмена (где её найти?)</div>
+
+      <% if session[:last_to_token].nil? %>
+          <input id="tourl" type="text" value="Ссылка на обмен" style="float: none; margin-bottom: 20px;">
+      <% else %>
+          <input id="tourl" type="text" value="https://steamcommunity.com/tradeoffer/new/?partner=<%= (session[:steam_id].to_i - 76561197960265728) %>&token=<%= session[:last_to_token] %>" style="float: none; margin-bottom: 20px;">
+      <% end %>
+
+      <div class="centered">
+        <a class="GreenButton" onclick="updateUrl();">Обновить</a>
+      </div>​
+    </div>
 
     <% content_for :ending do %>
         <div id="sideblock">
@@ -14,9 +32,32 @@
 
     <% content_for :js do %>
         <script type="text/javascript">
+            var token = "<%= form_authenticity_token %>";
+
             $(document).ready(function() {
                 updateEnding();
             });
+
+            function updateUrl() {
+                var user_trade_url = $("#tourl").val();
+                if ((user_trade_url.length > 65) && (user_trade_url.length < 100)) {
+                    $.ajax({
+                        url: '/profile',
+                        type: "POST",
+                        data: {'authenticity_token': token, 'tourl': $("#tourl").val()},
+                        success: function(response) {
+                            if (response['success']) {
+                                alert('success!');
+                            } else {
+                                alert(response['message']);
+                            }
+                        },
+                        dataType: 'json'
+                    });
+                } else {
+                    alert('not correct url');
+                }
+            }
 
             function updateEnding() {
                 $.getJSON('/gateway/getending', function(response) {
