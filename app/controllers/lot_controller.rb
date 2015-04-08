@@ -68,7 +68,7 @@ class LotController < ApplicationController
       total_price = slot_cost * cur_slots
       puts "Total item price:" + total_price.to_s
 
-      item = {'item_steam_id' => a['item_steam_id'], 'price_id' => a['price_id'], 'bot_id' => a['bot_id'], 'display_name_rus' => $prices[a['price_id']]['display_name_rus'], 'display_name_eng' => $prices[a['price_id']]['display_name_eng'], 'quality_rus' => $qualities_rus[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'quality_eng' => $qualities_eng[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'quality_color' => $quality_color[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i - 1], 'appid' => $prices[a['price_id']]['appid'], 'deposited_by' => a['deposited_by']}
+      item = {'item_steam_id' => a['item_steam_id'], 'price_id' => a['price_id'], 'bot_id' => a['bot_id'], 'display_name_rus' => $prices[a['price_id']]['display_name_rus'], 'display_name_eng' => $prices[a['price_id']]['display_name_eng'], 'quality_rus' => $qualities_rus[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i], 'quality_eng' => $qualities_eng[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i], 'quality_color' => $quality_color[$prices[a['price_id']]['appid'].to_s][$prices[a['price_id']]['quality'].to_i], 'appid' => $prices[a['price_id']]['appid'], 'deposited_by' => a['deposited_by']}
       puts item['item_steam_id']
       puts item
       a['frosen'] = true
