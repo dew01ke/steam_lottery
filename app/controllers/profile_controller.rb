@@ -44,7 +44,7 @@ class ProfileController < ApplicationController
     File.open(path_to_avatar, 'wb') { |fp| fp.write(resource_avatar) }
   end
 
-  def setUpTradeOfferLink()
+  def setUpTradeOfferLink
     trade_url = params[:tourl]
     parsed_url = trade_url.match(/[http|https]+:\/\/steamcommunity.com\/tradeoffer\/new\/\?partner=([\d]{8})&token=(.*)/)
 

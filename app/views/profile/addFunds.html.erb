@@ -155,7 +155,11 @@
                             $("#bp").hide();
                             $(".couriers").show();
 
-                            location.reload();
+                            if (response['success']) {
+                                location.reload();
+                            } else {
+                                alert(response['message'])
+                            }
                         },
                         dataType: 'json'
                     });
