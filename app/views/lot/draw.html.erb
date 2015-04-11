@@ -105,10 +105,12 @@
         function updateEnding() {
             $.getJSON('/gateway/getending', function(response) {
                 var json = JSON.parse(response);
-                $("#ending").empty();
-                $.each(json, function(key, value){
-                    $("#ending").append('<a href="/lot/'+value['global_id']+'"><li class="chance"><img class="left" src="<%= image_url('empty_small.jpg') %>" width="80"><div id="item-chance" class="right"><div id="name">'+value['display_name_rus']+'</div><div id="desc">'+value['quality_rus']+'</div></div></li></a>');
-                });
+                if (json.length != 0) {
+                    $("#ending").empty();
+                    $.each(json, function(key, value){
+                        $("#ending").append('<a href="/lot/'+value['global_id']+'"><li class="chance"><img class="left" src="<%= image_url('empty_small.jpg') %>" width="80"><div id="item-chance" class="right"><div id="name">'+value['display_name_rus']+'</div><div id="desc">'+value['quality_rus']+'</div></div></li></a>');
+                    });
+                };
                 setTimeout("updateEnding()", 30000);
             });
         }
