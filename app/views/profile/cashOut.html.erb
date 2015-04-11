@@ -7,23 +7,74 @@
       <% if not @available_items == [] %>
           <div class="step cashout">Выберите вещи, которые вы хотите забрать:</div>
 
-          <ul class="available-items">
+          <ul class="available-items" style="padding-bottom: 20px;">
             <% if not @available_items.nil? %>
                 <% @available_items.each do |item| %>
-                    <li><img height="105" src="/assets/items/<%= item['image_url'] %>"></li>
+                    <li data-param="<%= item['param'] %>"><img height="105" src="/assets/items/<%= item['image_url'] %>"></li>
                 <% end %>
             <% end %>
           </ul>
 
-          <div class="accept-terms">Забирая вещи, Вы соглашаетесь с условиями вывода.</div>
+          <div id="ac" style="display: none">
+              <div class="accept-terms">Забирая вещи, Вы соглашаетесь с условиями вывода.</div>
 
-          <div class="centered" style="padding-bottom: 30px;">
-            <a class="YellowButton" style="border-radius: 2px 0 0 2px;">Перевести в габены</a><a class="GreenButton" style="border-radius: 0 2px 2px 0;">Забрать в инвентарь</a>
+              <div class="centered" style="padding-bottom: 30px;">
+                <a class="YellowButton" onclick="requestItems(0)" style="border-radius: 2px 0 0 2px;">Перевести в габены</a><a class="GreenButton" onclick="requestItems(1)" style="border-radius: 0 2px 2px 0;">Забрать в инвентарь</a>
+              </div>
           </div>
+
       <% else %>
           <div class="step cashout" style="padding-bottom: 30px;">Нет доступных вещей для вывода, попробуйте поучаствовать.</div>
       <% end %>
     </div>
+
+    <% content_for :js do %>
+        <script type="text/javascript">
+            var Items = [];
+            var token = "<%= form_authenticity_token %>";
+
+            function requestItems(param) {
+                if (Items.length > 0) {
+                    $.ajax({
+                        url: '/gateway/requestitems',
+                        type: "POST",
+                        data: {'authenticity_token': token, 'userAction': param, 'wantItems': Items},
+                        success: function(response) {
+                            Items = [];
+
+                            if (response['success']) {
+                                alert(response['message']);
+                                location.reload();
+                            } else {
+                                alert(response['message'])
+                            }
+                        },
+                        dataType: 'json'
+                    });
+                }
+            }
+
+            $(document).ready(function() {
+                $("ul.available-items").on("click", "li", function () {
+                    if ($(this).has(".marker-check").length) {
+                        $(this).find("div.marker-check").remove();
+                        Items.splice(Items.indexOf($(this).data("param")), 1);
+                    } else {
+                        if (Items.length < 12) {
+                            $(this).append('<div class="marker-check"></div>');
+                            Items.push($(this).data("param"));
+                        }
+                    }
+
+                    if (Items.length > 0) {
+                        $("#ac").show();
+                    } else {
+                        $("#ac").hide();
+                    }
+                })
+            })
+        </script>
+    <% end %>
 
     <% content_for :profile_nav do %>
         <div class="profile-nav">

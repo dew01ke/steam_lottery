@@ -21,11 +21,14 @@ Rails.application.routes.draw do
   get 'gateway/buyslot/:lotid/:slotid' => 'gateway#buyslot'
   get 'gateway/getinventory/:appid'  => 'gateway#getinventory'
   post 'gateway/addfunds' => 'tradeoffer#sendTradeOffer'
+  post 'gateway/requestitems' => 'tradeoffer#requestItems'
 
   #Отдельный лот с вещью
   get 'lot/:lotid' => 'lot#draw'
 
-
+  ####################################
+  #####DELETE THIS, ONLY FOR TEST#####
+  ####################################
   #testing routes below
   get 'id64/:api_key/:steamlogin' => 'papi#id64'
   get 'backpackAppid/:steamid64/:api_key/:appid' => 'papi#backpackAppid'

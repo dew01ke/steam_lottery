@@ -203,6 +203,48 @@ class TradeofferController < ApplicationController
     return JSON.generate(http["tmp"])
   end
 
+  def requestItems
+    requested_items = params[:wantItems]
+    requested_action = params[:userAction]
+
+    #Список расшифрованных вещей
+    decrypted_items = []
+    #Общая цена вещей (если ломат вещи в габены)
+    total_coins = 0
+
+    #Составляем массив нужных вещей и считаем цену
+    requested_items.each do |item|
+      #Снимаем со строки Base64
+      deencrypted = Base64.urlsafe_decode64(item)
+
+      #Инициализируем алгоритм AES256
+      cipher = OpenSSL::Cipher::Cipher.new("aes-256-cbc")
+      cipher.decrypt
+      cipher.key = Digest::SHA256.digest(APP_CONFIG['secret_key'])
+      cipher.iv = deencrypted.slice!(0, 16)
+      decrypted = cipher.update(deencrypted) + cipher.final
+
+      #Извлекаем из строки id + appid + item_cost + item_steam_id + item_hash_name
+      splitted = decrypted.split('@@')
+
+      #Добавляем в массив требуемых вещей
+      decrypted_items.push([splitted[0], splitted[1], splitted[2], splitted[3], splitted[4]])
+    end
+
+    #Если пользователь выбрал пополнение себе счета
+    if requested_action.to_i == 0
+      decrypted_items.each do |item|
+        #Считаем сколько зачислить
+        total_coins += item[2].to_i
+        #Удаляем строку из бд
+        PendingItem.find(item[0]).destroy
+      end
+
+      @a = JSON.generate({"success" => true, 'message' => "Success! You have earned #{total_coins}"})
+      render :json => @a
+    end
+  end
+
   #Отправляем оффер для полнение депозита
   def sendTradeOffer()
     #Получаем шифрованный список вещей

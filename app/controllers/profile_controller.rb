@@ -19,10 +19,21 @@ class ProfileController < ApplicationController
 
     won_items.each do |item|
       hashed_image_url = item.price.image_url
+
+      #Строка состоящая из id + appid + item_cost + item_steam_id + item_hash_name + SALT
+      item_identificator = "#{item.id}@@#{item.price.appid}@@#{item.price.item_cost}@@#{item.item_steam_id}@@#{item.price.item_hash_name}@@#{Time.now}"
+
+      #Инициализируем алгоритм шифрования AES256 + ключ SHA256
+      cipher = OpenSSL::Cipher::Cipher.new("aes-256-cbc")
+      cipher.encrypt
+      cipher.key = Digest::SHA256.digest(APP_CONFIG['secret_key'])
+      cipher.iv = initialization_vector = cipher.random_iv
+      encrypted = Base64.urlsafe_encode64(initialization_vector + cipher.update(item_identificator) + cipher.final)
+
       if not hashed_image_url.nil?
-        @available_items.push({'id' => item.item_steam_id, 'image_url' => item.price.image_url})
+        @available_items.push({'id' => item.item_steam_id, 'image_url' => item.price.image_url, 'param' => encrypted})
       else
-        @available_items.push({'id' => item.item_steam_id, 'image_url' => "../empty_small.jpg"})
+        @available_items.push({'id' => item.item_steam_id, 'image_url' => "../empty_small.jpg", 'param' => encrypted})
       end
     end
   end
