@@ -35,13 +35,20 @@ class PapiController < ApplicationController
   end
 
   def cancelTradeOffer(api_key, tradeofferid)
-    url = "http://api.steampowered.com/IEconService/CancelTradeOffer/v1/"
-    data = {"key" => api_key, "tradeofferid" => tradeofferid}
+    http = Thread.new do
+      #Создаем контроллер
+      Thread.current["local_http"] = NetController.new
 
-    request = $http.httpRequest("POST", url, data)
-    response = JSON.parse(request)
+      url = "http://api.steampowered.com/IEconService/CancelTradeOffer/v1/"
+      data = {"key" => api_key, "tradeofferid" => tradeofferid}
 
-    if (request != -1) and (response != nil)
+      Thread.current["request"] = Thread.current["local_http"].httpRequest("POST", url, data)
+    end
+    http.join
+
+    response = JSON.parse(http["request"])
+
+    if (http["request"] != -1) and (response != nil)
       return 1
     else
       return -1
@@ -49,15 +56,21 @@ class PapiController < ApplicationController
   end
 
   def getHistoricalTradeOffers(api_key)
-    url = "http://api.steampowered.com/IEconService/GetTradeOffers/v1/"
+    http = Thread.new do
+      #Создаем контроллер
+      Thread.current["local_http"] = NetController.new
 
-    flags = {"get_sent_offers" => "true", "historical_only" => "true"}
-    data = {"key" => api_key, "format" => "json", "input_json" => flags.to_json}
+      url = "http://api.steampowered.com/IEconService/GetTradeOffers/v1/"
 
-    request = $http.httpRequest("GET", url, data)
+      flags = {"get_sent_offers" => "true", "historical_only" => "true"}
+      data = {"key" => api_key, "format" => "json", "input_json" => flags.to_json}
 
-    if (request != -1)
-      response = JSON.parse(request)
+      Thread.current["request"] = Thread.current["local_http"].httpRequest("GET", url, data)
+    end
+    http.join
+
+    if (http["request"] != -1)
+      response = JSON.parse(http["request"])
       return response['response']['trade_offers_sent']
     else
       return -1
@@ -66,11 +79,20 @@ class PapiController < ApplicationController
 
   #returns steam64
   def getSteam64(steamlogin, api_key)
-    url="http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/"
-    data = {'key'=> api_key, 'vanityurl' => steamlogin}
-    request = $http.httpRequest("GET", url, data)
-    if (request != -1)
-      response = JSON.parse(request)
+    http = Thread.new do
+      #Создаем контроллер
+      Thread.current["local_http"] = NetController.new
+
+      url = "http://api.steampowered.com/ISteamUser/ResolveVanityURL/v0001/"
+
+      data = {'key' => api_key, 'vanityurl' => steamlogin}
+
+      Thread.current["request"] = Thread.current["local_http"].httpRequest("GET", url, data)
+    end
+    http.join
+
+    if (http["request"] != -1)
+      response = JSON.parse(http["request"])
       if (response['response']['success'].to_i == 1)
       return response['response']['steamid']
       else
@@ -81,30 +103,19 @@ class PapiController < ApplicationController
     end
   end
 
-  #возвращает массив JSONов с данными о вещах
-  def getBackpackByAppid(steamid64, api_key, appid)
-    url = 'http://api.steampowered.com/IEconItems_570/GetPlayerItems/v0001/'
-    data = {'key'=> api_key, 'SteamID' => steamid64}
-    request = $http.httpRequest("GET", url, data)
-
-    if (request != -1)
-      response = JSON.parse(request)
-      if (response['success'].to_s == 'false')
-        return -1
-      else
-        return response['result']['items']
-      end
-    else
-      return -1
-    end
-  end
-
   def getBackpackLogin(steamlogin, appid)
-    url = 'http://steamcommunity.com/id/' + steamlogin.to_s + '/inventory/json/' + appid.to_s + '/2/'
-    request = $http.httpRequest("GET", url, {'l' => 'russian'})
+    http = Thread.new do
+      #Создаем контроллер
+      Thread.current["local_http"] = NetController.new
 
-    if (request != -1)
-      response = JSON.parse(request)
+      url = 'http://steamcommunity.com/id/' + steamlogin.to_s + '/inventory/json/' + appid.to_s + '/2/'
+
+      Thread.current["request"] = Thread.current["local_http"].httpRequest("GET", url, {'l' => 'russian'})
+    end
+    http.join
+
+    if (http["request"] != -1)
+      response = JSON.parse(http["request"])
       if (response['success'].to_s == 'false')
         return -1
       else
@@ -116,11 +127,18 @@ class PapiController < ApplicationController
   end
 
   def getBackpack(steamid64, appid)
-    url = 'http://steamcommunity.com/profiles/' + steamid64.to_s + '/inventory/json/' + appid.to_s + '/2'
-    request = $http.httpRequest("GET", url, {'l' => 'russian'})
+    http = Thread.new do
+      #Создаем контроллер
+      Thread.current["local_http"] = NetController.new
 
-    if (request != -1)
-      response = JSON.parse(request)
+      url = 'http://steamcommunity.com/profiles/' + steamid64.to_s + '/inventory/json/' + appid.to_s + '/2'
+
+      Thread.current["request"] = Thread.current["local_http"].httpRequest("GET", url, {'l' => 'russian'})
+    end
+    http.join
+
+    if (http["request"] != -1)
+      response = JSON.parse(http["request"])
       if (response['success'].to_s == 'false')
         return -1
       else
@@ -132,19 +150,38 @@ class PapiController < ApplicationController
   end
 
   def getUserInfo(steamid64, api_key)
-    url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
-    data = {'key'=> api_key, 'steamids' => steamid64}
-    response = JSON.parse($http.httpRequest("GET", url, data))
-    return response['response']['players']
+    http = Thread.new do
+      #Создаем контроллер
+      Thread.current["local_http"] = NetController.new
+
+      url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
+
+      data = {'key' => api_key, 'steamids' => steamid64}
+
+
+      Thread.current["response"] = JSON.parse(Thread.current["local_http"].httpRequest("GET", url, data))
+    end
+    http.join
+
+    return http['response']['response']['players']
     #in case of wrong id, response['response']['players'] is empty
   end
 
   def getPricesByHashname(appid, market_hash_name)
-    url = "http://steamcommunity.com/market/priceoverview/"
-    data = {'country' => "ru", 'currency' => 1, 'appid' => appid, 'market_hash_name' => market_hash_name}
-    request = $http.httpRequest("GET", url, data)
-    if (request != -1)
-      response = JSON.parse($http.httpRequest("GET", url, data))
+    http = Thread.new do
+      #Создаем контроллер
+      Thread.current["local_http"] = NetController.new
+
+      url = "http://steamcommunity.com/market/priceoverview/"
+
+      data = {'country' => "ru", 'currency' => 1, 'appid' => appid, 'market_hash_name' => market_hash_name}
+
+      Thread.current["request"] = Thread.current["local_http"].httpRequest("GET", url, data)
+    end
+    http.join
+
+    if (http["request"] != -1)
+      response = JSON.parse(http["request"])
       return response
     else
       return -1
@@ -153,11 +190,20 @@ class PapiController < ApplicationController
   end
 
   def getAssetPrices(api_key, appid)
-    url = "http://api.steampowered.com/ISteamEconomy/GetAssetPrices/v0001/"
-    data = {'key'=> api_key, 'appid' => appid}
-    request = $http.httpRequest("GET", url, data)
-    if (request != -1)
-      response = JSON.parse(request)
+    http = Thread.new do
+      #Создаем контроллер
+      Thread.current["local_http"] = NetController.new
+
+      url = "http://api.steampowered.com/ISteamEconomy/GetAssetPrices/v0001/"
+
+      data = {'key'=> api_key, 'appid' => appid}
+
+      Thread.current["request"] = Thread.current["local_http"].httpRequest("GET", url, data)
+    end
+    http.join
+
+    if (http["request"] != -1)
+      response = JSON.parse(http["request"])
       if (response['result']['success'].to_s == 'false')
         return -1
       else

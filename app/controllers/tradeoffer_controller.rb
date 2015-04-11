@@ -108,92 +108,99 @@ class TradeofferController < ApplicationController
 
   #Получение инвентаря пользователя
   def getInventory(steam64, appId)
-    #Загружаем инвентарь
-    inventory = $papi.getBackpack(steam64, appId)
-    #Массив для вывода
-    tmp = []
+    #Создаем новый поток
+    http = Thread.new do
+      #Создаем
+      Thread.current["local_http"] = NetController.new
+      #Загружаем инвентарь
+      inventory = $papi.getBackpack(steam64, appId)
+      #Массив для вывода
+      #tmp = []
+      Thread.current["tmp"] = []
 
-    #Проверка на наличие вещей
-    if inventory == -1
-      #оставляем tmp пустым
-    else
-      inventory['rgInventory'].each do |item|
-        current = inventory['rgDescriptions'][item[1]['classid'].to_s + '_' + item[1]['instanceid'].to_s]
+      #Проверка на наличие вещей
+      if inventory == -1
+        #оставляем tmp пустым
+      else
+        inventory['rgInventory'].each do |item|
+          current = inventory['rgDescriptions'][item[1]['classid'].to_s + '_' + item[1]['instanceid'].to_s]
 
-        if current['tradable'] == 1
+          if current['tradable'] == 1
 
-          show = true
-          #фильтруем кейсы и музыку
-          current['tags'].each do |t|
-            if t['category']=="Type"
-              type = t['internal_name'].split('_')
-              type = type.last.downcase!
-              if (type.eql?("weaponcase") or type.eql?("musickit"))
-                #кейсы и музыку заныкать и никому не показывать
-                show = false
-              end
-            end
-          end
-
-          #если вдруг шмотка оказалась не кейсом и не музыкой. придется ее показывать :(
-          if show == true
-
-            price_result = getItemPrice(appId, current['market_hash_name'].to_s)
-
-            #если шмотка новая и нужно вписать название и качество
-            if price_result['success'] == 2
-              #кешируем пикчу
-              #Выбираем название файла дешево и сердито
-              filename = Digest::SHA1.hexdigest(current['market_hash_name'].to_s)
-              resource_pic = $http.httpRequest("GET", "http://steamcommunity-a.akamaihd.net/economy/image/" + current['icon_url_large'])
-              path_to_avatar = File.join(File.dirname(File.expand_path("../", __FILE__)), 'assets', 'images', 'items', filename + ".png")
-              File.open(path_to_avatar, 'wb') { |fp| fp.write(resource_pic) }
-              $prices[price_result['arrayid']]['image_url'] = filename + ".png"
-
-              $prices[price_result['arrayid']]['display_name_rus'] = current['market_name']
-              quality = ""
-              current['tags'].each do |t|
-                if t['category']=="Rarity"
-                  quality = t['internal_name'].split('_')
-                  if quality.size > 1
-                    quality = quality[1]
-                  else
-                    quality = quality[0]
-                  end
+            show = true
+            #фильтруем кейсы и музыку
+            current['tags'].each do |t|
+              if t['category']=="Type"
+                type = t['internal_name'].split('_')
+                type = type.last.downcase!
+                if (type.eql?("weaponcase") or type.eql?("musickit"))
+                  #кейсы и музыку заныкать и никому не показывать
+                  show = false
                 end
               end
-              quality.downcase!
-              quality = $quality_color[appId.to_s].index{|x| x == quality}
-              $prices[price_result['arrayid']]['quality'] = quality
-              fetchprice = Price.find(price_result['arrayid'])
-              fetchprice['quality'] = quality
-              fetchprice['display_name_rus'] = current['market_name']
-              fetchprice['image_url'] = filename + ".png"
-              fetchprice.save
             end
 
-            #если все норм, в т.ч. с ценой, отправляем шмотку на вывод
-            if price_result['success'] > 0
-              #Строка состоящая из assetid + market_hash_name + salt(time)
-              item_identificator = "#{item[1]['id']}@@#{current['market_hash_name']}@@#{Time.now}"
+            #если вдруг шмотка оказалась не кейсом и не музыкой. придется ее показывать :(
+            if show == true
 
-              #Инициализируем алгоритм шифрования AES256 + ключ SHA256
-              cipher = OpenSSL::Cipher::Cipher.new("aes-256-cbc")
-              cipher.encrypt
-              cipher.key = Digest::SHA256.digest(APP_CONFIG['secret_key'])
-              cipher.iv = initialization_vector = cipher.random_iv
-              encrypted = Base64.urlsafe_encode64(initialization_vector + cipher.update(item_identificator) + cipher.final)
+              price_result = getItemPrice(appId, current['market_hash_name'].to_s)
 
-              hashed_icon_url = Digest::SHA1.hexdigest(current['market_hash_name'].to_s) + ".png"
+              #если шмотка новая и нужно вписать название и качество
+              if price_result['success'] == 2
+                #кешируем пикчу
+                #Выбираем название файла дешево и сердито
+                filename = Digest::SHA1.hexdigest(current['market_hash_name'].to_s)
+                resource_pic = Thread.current["local_http"].httpRequest("GET", "http://steamcommunity-a.akamaihd.net/economy/image/" + current['icon_url_large'])
+                path_to_avatar = File.join(File.dirname(File.expand_path("../", __FILE__)), 'assets', 'images', 'items', filename + ".png")
+                File.open(path_to_avatar, 'wb') { |fp| fp.write(resource_pic) }
+                $prices[price_result['arrayid']]['image_url'] = filename + ".png"
 
-              tmp.push({'alt_name' => current['market_hash_name'].to_s, 'image_url' => hashed_icon_url, 'price' => price_result['price'], 'param' => encrypted})
+                $prices[price_result['arrayid']]['display_name_rus'] = current['market_name']
+                quality = ""
+                current['tags'].each do |t|
+                  if t['category']=="Rarity"
+                    quality = t['internal_name'].split('_')
+                    if quality.size > 1
+                      quality = quality[1]
+                    else
+                      quality = quality[0]
+                    end
+                  end
+                end
+                quality.downcase!
+                quality = $quality_color[appId.to_s].index{|x| x == quality}
+                $prices[price_result['arrayid']]['quality'] = quality
+                fetchprice = Price.find(price_result['arrayid'])
+                fetchprice['quality'] = quality
+                fetchprice['display_name_rus'] = current['market_name']
+                fetchprice['image_url'] = filename + ".png"
+                fetchprice.save
+              end
+
+              #если все норм, в т.ч. с ценой, отправляем шмотку на вывод
+              if price_result['success'] > 0
+                #Строка состоящая из assetid + market_hash_name + salt(time)
+                item_identificator = "#{item[1]['id']}@@#{current['market_hash_name']}@@#{Time.now}"
+
+                #Инициализируем алгоритм шифрования AES256 + ключ SHA256
+                cipher = OpenSSL::Cipher::Cipher.new("aes-256-cbc")
+                cipher.encrypt
+                cipher.key = Digest::SHA256.digest(APP_CONFIG['secret_key'])
+                cipher.iv = initialization_vector = cipher.random_iv
+                encrypted = Base64.urlsafe_encode64(initialization_vector + cipher.update(item_identificator) + cipher.final)
+
+                hashed_icon_url = Digest::SHA1.hexdigest(current['market_hash_name'].to_s) + ".png"
+
+                Thread.current["tmp"].push({'alt_name' => current['market_hash_name'].to_s, 'image_url' => hashed_icon_url, 'price' => price_result['price'], 'param' => encrypted})
+              end
             end
           end
         end
       end
     end
+    http.join
 
-    return JSON.generate(tmp)
+    return JSON.generate(http["tmp"])
   end
 
   #Отправляем оффер для полнение депозита
@@ -282,41 +289,47 @@ class TradeofferController < ApplicationController
 
   #Общая функция трейдофферов
   def makeTradeOffer(botId, themSteam64, themToken, myItems = [], themItems = [])
-    #Уникальный токен для данного действия
-    @unique_id = Digest::MD5.hexdigest(themSteam64 + Time.now.to_s)[4..8].upcase!
+    http = Thread.new do
+      #Создаем контроллер
+      Thread.current["local_http"] = NetController.new
 
-    #Выбираем бота
-    bot = Bot.find(botId)
+      #Уникальный токен для данного действия
+      @unique_id = Digest::MD5.hexdigest(themSteam64 + Time.now.to_s)[4..8].upcase!
 
-    #Заполняем куки
-    $http.addCookie({
-                        'sessionid' => bot.last_sessionid,
-                        'steamLogin' => (bot.steam64.to_s + "%7C%7C" + bot.token),
-                        'steamLoginSecure' => (bot.steam64.to_s + "%7C%7C" + bot.token_secure),
-                        ('steamMachineAuth' + bot.steam64.to_s) => bot.webcookie
-                    })
+      #Выбираем бота
+      bot = Bot.find(botId)
 
-    #Заполняем заголовок
-    $http.addHeader({
-                        "User-Agent" => bot.user_agent,
-                        "Content-Type" => "application/x-www-form-urlencoded; charset=UTF-8",
-                        "Referer" => "https://steamcommunity.com/tradeoffer/new/?partner=" + (themSteam64.to_i - 76561197960265728).to_s + "&token=" + themToken
-                    })
-    #Заполняем сам запрос
-    body = {
-        "sessionid" => bot.last_sessionid,
-        "serverid" => "1",
-        #"partner" => themSteam64.to_s,
-        "partner" => (76561197960265728 + 46960631).to_s,
-        "tradeoffermessage" => ("Токен действия: #{@unique_id}"),
-        "json_tradeoffer" => '{"newversion":true,"version":2,"me":{"assets":' + myItems.to_json + ',"currency":[],"ready":false},"them":{"assets":' + themItems.to_json + ',"currency":[],"ready":false}}',
-        "captcha" => "",
-        "trade_offer_create_params" => '{"trade_offer_access_token": "'+ themToken +'"}'
-    }
+      #Заполняем куки
+      Thread.current["local_http"].addCookie({
+                          'sessionid' => bot.last_sessionid,
+                          'steamLogin' => (bot.steam64.to_s + "%7C%7C" + bot.token),
+                          'steamLoginSecure' => (bot.steam64.to_s + "%7C%7C" + bot.token_secure),
+                          ('steamMachineAuth' + bot.steam64.to_s) => bot.webcookie
+                      })
 
-    #Посылаем запрос
-    response = $http.httpRequest("POST", APP_CONFIG['steam_trade_url'], body)
-    response_data = JSON.parse(response)
+      #Заполняем заголовок
+      Thread.current["local_http"].addHeader({
+                          "User-Agent" => bot.user_agent,
+                          "Content-Type" => "application/x-www-form-urlencoded; charset=UTF-8",
+                          "Referer" => "https://steamcommunity.com/tradeoffer/new/?partner=" + (themSteam64.to_i - 76561197960265728).to_s + "&token=" + themToken
+                      })
+      #Заполняем сам запрос
+      body = {
+          "sessionid" => bot.last_sessionid,
+          "serverid" => "1",
+          "partner" => themSteam64.to_s,
+          "tradeoffermessage" => ("Токен действия: #{@unique_id}"),
+          "json_tradeoffer" => '{"newversion":true,"version":2,"me":{"assets":' + myItems.to_json + ',"currency":[],"ready":false},"them":{"assets":' + themItems.to_json + ',"currency":[],"ready":false}}',
+          "captcha" => "",
+          "trade_offer_create_params" => '{"trade_offer_access_token": "'+ themToken +'"}'
+      }
+
+      #Посылаем запрос
+      Thread.current["response"] = Thread.current["local_http"].httpRequest("POST", APP_CONFIG['steam_trade_url'], body)
+    end
+    http.join
+
+    response_data = JSON.parse(http["response"])
 
     #Если в ответе содержится ошибка
     if not response_data['strError'].nil?
