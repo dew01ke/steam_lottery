@@ -10,7 +10,7 @@
           <ul class="available-items" style="padding-bottom: 20px;">
             <% if not @available_items.nil? %>
                 <% @available_items.each do |item| %>
-                    <li data-param="<%= item['param'] %>"><img height="105" src="/assets/items/<%= item['image_url'] %>"></li>
+                    <li class="backgr" data-param="<%= item['param'] %>"><img height="105" src="/assets/items/<%= item['image_url'] %>"></li>
                 <% end %>
             <% end %>
           </ul>
@@ -19,7 +19,7 @@
               <div class="accept-terms">Забирая вещи, Вы соглашаетесь с условиями вывода.</div>
 
               <div class="centered" style="padding-bottom: 30px;">
-                <a class="YellowButton" onclick="requestItems(0)" style="border-radius: 2px 0 0 2px;">Перевести в габены</a><a class="GreenButton" onclick="requestItems(1)" style="border-radius: 0 2px 2px 0;">Забрать в инвентарь</a>
+                <a class="YellowButton" onclick="acceptAction_0(this)" style="border-radius: 2px 0 0 2px;">Перевести в габены</a><a class="GreenButton" onclick="acceptAction_1(this)" style="border-radius: 0 2px 2px 0;">Забрать в инвентарь</a>
               </div>
           </div>
 
@@ -32,6 +32,34 @@
         <script type="text/javascript">
             var Items = [];
             var token = "<%= form_authenticity_token %>";
+            var isClicked_0 = false;
+            var isClicked_1 = false;
+
+            function acceptAction_0(button) {
+                if (!isClicked_0) {
+                    $(button).text('Вы уверены?');
+                    isClicked_0 = true;
+                } else {
+                    $(button).text('Перевести в габены');
+                    requestItems(0);
+                    isClicked_0 = false;
+
+                    Items = [];
+                }
+            }
+
+            function acceptAction_1(button) {
+                if (!isClicked_1) {
+                    $(button).text('Вы уверены?');
+                    isClicked_1 = true;
+                } else {
+                    $(button).text('Забрать в инвентарь');
+                    requestItems(1);
+                    isClicked_1 = false;
+
+                    Items = [];
+                }
+            }
 
             function requestItems(param) {
                 if (Items.length > 0) {

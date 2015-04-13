@@ -1,3 +1,13 @@
+.backgr {
+    background: rgba(68,68,68,1);
+    background: -moz-linear-gradient(top, rgba(68,68,68,1) 0%, rgba(68,68,68,1) 63%, rgba(157,158,157,1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(68,68,68,1)), color-stop(63%, rgba(68,68,68,1)), color-stop(100%, rgba(157,158,157,1)));
+    background: -webkit-linear-gradient(top, rgba(68,68,68,1) 0%, rgba(68,68,68,1) 63%, rgba(157,158,157,1) 100%);
+    background: -o-linear-gradient(top, rgba(68,68,68,1) 0%, rgba(68,68,68,1) 63%, rgba(157,158,157,1) 100%);
+    background: -ms-linear-gradient(top, rgba(68,68,68,1) 0%, rgba(68,68,68,1) 63%, rgba(157,158,157,1) 100%);
+    background: linear-gradient(to bottom, rgba(68,68,68,1) 0%, rgba(68,68,68,1) 63%, rgba(157,158,157,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#444444', endColorstr='#9d9e9d', GradientType=0 );
+}
 .notification {
     text-align: center;
     background: #963222;

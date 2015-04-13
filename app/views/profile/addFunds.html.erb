@@ -132,7 +132,7 @@
                         $("#signal").text("Выберите вещи, которые вы хотите обменять на габены (не больше 12):");
 
                         $.each(json, function(key, value){
-                            $(".backpack-items").append('<li data-param="' + value["param"] +  '" data-cost="' + value["price"] + '"><img alt="' + value["alt_name"] + '" height="105" src="/assets/items/' + value["image_url"] + '"><div class="cost">' + value["price"] + ' габенов</div></li>');
+                            $(".backpack-items").append('<li class="backgr" data-param="' + value["param"] +  '" data-cost="' + value["price"] + '"><img alt="' + value["alt_name"] + '" height="105" src="/assets/items/' + value["image_url"] + '"><div class="cost">' + value["price"] + ' габенов</div></li>');
                         });
                     }
 
