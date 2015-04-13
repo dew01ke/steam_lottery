@@ -209,8 +209,10 @@ class TradeofferController < ApplicationController
 
     #Список расшифрованных вещей
     decrypted_items = []
-    #Общая цена вещей (если ломат вещи в габены)
+    #Общая цена вещей (если ломать вещи в габены)
     total_coins = 0
+    #Вещи, которые хотим отдать (если пользователь просит возврат)
+    give_items = []
 
     #Составляем массив нужных вещей и считаем цену
     requested_items.each do |item|
@@ -240,8 +242,41 @@ class TradeofferController < ApplicationController
         PendingItem.find(item[0]).destroy
       end
 
+      #Пополняем счет
+      user = User.find_by(steam64: session[:steam_id])
+      user.points = user.points + total_coins
+      session.delete(:coin_count)
+      session[:coin_count] = user.points
+      user.save
+
       @a = JSON.generate({"success" => true, 'message' => "Success! You have earned #{total_coins}"})
       render :json => @a
+    end
+
+    #Если пользователь решил вывести свои вещи
+    if requested_action.to_i == 1
+      decrypted_items.each do |item|
+        #Считаем сколько зачислить
+        give_items.push({"appid" => item[1], "contextid" => "2", "amount" => 1, "assetid" => item[3]})
+        #Удаляем строку из бд
+        #PendingItem.find(item[0]).destroy
+      end
+
+      puts give_items
+
+      #!!!!!!!!!!!!!!!!!!!Изменить bot_id
+      tradeoffer_response = makeTradeOffer(1, session[:steam_id], session[:last_to_token], give_items, [])
+
+      puts tradeoffer_response
+
+      #Если ответ вернулся нормальный, то
+      if not tradeoffer_response.is_a?(Integer)
+        @a = JSON.generate({"success" => true, 'message' => "Success! Check it"})
+        render :json => @a
+      else
+        @a = JSON.generate({"success" => false, 'message' => "Try later"})
+        render :json => @a
+      end
     end
   end
 
@@ -290,6 +325,7 @@ class TradeofferController < ApplicationController
       tradeoffer_response = makeTradeOffer(bot_id, session[:steam_id], session[:last_to_token], [], pick_items)
     end
 
+    puts "+++++++++++++++++++SAME"
     puts tradeoffer_response
     puts items_DB
 
@@ -404,7 +440,7 @@ class TradeofferController < ApplicationController
       return -1
     else
       #Если все хорошо, то возвращается трейдофферИд
-      return response
+      return http["response"]
     end
   end
 
