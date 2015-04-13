@@ -73,13 +73,15 @@
                 var json = JSON.parse(response);
 
                 $.each(json, function(i, j) {
-                    var mslots = Math.floor((j['myslots'] / j['total_slots']) * 100);
-                    var oslots = Math.floor((j['otherslots'] / j['total_slots']) * 100);
+                    if (j != null) {
+                        var mslots = Math.floor((j['myslots'] / j['total_slots']) * 100);
+                        var oslots = Math.floor((j['otherslots'] / j['total_slots']) * 100);
 
-                    var slot = $('div.row').find('.item[data-id="' + j['global_id'] + '"]');
+                        var slot = $('div.row').find('.item[data-id="' + j['global_id'] + '"]');
 
-                    $(slot).find(".slot-count .filled").css("width", oslots + "%");
-                    $(slot).find(".slot-count .owned").css("width", mslots + "%");
+                        $(slot).find(".slot-count .filled").css("width", oslots + "%");
+                        $(slot).find(".slot-count .owned").css("width", mslots + "%");
+                    }
                 });
                 setTimeout("updateCount()", 30000);
             });
