@@ -8,6 +8,8 @@ $trade = TradeofferController.new
 $qualities_rus = {'570' => ["Частое", "Нечастое", "Редкое", "Мифическое", "Легендарное", "Древнее", "Чрезвычайно редкое"], "730" => ["Потребительская серия", "Промышленная серия", "Военная серия", "Ограниченная серия", "Засекреченная серия", "Тайная серия", "Нож"]}
 $qualities_eng = {'570' => ["Common", "Uncommon", "Rare", "Mythical", "Legendary", "Ancient", "Arcana"], '730' => ["Consumer grade", "Industrial grade", "Mil-spec", "Restricted", "Classified", "Covert", "Melee Weapon"]}
 $quality_color = {'570' => ["common", "uncommon", "rare", "mythical", "legendary", "ancient", "arcana"], '730' => ["common", "uncommon", "rare", "mythical", "legendary", "ancient", "immortal"]}
+$wear_rus = ["Прямо с завода", "Немного поношенное", "После полевых испытаний", "Поношенное", "Закаленное в боях"]
+$wear_eng = ["Factory New", "Minimal Wear", "Field-Tested", "Well-Worn", "Battle-Scarred"]
 
 all_prices = Price.all
 if all_prices.size==0

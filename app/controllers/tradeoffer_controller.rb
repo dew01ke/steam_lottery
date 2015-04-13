@@ -155,7 +155,11 @@ class TradeofferController < ApplicationController
                 File.open(path_to_avatar, 'wb') { |fp| fp.write(resource_pic) }
                 $prices[price_result['arrayid']]['image_url'] = filename + ".png"
 
-                $prices[price_result['arrayid']]['display_name_rus'] = current['market_name']
+                if (appId.to_i == 730)
+                  $prices[price_result['arrayid']]['display_name_rus'] = current['market_name'].match(/(.*)\s\((.*)\)/)[1]
+                else
+                  $prices[price_result['arrayid']]['display_name_rus'] = current['market_name']
+                end
                 quality = ""
                 current['tags'].each do |t|
                   if t['category']=="Rarity"
@@ -172,7 +176,11 @@ class TradeofferController < ApplicationController
                 $prices[price_result['arrayid']]['quality'] = quality
                 fetchprice = Price.find(price_result['arrayid'])
                 fetchprice['quality'] = quality
-                fetchprice['display_name_rus'] = current['market_name']
+                if (appId.to_i == 730)
+                  fetchprice['display_name_rus'] = current['market_name'].match(/(.*)\s\((.*)\)/)[1]
+                else
+                  fetchprice['display_name_rus'] = current['market_name']
+                end
                 fetchprice['image_url'] = filename + ".png"
                 fetchprice.save
               end
@@ -465,8 +473,15 @@ class TradeofferController < ApplicationController
       c={}
       c['item_hash_name'] = market_hash_name
       c['appid'] = appid
-      c['display_name_eng'] = market_hash_name
-      c['display_name_rus'] = market_hash_name
+      if (appid.to_i == 730)
+        c['display_name_eng'] = market_hash_name.match(/(.*)\s\((.*)\)/)[1]
+        c['display_name_rus'] = market_hash_name.match(/(.*)\s\((.*)\)/)[1]
+        c['wear'] = $wear_eng.index{|x| x.downcase == market_hash_name.match(/(.*)\s\((.*)\)/)[2].downcase}
+      else
+        c['display_name_eng'] = market_hash_name
+        c['display_name_rus'] = market_hash_name
+        c['wear'] = nil
+      end
       c['last_update'] = Time.new(2010,10,10)
       c['quality'] = 0
       c['item_cost'] = 0
