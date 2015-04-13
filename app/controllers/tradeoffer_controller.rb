@@ -270,7 +270,7 @@ class TradeofferController < ApplicationController
         #Считаем сколько зачислить
         give_items.push({"appid" => item[1], "contextid" => "2", "amount" => 1, "assetid" => item[3]})
         #Удаляем строку из бд
-        #PendingItem.find(item[0]).destroy
+        PendingItem.find(item[0]).destroy
       end
 
       puts give_items

@@ -31,9 +31,9 @@ class ProfileController < ApplicationController
       encrypted = Base64.urlsafe_encode64(initialization_vector + cipher.update(item_identificator) + cipher.final)
 
       if not hashed_image_url.nil?
-        @available_items.push({'id' => item.item_steam_id, 'image_url' => item.price.image_url, 'param' => encrypted})
+        @available_items.push({'id' => item.item_steam_id, 'image_url' => item.price.image_url, 'param' => encrypted, 'title' => item.price.item_hash_name})
       else
-        @available_items.push({'id' => item.item_steam_id, 'image_url' => "../empty_small.jpg", 'param' => encrypted})
+        @available_items.push({'id' => item.item_steam_id, 'image_url' => "../empty_small.jpg", 'param' => encrypted, 'title' => item.price.item_hash_name})
       end
     end
   end
