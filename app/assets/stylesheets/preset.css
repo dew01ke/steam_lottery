@@ -35,7 +35,16 @@ a {
     background: url(./preset/logout_button.png);
     cursor: pointer;
 }
-#logo {
+#logo-pic {
+    position: absolute;
+    margin-left: -35px;
+    width: 170px;
+    height: 80px;
+    background-image: url(./preset/logos.png);
+    background-size: cover
+}
+#logo-title {
+    margin-left: 150px;
     line-height: 60px;
     color: #d25a3e;
     font-size: 25px;
