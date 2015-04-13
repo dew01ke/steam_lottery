@@ -21,7 +21,7 @@ class ProfileController < ApplicationController
       hashed_image_url = item.price.image_url
 
       #Строка состоящая из id + appid + item_cost + item_steam_id + item_hash_name + SALT
-      item_identificator = "#{item.id}@@#{item.price.appid}@@#{item.price.item_cost}@@#{item.item_steam_id}@@#{item.price.item_hash_name}@@#{Time.now}"
+      item_identificator = "#{item.id}@@#{item.price.appid}@@#{item.price.item_cost}@@#{item.item_steam_id}@@#{item.price.item_hash_name}@@#{item.user_id}@@#{Time.now}"
 
       #Инициализируем алгоритм шифрования AES256 + ключ SHA256
       cipher = OpenSSL::Cipher::Cipher.new("aes-256-cbc")

@@ -213,6 +213,8 @@ class TradeofferController < ApplicationController
     total_coins = 0
     #Вещи, которые хотим отдать (если пользователь просит возврат)
     give_items = []
+    #Steam64 пользователя, который запросил
+    user_who_requested = 0
 
     #Составляем массив нужных вещей и считаем цену
     requested_items.each do |item|
@@ -226,11 +228,12 @@ class TradeofferController < ApplicationController
       cipher.iv = deencrypted.slice!(0, 16)
       decrypted = cipher.update(deencrypted) + cipher.final
 
-      #Извлекаем из строки id + appid + item_cost + item_steam_id + item_hash_name
+      #Извлекаем из строки id + appid + item_cost + item_steam_id + item_hash_name + steam64
       splitted = decrypted.split('@@')
 
       #Добавляем в массив требуемых вещей
       decrypted_items.push([splitted[0], splitted[1], splitted[2], splitted[3], splitted[4]])
+      user_who_requested = splitted[5]
     end
 
     #Если пользователь выбрал пополнение себе счета
@@ -243,7 +246,7 @@ class TradeofferController < ApplicationController
       end
 
       #Пополняем счет
-      user = User.find_by(steam64: session[:steam_id])
+      user = User.find_by(steam64: user_who_requested)
       user.points = user.points + total_coins
       session.delete(:coin_count)
       session[:coin_count] = user.points
