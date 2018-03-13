@@ -1,32 +1,42 @@
 Steam Lottery
 =============================
-##Информация о проекте
+## Информация о проекте
 Основная идея сервиса заключена в его развлекательной тематике. Ни для кого не секрет, что в сервисе Steam у каждого пользователя есть инвентарь, который может содержать те или иные предметы некоторой стоимости, которая определяется торговой площадкой Steam. Предметы могут быть из таких игр, как Dota 2, Counter-Strike: Global Offensive, Team Fortress 2. Суть сервиса в том, чтобы разыгрывать предметы высокой стоимости посредством покупки билетов. Базовая стоимость билета определяется как **цена предмета** / **количество слотов**. Разумеется, чтобы иметь какую-нибудь прибыль базовая стоимость умножается на некий коэффициент. Покупка билетов осуществляется за локальную валюту, которую можно получить путем продажи предметов Steam этому сервису.
 
-##Основные принципы
+## Основные принципы
 * Множество одновременных раздач вещей разных ценовых категорий
 * Суммарная стоимость слотов - 130-140%
 * Каждый слот имеет равный шанс победить + рандомные награды в виде экспы
 
-##Steam API:
-###ПОЛУЧЕНИЕ ИНВЕНТАРЯ
+## Интерфейс
+#### Главная страница
+![Alt text](https://i.imgur.com/7FLCOda.png "Главная страница")
+####Страница для участия (для покупки доступны билеты)
+![Alt text](https://i.imgur.com/5hArpYo.png "Страница раздачи")
+####Пополнение баланса
+![Alt text](https://i.imgur.com/WpEEA5z.png "Пополнение баланса")
+####Вывод предметов
+![Alt text](https://i.imgur.com/IYRNfCI.png "Вывод предметов")
+
+## Steam API:
+### ПОЛУЧЕНИЕ ИНВЕНТАРЯ
 http://api.steampowered.com/IEconItems_440/GetPlayerItems/v0001/?key=XXXX&steamid=YYYY получение списка предметов TF<br>
 http://api.steampowered.com/IEconItems_570/GetPlayerItems/v0001/?key=XXXX&steamid=YYYY получение списка предметов Dota<br>
 http://api.steampowered.com/IEconItems_730/GetPlayerItems/v0001/?key=XXXX&steamid=YYYY получение списка предметов CS<br>
 Для примера key=XXXX, steamid=76561197996373589<br>
-###Получение цен на ассеты
+### Получение цен на ассеты
 http://api.steampowered.com/ISteamEconomy/GetAssetPrices/v0001/?appid=440&key=XXXX получение цен на предметы(?) TF<br>
 http://api.steampowered.com/ISteamEconomy/GetAssetPrices/v0001/?appid=570&key=XXXX получение цен на предметы(?) Dota<br>
 http://api.steampowered.com/ISteamEconomy/GetAssetPrices/v0001/?appid=730&key=XXXX получение цен на предметы(?) CS<br>
-###Получение цены предмета по его MARKET_HASH_NAME
+### Получение цены предмета по его MARKET_HASH_NAME
 https://steamcommunity.com/market/priceoverview/?country=RU&currency=1&appid=570&market_hash_name=Sentinel Hood
 
-##STEAM APPID:
+## STEAM APPID:
 440 = TF<br>
 570 = DOTA2<br>
 730 = CSGO<br>
 
-##Модели
+## Модели
 * User
   * steamid
   * email
@@ -84,7 +94,7 @@ Depo examples:
   * item price
   * last updated
 
-##Контроллеры
+## Контроллеры
 * **/raffle** - методы, обесечивающие функционал раздач
 * **/auth** - авторизация ботов и юзеров
 * **/account** - данные об аккаунте, статистика, внесение/снятие поинтов
@@ -93,7 +103,7 @@ Depo examples:
 * **/papi** - public API
 * **/trade** - функционал трейдофферов
 
-##Админка
+## Админка
 * просмотр логов
 * бан/разбан пользователей
 * управление раздачами:
@@ -113,18 +123,8 @@ Depo examples:
 * переключения сайта в режим ремонта, с возможностью админам заходить по openid
 * добавление\удаление админов
 
-##Полезные ссылки:
+## Полезные ссылки:
 * http://skim.la/2012/01/16/rsa-public-key-interoperability-between-ruby-and-android/
 * http://rxr.whitequark.org/mri/source/test/openssl/test_pkey_rsa.rb
 * https://wiki.teamfortress.com/wiki/WebAPI
 * Соотношение типов данных Ruby и MySQL: http://niugrad.blogspot.in/2008/03/ruby-rails-column-type-to-mysql.html
-
-##Интерфейс
-####Главная страница
-![Alt text](https://i.imgur.com/7FLCOda.png "Главная страница")
-####Страница для участия (для покупки доступны билеты)
-![Alt text](https://i.imgur.com/5hArpYo.png "Страница раздачи")
-####Пополнение баланса
-![Alt text](https://i.imgur.com/WpEEA5z.png "Пополнение баланса")
-####Вывод предметов
-![Alt text](https://i.imgur.com/IYRNfCI.png "Вывод предметов")
