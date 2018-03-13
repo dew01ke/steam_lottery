@@ -121,10 +121,10 @@ Depo examples:
 
 ##Интерфейс
 ####Главная страница
-![Alt text](https://dl.dropboxusercontent.com/u/41799129/RoR/1.png "Главная страница")
+![Alt text](https://i.imgur.com/7FLCOda.png "Главная страница")
 ####Страница для участия (для покупки доступны билеты)
-![Alt text](https://dl.dropboxusercontent.com/u/41799129/RoR/2.PNG "Страница раздачи")
+![Alt text](https://i.imgur.com/5hArpYo.png "Страница раздачи")
 ####Пополнение баланса
-![Alt text](https://dl.dropboxusercontent.com/u/41799129/RoR/3.PNG "Пополнение баланса")
+![Alt text](https://i.imgur.com/WpEEA5z.png "Пополнение баланса")
 ####Вывод предметов
-![Alt text](https://dl.dropboxusercontent.com/u/41799129/RoR/44.PNG "Вывод предметов")
+![Alt text](https://i.imgur.com/IYRNfCI.png "Вывод предметов")
